@@ -2,175 +2,339 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>MatchGym PUCV</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MatchGym - PUCV</title>
+
+  <!-- Leaflet para mapa interactivo -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-    body { background: #050816; color: #f5f5f5; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-    .card {
-      width: 100%;
-      max-width: 480px;
-      background: #0b1020;
-      border-radius: 18px;
-      padding: 24px 24px 20px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-      border: 1px solid rgba(255,255,255,0.08);
+    :root {
+      /* PUCV vibes */
+      --bg: #f4f6fb;
+      --card: #ffffff;
+      --border: #dde3f0;
+      --primary: #004b9b;          /* azul PUCV */
+      --primary-soft: #e2ecff;
+      --secondary: #f2b705;        /* dorado PUCV */
+      --text-main: #17213a;
+      --text-muted: #66728c;
+      --danger: #d93025;
+      --success: #188038;
+      --warning: #f9ab00;
+      --radius-lg: 14px;
+      --shadow-soft: 0 10px 30px rgba(0,0,0,0.06);
     }
-    h1 {
-      font-size: 1.7rem;
-      margin-bottom: 4px;
-      font-weight: 700;
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #eaf1ff 0, #f4f6fb 55%, #edf1fa 100%);
+      color: var(--text-main);
     }
-    .badge {
-      display: inline-block;
-      padding: 2px 10px;
+
+    /* Barra superior tipo navegador */
+    .browser-chrome {
+      background: #e7ecf7;
+      padding: 6px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid #ced6eb;
+    }
+    .traffic-lights {
+      display: flex;
+      gap: 6px;
+    }
+    .dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+    }
+    .dot.red { background: #ff5f57; }
+    .dot.yellow { background: #febc2e; }
+    .dot.green { background: #28c840; }
+    .address-bar {
+      flex: 1;
+      background: white;
       border-radius: 999px;
-      background: rgba(129, 140, 248, 0.15);
-      color: #a5b4fc;
-      font-size: 0.75rem;
-      margin-bottom: 12px;
+      border: 1px solid #d0d7ec;
+      padding: 4px 14px;
+      font-size: 13px;
+      color: #5f6368;
     }
-    p { font-size: 0.95rem; color: #d4d4d8; margin-bottom: 12px; }
-    button {
-      margin-top: 10px;
-      width: 100%;
-      padding: 11px 14px;
-      border-radius: 999px;
-      border: none;
-      cursor: pointer;
-      font-size: 0.95rem;
+
+    header {
+      background: linear-gradient(90deg, #ffffff, #f6f8ff);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
       font-weight: 600;
       display: flex;
       align-items: center;
+      gap: 10px;
+    }
+    .logo-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #fef6d6 0, #f2b705 35%, #004b9b 80%);
+      display: flex;
+      align-items: center;
       justify-content: center;
-      gap: 8px;
-      background: linear-gradient(135deg, #4f46e5, #06b6d4);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .logo span {
+      letter-spacing: 0.03em;
+    }
+
+    nav {
+      display: flex;
+      gap: 18px;
+      font-size: 14px;
+    }
+    nav button {
+      border: none;
+      background: transparent;
+      padding: 4px 0;
+      cursor: pointer;
+      color: var(--text-muted);
+      position: relative;
+      font-size: 14px;
+    }
+    nav button.active {
+      color: var(--primary);
+      font-weight: 500;
+    }
+    nav button.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -10px;
+      height: 3px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #dde3f5;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--primary);
+      border: 1px solid #c8d3f3;
+    }
+
+    .app-shell {
+      max-width: 1120px;
+      margin: 18px auto 40px;
+      padding: 0 24px 40px;
+    }
+
+    h1 {
+      font-size: 26px;
+      margin: 10px 0 18px;
+    }
+    h2 {
+      font-size: 22px;
+      margin: 20px 0 12px;
+    }
+    h3 {
+      margin: 0 0 6px;
+      font-size: 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 18px 20px;
+      box-shadow: var(--shadow-soft);
+      margin-bottom: 16px;
+    }
+
+    .subtle {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: #eef0f5;
+      color: var(--text-muted);
+      margin-right: 4px;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      margin-top: 4px;
+    }
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+    .status-dot.green { background: var(--success); }
+    .status-dot.yellow { background: var(--warning); }
+    .status-dot.red { background: var(--danger); }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), #006fd6);
       color: white;
     }
-    button:hover { filter: brightness(1.07); }
-    .small { font-size: 0.8rem; color: #9ca3af; margin-top: 8px; }
-    #msg-error { margin-top: 8px; color: #f97373; font-size: 0.85rem; }
-    #pantalla-app { display: none; }
-    nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-    nav h2 { font-size: 1.1rem; }
-    .gym-list { margin-top: 6px; font-size: 0.9rem; color: #e5e7eb; }
-    .gym-list li { margin-left: 18px; margin-bottom: 4px; }
-  </style>
-</head>
-<body>
-
-  <!-- PANTALLA LOGIN -->
-  <main id="pantalla-login" class="card">
-    <span class="badge">Proyecto MatchGym · PUCV</span>
-    <h1>MatchGym PUCV</h1>
-    <p>Compara gimnasios, planes y beneficios cercanos a la PUCV. Acceso exclusivo para estudiantes con correo institucional.</p>
-
-    <button id="btn-login">
-      <span>Ingresar con Google PUCV</span>
-    </button>
-
-    <p class="small">Solo se permite acceso con correos <strong>@mail.pucv.cl</strong>.</p>
-    <p id="msg-error" style="display:none;"></p>
-  </main>
-
-  <!-- PANTALLA APP (DESPUÉS DEL LOGIN) -->
-  <main id="pantalla-app" class="card">
-    <nav>
-      <div>
-        <span class="badge">Dashboard</span>
-        <h2>MatchGym</h2>
-      </div>
-      <button id="btn-salir" style="width:auto; padding-inline:16px; background:#111827;">
-        Salir
-      </button>
-    </nav>
-
-    <p>Hola <strong><span id="nombre-usuario"></span></strong> 👋</p>
-    <p class="small">Esta es una demo del MVP: aquí puedes listar gimnasios, precios y beneficios para los estudiantes PUCV.</p>
-
-    <section class="gym-list">
-      <p><strong>Gimnasios destacados (ejemplo):</strong></p>
-      <ul>
-        <li>Gym A · $25.000/mes · a 5 min de Casa Central</li>
-        <li>Gym B · $20.000/mes · incluye clases grupales</li>
-        <li>Gym C · $30.000/mes · 24/7 · cerca de Av. España</li>
-      </ul>
-      <p class="small">Después podemos conectar esto a una base real (Firestore).</p>
-    </section>
-  </main>
-
-  <!-- Firebase SDK (CDN compat) -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-
-  <!-- LÓGICA DIRECTAMENTE AQUÍ -->
-  <script>
-    // Configuración Firebase de tu proyecto
-    const firebaseConfig = {
-      apiKey: "AIzaSyCC5XJy3oqmDoTKgDMefB1zjp7XAFgTxWo",
-      authDomain: "matchgym-e7df0.firebaseapp.com",
-      projectId: "matchgym-e7df0",
-      storageBucket: "matchgym-e7df0.firebasestorage.app",
-      messagingSenderId: "766710296254",
-      appId: "1:766710296254:web:a01ca1d2ee5d362b45b8ef",
-      measurementId: "G-D4VWL0H0K9"
-    };
-
-    // Inicializar Firebase
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-
-    // Referencias al DOM
-    const btnLogin = document.getElementById("btn-login");
-    const btnSalir = document.getElementById("btn-salir");
-    const pantallaLogin = document.getElementById("pantalla-login");
-    const pantallaApp = document.getElementById("pantalla-app");
-    const nombreUsuario = document.getElementById("nombre-usuario");
-    const msgError = document.getElementById("msg-error");
-
-    const DOMINIO_PERMITIDO = "@mail.pucv.cl";
-
-    // Escuchar cambios de sesión
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        const email = user.email || "";
-
-        if (!email.endsWith(DOMINIO_PERMITIDO)) {
-          auth.signOut();
-          mostrarError("Solo se permite acceso con correos " + DOMINIO_PERMITIDO);
-          return;
-        }
-
-        nombreUsuario.textContent = user.displayName || email;
-        pantallaLogin.style.display = "none";
-        pantallaApp.style.display = "block";
-        msgError.style.display = "none";
-      } else {
-        pantallaLogin.style.display = "block";
-        pantallaApp.style.display = "none";
-      }
-    });
-
-    // Login con Google
-    btnLogin.addEventListener("click", async () => {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      try {
-        await auth.signInWithPopup(provider);
-      } catch (err) {
-        console.error(err);
-        mostrarError("No se pudo iniciar sesión. Intenta nuevamente.");
-      }
-    });
-
-    // Cerrar sesión
-    btnSalir.addEventListener("click", () => {
-      auth.signOut();
-    });
-
-    function mostrarError(texto) {
-      msgError.textContent = texto;
-      msgError.style.display = "block";
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-main);
     }
-  </script>
-</body>
-</html>
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .section-header h1 {
+      margin: 0;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 12px;
+    }
+    .filters label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    select, input[type="number"], input[type="text"], input[type="email"] {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 6px 10px;
+      font-size: 13px;
+      outline: none;
+      background: white;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 12px;
+    }
+    .field label {
+      display: block;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 3px;
+    }
+    .field input, .field select, .field textarea {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 7px 10px;
+      font-size: 13px;
+      outline: none;
+      resize: vertical;
+      font-family: inherit;
+      min-height: 34px;
+    }
+
+    .badge-level {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    .routine-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .routine-details {
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--border);
+      font-size: 13px;
+    }
+
+    .table-mini {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin-top: 6px;
+    }
+    .table-mini th, .table-mini td {
+      padding: 4px 6px;
+      text-align: left;
+    }
+    .table-mini th {
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .table-mini tr:nth-child(even) {
+      background: #fafafa;
+    }
+
+    .view { display: none; }
+    .view.active { display: block; }
+
+    /* --- Login overlay --- */
+    #login-overlay {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, rgba(0,75,155,0.18), rgba(0,0,0,0.6));
+      backdrop-filter: blur(4px);
+      z-index: 20;
+    }
+    .login-card {
+      width: 100%;
