@@ -69,14 +69,14 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .brand-logo {
-      width: 56px;
-      height: 56px;
+      width: 52px;
+      height: 52px;
       border-radius: 999px;
-      background: rgba(15, 23, 42, 0.95);
+      background: radial-gradient(circle at top, #020617, #020617);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -84,14 +84,14 @@
       overflow: hidden;
     }
 
-    .brand-logo-img {
+    .brand-logo img {
       width: 100%;
       height: 100%;
       object-fit: contain;
     }
 
     .brand-text h1 {
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 700;
       letter-spacing: 0.03em;
       display: flex;
@@ -115,7 +115,7 @@
     }
 
     .pucv-logo-wrapper img {
-      height: 32px;
+      height: 26px;
       width: auto;
     }
 
@@ -219,7 +219,7 @@
     .section-header p {
       font-size: 11px;
       color: var(--text-soft);
-      max-width: 480px;
+      max-width: 420px;
     }
 
     .section-controls {
@@ -236,8 +236,6 @@
 
     select,
     input[type="number"],
-    input[type="text"],
-    input[type="email"],
     textarea {
       font-size: 11px;
       padding: 4px 7px;
@@ -323,8 +321,8 @@
     .badge-pill {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      padding: 2px 7px;
+      gap: 4px;
+      padding: 2px 6px;
       border-radius: 999px;
       font-size: 10px;
     }
@@ -420,21 +418,6 @@
     .modal-header h3 { font-size: 14px; }
     .modal-header small { font-size: 11px; color: var(--text-soft); }
 
-    .modal-gym-head {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      justify-content: center;
-    }
-
-    .gym-logo {
-      width: 20px;
-      height: 20px;
-      object-fit: contain;
-      border-radius: 999px;
-      background: #020617;
-    }
-
     .modal-close {
       width: 24px;
       height: 24px;
@@ -504,10 +487,10 @@
     }
 
     .login-card {
-      width: min(420px, 92vw);
+      width: min(460px, 92vw);
       background: rgba(15, 23, 42, 0.96);
       border-radius: 24px;
-      padding: 24px 22px 20px;
+      padding: 22px 22px 18px;
       border: 1px solid rgba(148, 163, 184, 0.45);
       box-shadow: 0 26px 80px rgba(15, 23, 42, 0.95);
     }
@@ -515,18 +498,29 @@
     .login-title {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 10px;
       margin-bottom: 10px;
     }
 
-    .login-title h2 { font-size: 22px; }
-    .login-title span { font-size: 11px; color: var(--text-soft); }
-
-    /* logo más grande solo en login */
-    .login-card .brand-logo {
-      width: 72px;
-      height: 72px;
+    .login-title-logo {
+      width: 54px;
+      height: 54px;
+      border-radius: 999px;
+      background: #020617;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
     }
+
+    .login-title-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .login-title h2 { font-size: 20px; }
+    .login-title span { font-size: 11px; color: var(--text-soft); }
 
     .login-body p {
       font-size: 12px;
@@ -547,7 +541,7 @@
     .google-btn {
       width: 100%;
       margin-top: 6px;
-      padding: 10px 10px;
+      padding: 8px 10px;
       border-radius: 999px;
       background: linear-gradient(135deg, #f97316, #22c55e);
       color: #0b1120;
@@ -576,62 +570,26 @@
       min-height: 14px;
     }
 
-    /* Perfil estilo formulario */
-    .perfil-form-card {
-      margin-top: 4px;
-      background: rgba(15, 23, 42, 0.96);
-      border-radius: 18px;
-      padding: 14px 14px 12px;
-      border: 1px solid rgba(148, 163, 184, 0.35);
-    }
-
+    /* Perfil */
     .perfil-grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px 12px;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 14px;
       font-size: 12px;
     }
 
-    .perfil-field {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
+    .perfil-group { margin-bottom: 10px; }
 
-    .perfil-field label {
+    .perfil-group label {
       font-size: 11px;
       color: var(--text-soft);
+      display: block;
+      margin-bottom: 3px;
     }
 
-    .perfil-field input,
-    .perfil-field select {
-      width: 100%;
-    }
-
-    .perfil-field.wide {
-      grid-column: 1 / -1;
-    }
-
-    .perfil-field textarea {
-      border-radius: 12px;
-      min-height: 52px;
-    }
-
-    .perfil-note {
-      font-size: 11px;
+    .perfil-group small {
+      font-size: 10px;
       color: var(--text-soft);
-      margin-top: 10px;
-    }
-
-    .perfil-actions {
-      margin-top: 10px;
-      display: flex;
-      justify-content: flex-end;
-    }
-
-    .perfil-actions .btn-primary {
-      padding: 6px 14px;
-      font-size: 12px;
     }
 
     .perfil-badge {
@@ -645,210 +603,57 @@
       color: var(--text-soft);
     }
 
-    /* chips lesiones */
-    .lesiones-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      font-size: 11px;
-      color: var(--text-soft);
+    /* Rutinas */
+    .subsection-title {
+      font-size: 14px;
+      margin-top: 6px;
+      margin-bottom: 2px;
     }
 
-    .lesiones-chips label {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 3px 7px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.6);
-      background: rgba(15, 23, 42, 0.9);
-    }
-
-    .lesiones-chips input[type="checkbox"] {
-      accent-color: #38bdf8;
-    }
-
-    /* Mis rutinas */
-    .routines-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-
-    .routines-header-text h2 {
-      font-size: 17px;
-      letter-spacing: 0.03em;
-    }
-
-    .routines-header-text p {
-      font-size: 11px;
-      color: var(--text-soft);
-      max-width: 520px;
-      margin-top: 3px;
-    }
-
-    .routines-block-title {
-      font-size: 15px;
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-
-    .routines-block-sub {
+    .subsection-help {
       font-size: 11px;
       color: var(--text-soft);
       margin-bottom: 8px;
     }
 
-    .routines-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    .routine-cards {
+      display: flex;
+      flex-direction: column;
       gap: 10px;
     }
 
-    .routine-card,
-    .user-routine-card {
-      border-radius: 16px;
+    .routine-card {
+      border-radius: var(--radius-lg);
       background: rgba(15, 23, 42, 0.96);
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      padding: 10px 12px 10px;
-      font-size: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      padding: 10px 12px 9px;
+      font-size: 11px;
     }
 
-    .routine-title {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 2px;
+    .routine-card h3 {
+      font-size: 13px;
+      margin-bottom: 4px;
     }
 
-    .routine-level {
+    .routine-pill {
       display: inline-flex;
-      padding: 2px 7px;
+      align-items: center;
+      padding: 2px 8px;
       border-radius: 999px;
       font-size: 10px;
-      background: rgba(59, 130, 246, 0.18);
-      color: #bfdbfe;
-      border: 1px solid rgba(59, 130, 246, 0.6);
+      background: rgba(15, 23, 42, 1);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      margin-right: 4px;
     }
 
     .routine-meta {
-      font-size: 11px;
-      color: #cbd5f5;
-    }
-
-    .routine-desc {
-      font-size: 11px;
       color: var(--text-soft);
+      margin-top: 3px;
     }
 
-    .routine-ex-list {
-      font-size: 11px;
-      color: #e5e7eb;
-      margin-left: 14px;
-    }
-
-    .user-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .avatar {
-      width: 28px;
-      height: 28px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 30% 10%, #93c5fd, #1d4ed8);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      font-weight: 600;
-      color: #e5f0ff;
-    }
-
-    .user-meta {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .user-name-card {
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    .user-degree {
-      font-size: 11px;
-      color: var(--text-soft);
-    }
-
-    .badge-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
+    .routine-card ul {
       margin-top: 4px;
-      font-size: 10px;
-    }
-
-    .badge-chip {
-      padding: 2px 7px;
-      border-radius: 999px;
-      font-size: 10px;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      color: var(--text-soft);
-    }
-
-    .badge-level-basic,
-    .badge-level-intermediate {
-      padding: 2px 7px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.6);
-    }
-
-    .badge-level-basic {
-      background: rgba(234, 179, 8, 0.12);
-      color: #fef3c7;
-    }
-
-    .badge-level-intermediate {
-      background: rgba(59, 130, 246, 0.18);
-      color: #bfdbfe;
-    }
-
-    .user-routine-title {
-      font-size: 13px;
-      font-weight: 600;
-      margin-top: 5px;
-    }
-
-    .user-routine-desc {
-      font-size: 11px;
-      color: var(--text-soft);
-    }
-
-    .routine-footer {
-      display: flex;
-      justify-content: flex-end;
-      gap: 6px;
-      margin-top: 6px;
-    }
-
-    .routine-footer .btn-primary,
-    .routine-footer .btn-ghost {
-      padding-inline: 10px;
-      padding-block: 4px;
-      font-size: 11px;
-    }
-
-    .routines-note {
-      font-size: 11px;
-      color: var(--text-soft);
-      margin-top: 6px;
+      margin-left: 16px;
     }
 
     [hidden] { display: none !important; }
@@ -856,8 +661,7 @@
     @media (max-width: 880px) {
       .explorar-layout { grid-template-columns: minmax(0, 1fr); }
       #gym-map { height: 260px; }
-      .perfil-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .routines-header { flex-direction: column; align-items: flex-start; }
+      .perfil-grid { grid-template-columns: minmax(0, 1fr); }
     }
   </style>
 </head>
@@ -866,8 +670,8 @@
   <div id="login-overlay" class="login-overlay" hidden>
     <div class="login-card">
       <div class="login-title">
-        <div class="brand-logo">
-          <img src="matchgym_logo_transparent.png" alt="MatchGym" class="brand-logo-img" />
+        <div class="login-title-logo">
+          <img src="matchgym-logo.png" alt="MatchGym" />
         </div>
         <div>
           <h2>MatchGym · PUCV</h2>
@@ -904,7 +708,7 @@
     <header class="app-header">
       <div class="brand">
         <div class="brand-logo">
-          <img src="matchgym_logo_transparent.png" alt="MatchGym" class="brand-logo-img" />
+          <img src="matchgym-logo.png" alt="MatchGym" />
         </div>
         <div class="brand-text">
           <h1>
@@ -983,46 +787,36 @@
     </section>
 
     <!-- MIS RUTINAS -->
-    <<!-- MIS RUTINAS (con adopción + creación) -->
-<section id="section-rutinas" class="main-card" hidden>
-  <div class="section-header">
-    <div>
-      <h2>Mis rutinas</h2>
-      <p>
-        Rutinas que estás usando actualmente. Al adoptar una rutina nueva de un mismo
-        grupo muscular, se reemplaza la anterior (no se acumulan por acumular).
+    <section id="section-rutinas" class="main-card" hidden>
+      <div class="section-header">
+        <div>
+          <h2>Mis rutinas</h2>
+          <p>
+            Rutinas que estás usando actualmente. Al adoptar una rutina nueva de un mismo
+            grupo muscular, se reemplaza la anterior (no se acumulan por acumular).
+          </p>
+        </div>
+        <button id="btn-nueva-rutina" class="btn-primary">
+          + Nueva rutina
+        </button>
+      </div>
+
+      <h3 class="subsection-title">Mis rutinas guardadas</h3>
+      <p class="subsection-help">
+        Estas son las rutinas que estás usando ahora mismo. Algunas pueden venir
+        de otros estudiantes (adoptadas) y otras pueden ser creadas por ti.
       </p>
-    </div>
-    <button id="btn-nueva-rutina" class="btn-primary">
-      + Nueva rutina
-    </button>
-  </div>
+      <div id="my-routines-list" class="routine-cards"></div>
 
-  <h3 class="subsection-title">Mis rutinas guardadas</h3>
-  <p class="subsection-help">
-    Estas son las rutinas que estás usando ahora mismo. Algunas pueden venir
-    de otros estudiantes (adoptadas) y otras pueden ser creadas por ti.
-  </p>
-  <div id="my-routines-list" class="routine-cards"></div>
-
-  <h3 class="subsection-title" style="margin-top:16px;">
-    Rutinas recomendadas (otros estudiantes)
-  </h3>
-  <p class="subsection-help">
-    Se filtran según las <strong>lesiones/condiciones</strong> que marcaste en tu perfil.
-    Si indicas rodilla o lumbar, se ocultan las rutinas que podrían molestarte.
-  </p>
-  <div id="recommended-routines-list" class="routine-cards"></div>
-</section>
-
-<!-- MODAL CREAR RUTINA -->
-<div id="routine-modal" class="modal-overlay" hidden>
-  <div class="modal">
-    <div class="modal-header">
-      <div>
-        <h3 id="routine-modal-title">Nueva rutina</h3>
-        <small>Define un nombre, grupo muscular y la lista de ejercicios.</small>
-      </div
+      <h3 class="subsection-title" style="margin-top:16px;">
+        Rutinas recomendadas (otros estudiantes)
+      </h3>
+      <p class="subsection-help">
+        Se filtran según las <strong>lesiones/condiciones</strong> que marcaste en tu perfil.
+        Si marcas rodilla o lumbar, se ocultan las rutinas que podrían molestarte.
+      </p>
+      <div id="recommended-routines-list" class="routine-cards"></div>
+    </section>
 
     <!-- MI PERFIL -->
     <section id="section-perfil" class="main-card" hidden>
@@ -1030,86 +824,65 @@
         <div>
           <h2>Mi perfil</h2>
           <p>
-            Tu perfil se vincula a tu correo institucional PUCV y se usa para
-            personalizar recomendaciones de gimnasios y rutinas (nivel, objetivos,
-            lesiones y tiempo disponible).
+            Resumen de tus antecedentes: objetivos, dolores articulares y horarios.
+            Esto es lo que MatchGym usará para sugerirte rutinas.
           </p>
         </div>
         <div class="perfil-badge">
-          “Debido a tus antecedentes, las mejores rutinas son…”
+          <span>“Debido a tus antecedentes, las mejores rutinas son…”</span>
         </div>
       </div>
 
-      <div class="perfil-form-card">
-        <div class="perfil-grid">
-          <div class="perfil-field wide">
-            <label for="perfil-email">Correo institucional PUCV</label>
-            <input id="perfil-email" type="email" readonly placeholder="@mail.pucv.cl" />
-          </div>
-
-          <div class="perfil-field">
-            <label for="perfil-peso">Peso (kg)</label>
-            <input id="perfil-peso" type="number" min="30" max="250" />
-          </div>
-
-          <div class="perfil-field">
-            <label for="perfil-estatura">Estatura (cm)</label>
-            <input id="perfil-estatura" type="number" min="130" max="220" />
-          </div>
-
-          <div class="perfil-field">
-            <label for="perfil-edad">Edad</label>
-            <input id="perfil-edad" type="number" min="15" max="80" />
-          </div>
-
-          <div class="perfil-field">
-            <label for="perfil-nivel">Nivel / experiencia</label>
-            <select id="perfil-nivel">
-              <option value="principiante">Principiante (0–1 año)</option>
-              <option value="intermedio">Intermedio (2–4 años)</option>
-              <option value="avanzado">Avanzado (4+ años)</option>
+      <div class="perfil-grid">
+        <div>
+          <div class="perfil-group">
+            <label for="objetivo">Objetivo principal</label>
+            <select id="objetivo">
+              <option>Ganar masa muscular</option>
+              <option>Perder grasa / definición</option>
+              <option>Mejorar resistencia</option>
+              <option>Rehabilitación / mantenimiento suave</option>
             </select>
           </div>
 
-          <div class="perfil-field">
-            <label for="perfil-anios">Años de entrenamiento</label>
-            <input id="perfil-anios" type="number" min="0" max="20" />
-          </div>
-
-          <div class="perfil-field">
-            <label for="perfil-disponibilidad">Disponibilidad semanal (días)</label>
-            <input id="perfil-disponibilidad" type="number" min="1" max="7" />
-          </div>
-
-          <div class="perfil-field">
-            <label>Condiciones / lesiones relevantes</label>
-            <div id="perfil-lesiones-group" class="lesiones-chips">
-              <label><input type="checkbox" value="rodilla" /> Lesión de rodilla</label>
-              <label><input type="checkbox" value="lumbar" /> Lesión lumbar</label>
-              <label><input type="checkbox" value="hombro" /> Lesión de hombro</label>
+          <div class="perfil-group">
+            <label>Lesiones / condiciones relevantes</label>
+            <small>(marca todas las que apliquen)</small>
+            <div style="margin-top:4px;font-size:11px;color:var(--text-soft);display:flex;flex-wrap:wrap;gap:6px;">
+              <label><input type="checkbox" name="lesion" value="rodilla" /> Rodilla</label>
+              <label><input type="checkbox" name="lesion" value="lumbar" /> Lumbar</label>
+              <label><input type="checkbox" name="lesion" value="hombro" /> Hombro</label>
             </div>
           </div>
 
-          <div class="perfil-field wide">
-            <label for="perfil-preferencias">Preferencias de gimnasio</label>
-            <input id="perfil-preferencias" type="text"
-                   placeholder="Ej: Cerca de la sede, precio, poca afluencia" />
-          </div>
-
-          <div class="perfil-field wide">
-            <label for="perfil-objetivos">Objetivos</label>
-            <textarea id="perfil-objetivos"
-              placeholder="Ej: Ganar fuerza, hipertrofia."></textarea>
+          <div class="perfil-group">
+            <label for="restricciones">Restricciones médicas / recomendaciones</label>
+            <textarea id="restricciones"
+              placeholder="Ej: evitar impacto fuerte en rodillas, preferir elíptica y bicicleta."></textarea>
           </div>
         </div>
 
-        <p class="perfil-note">
-          Podrás controlar quién ve tus rutinas y datos en la plataforma cuando
-          incorporemos el módulo social completo.
-        </p>
+        <div>
+          <div class="perfil-group">
+            <label for="dias-entreno">Días disponibles para entrenar</label>
+            <textarea id="dias-entreno"
+              placeholder="Ej: Lunes, miércoles y viernes en la tarde; sábado en la mañana."></textarea>
+          </div>
 
-        <div class="perfil-actions">
-          <button id="save-profile-btn" class="btn-primary">Guardar perfil</button>
+          <div class="perfil-group">
+            <label for="experiencia">Experiencia en entrenamiento</label>
+            <select id="experiencia">
+              <option>Principiante (0–1 año)</option>
+              <option>Intermedio (1–4 años)</option>
+              <option>Avanzado (4+ años)</option>
+            </select>
+          </div>
+
+          <div class="perfil-group">
+            <label for="comentarios-extra">Comentarios extra</label>
+            <textarea id="comentarios-extra"
+              placeholder="Cualquier info extra que explique por qué eliges ciertos gimnasios o rutinas."></textarea>
+          </div>
         </div>
       </div>
     </section>
@@ -1141,21 +914,80 @@
     </div>
   </div>
 
-  <!-- MODAL DETALLE RUTINA -->
-  <div id="routine-overlay" class="modal-overlay" hidden>
+  <!-- MODAL DETALLE GIMNASIO -->
+  <div id="gym-detail-overlay" class="modal-overlay" hidden>
     <div class="modal">
       <div class="modal-header">
         <div>
-          <h3 id="routine-modal-title"></h3>
-          <small id="routine-modal-subtitle"></small>
+          <h3 id="gym-detail-title">Detalle gimnasio</h3>
+          <small id="gym-detail-subtitle"></small>
         </div>
-        <button id="routine-close" class="modal-close">×</button>
+        <button id="gym-detail-close" class="modal-close">×</button>
       </div>
-      <div id="routine-modal-body"
-           style="font-size:12px;color:var(--text-soft);max-height:260px;overflow-y:auto;"></div>
+      <div id="gym-detail-body" style="font-size:11px;color:var(--text-soft);"></div>
       <div class="modal-footer">
-        <button id="routine-close-bottom">Cerrar</button>
+        <button id="gym-detail-close-bottom">Cerrar</button>
       </div>
+    </div>
+  </div>
+
+  <!-- MODAL CREAR RUTINA -->
+  <div id="routine-modal" class="modal-overlay" hidden>
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h3 id="routine-modal-title">Nueva rutina</h3>
+          <small>Define un nombre, grupo muscular y la lista de ejercicios.</small>
+        </div>
+        <button id="routine-modal-close" class="modal-close">×</button>
+      </div>
+      <form id="routine-form">
+        <div class="perfil-group">
+          <label for="r-name">Nombre de la rutina</label>
+          <input id="r-name" type="text" required
+                 style="width:100%;border-radius:999px;padding:6px 9px;
+                 font-size:11px;border:1px solid rgba(148,163,184,0.5);
+                 background:rgba(15,23,42,0.95);color:var(--text);" />
+        </div>
+
+        <div class="perfil-group">
+          <label for="r-group">Grupo muscular</label>
+          <select id="r-group" required>
+            <option value="pierna">Pierna</option>
+            <option value="espalda">Espalda</option>
+            <option value="pecho">Pecho</option>
+            <option value="hombro">Hombro</option>
+            <option value="fullbody">Full body</option>
+          </select>
+        </div>
+
+        <div class="perfil-group">
+          <label for="r-level">Nivel</label>
+          <select id="r-level" required>
+            <option value="Principiante">Principiante (0–1 año)</option>
+            <option value="Intermedio">Intermedio (1–4 años)</option>
+            <option value="Avanzado">Avanzado (4+ años)</option>
+          </select>
+        </div>
+
+        <div class="perfil-group">
+          <label for="r-desc">Descripción corta</label>
+          <textarea id="r-desc"
+            placeholder="Ej: Pierna — 3 ejercicios básicos para volver a tomar ritmo."></textarea>
+        </div>
+
+        <div class="perfil-group">
+          <label for="r-exercises">Ejercicios (uno por línea)</label>
+          <textarea id="r-exercises"
+            placeholder="Sentadilla en máquina&#10;Prensa de piernas&#10;Curl femoral"
+            required></textarea>
+        </div>
+
+        <div class="modal-footer" style="display:flex;gap:8px;justify-content:flex-end;">
+          <button type="button" id="routine-modal-cancel">Cancelar</button>
+          <button type="submit" class="btn-primary">Guardar rutina</button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -1175,7 +1007,7 @@
     const auth = firebase.auth();
     const provider = new firebase.auth.GoogleAuthProvider();
 
-    // SEDES Y GIMNASIOS
+    // ------------------- DATOS GIMNASIOS -------------------
     const sedes = {
       ibc: {
         nombre: "Edificio Isabel Brown Caces PUCV · Av. Brasil 2241",
@@ -1294,7 +1126,7 @@
       },
     };
 
-    // LOGIN UI
+    // ------------------- LOGIN UI -------------------
     const loginOverlay = document.getElementById("login-overlay");
     const loginBtn = document.getElementById("google-login-btn");
     const loginError = document.getElementById("login-error");
@@ -1320,7 +1152,286 @@
 
     signOutBtn.addEventListener("click", () => auth.signOut());
 
-    // NAV TABS
+    auth.onAuthStateChanged((user) => {
+      if (user && user.email && user.email.endsWith("@mail.pucv.cl")) {
+        loginOverlay.hidden = true;
+        const displayName = user.displayName || user.email;
+        userNameLabel.textContent = displayName;
+        userAvatar.textContent = (displayName[0] || "?").toUpperCase();
+        signOutBtn.hidden = false;
+      } else {
+        loginOverlay.hidden = false;
+        userNameLabel.textContent = "Sesión no iniciada";
+        userAvatar.textContent = "--";
+        signOutBtn.hidden = true;
+      }
+    });
+
+    // ------------------- RUTINAS -------------------
+    const recommendedRoutines = [
+      {
+        id: "juan-pierna-basica",
+        titulo: "Pierna básica",
+        nivel: "Principiante",
+        grupoKey: "pierna",
+        grupoLabel: "Pierna",
+        creador: {
+          nombre: "Juan",
+          carrera: "Ingeniería Civil PUCV",
+          horario: "13:00–15:00",
+          objetivo: "Bajar grasa",
+        },
+        evitarSiLesiones: ["rodilla"],
+        descripcion:
+          "Pierna — 3 ejercicios. Sentadilla en máquina, prensa y curl femoral. Ideal para retomar después de la universidad.",
+        ejercicios: [
+          "Sentadilla en máquina",
+          "Prensa de piernas",
+          "Curl femoral",
+        ],
+      },
+      {
+        id: "carla-biceps-espalda",
+        titulo: "Espalda + bíceps simple",
+        nivel: "Intermedio",
+        grupoKey: "espalda",
+        grupoLabel: "Espalda",
+        creador: {
+          nombre: "Carla",
+          carrera: "Ingeniería Comercial PUCV",
+          horario: "18:00–20:00",
+          objetivo: "Hipertrofia tren superior",
+        },
+        evitarSiLesiones: ["hombro", "lumbar"],
+        descripcion:
+          "Rutina pensada para combinar con un día fuerte de pierna. Mucho foco en remos.",
+        ejercicios: [
+          "Remo con barra",
+          "Jalón al pecho",
+          "Remo en polea baja",
+          "Curl bíceps con barra Z",
+        ],
+      },
+      {
+        id: "alejandro-fullbody-suave",
+        titulo: "Full body suave",
+        nivel: "Principiante",
+        grupoKey: "fullbody",
+        grupoLabel: "Full body",
+        creador: {
+          nombre: "Alejandro",
+          carrera: "Ing. Informática PUCV",
+          horario: "07:00–08:00",
+          objetivo: "Mantenerse activo durante el semestre",
+        },
+        evitarSiLesiones: [],
+        descripcion:
+          "Rutina completa de 5 ejercicios para quienes solo pueden ir 2–3 veces por semana.",
+        ejercicios: [
+          "Prensa de piernas",
+          "Press banca en máquina",
+          "Remo sentado",
+          "Press militar con mancuernas sentado",
+          "Plancha abdominal",
+        ],
+      },
+    ];
+
+    let myRoutines = {
+      pierna: {
+        ...recommendedRoutines[0],
+        origen: "Adoptada de Juan",
+      },
+      espalda: {
+        id: "matchgym-espalda-basica",
+        titulo: "Espalda",
+        nivel: "Intermedio",
+        grupoKey: "espalda",
+        grupoLabel: "Espalda",
+        origen: "Sugerida por MatchGym",
+        descripcion:
+          "Remos básicos para combinar con tu split actual durante el semestre.",
+        ejercicios: ["Remo inclinado", "Jalón al pecho", "Remo a un brazo"],
+      },
+    };
+
+    const myRoutinesListEl = document.getElementById("my-routines-list");
+    const recommendedListEl = document.getElementById("recommended-routines-list");
+
+    function getSelectedLesiones() {
+      const checks = document.querySelectorAll('input[name="lesion"]:checked');
+      return Array.from(checks).map((c) => c.value);
+    }
+
+    function renderMyRoutines() {
+      const rutinas = Object.values(myRoutines).filter(Boolean);
+
+      if (!rutinas.length) {
+        myRoutinesListEl.innerHTML =
+          '<p style="font-size:12px;color:var(--text-soft);">Aún no has guardado ninguna rutina. Adopta una desde las recomendaciones o crea una nueva.</p>';
+        return;
+      }
+
+      myRoutinesListEl.innerHTML = rutinas
+        .map((r) => {
+          const ejerciciosHtml = (r.ejercicios || [])
+            .map((e) => `<li>${e}</li>`)
+            .join("");
+          return `
+            <article class="routine-card">
+              <h3>${r.titulo}</h3>
+              <div class="routine-meta">
+                <span class="routine-pill">${r.nivel.toUpperCase()}</span>
+                <span>Grupo muscular: ${r.grupoLabel}</span>
+                ${r.origen ? ` · <span>${r.origen}</span>` : ""}
+              </div>
+              <p class="routine-meta" style="margin-top:4px;">${r.descripcion || ""}</p>
+              ${
+                ejerciciosHtml
+                  ? `<ul>${ejerciciosHtml}</ul>`
+                  : "<p style='margin-top:4px;color:var(--text-soft);'>Sin ejercicios definidos.</p>"
+              }
+            </article>
+          `;
+        })
+        .join("");
+    }
+
+    function renderRecommendedRoutines() {
+      const lesiones = getSelectedLesiones();
+
+      const filtradas = recommendedRoutines.filter((r) => {
+        if (!lesiones.length) return true;
+        if (!r.evitarSiLesiones || !r.evitarSiLesiones.length) return true;
+        return !lesiones.some((l) => r.evitarSiLesiones.includes(l));
+      });
+
+      if (!filtradas.length) {
+        recommendedListEl.innerHTML =
+          '<p style="font-size:12px;color:var(--text-soft);">Con las lesiones marcadas no hay rutinas recomendadas por ahora. Prueba desmarcando alguna o crea tu propia rutina.</p>';
+        return;
+      }
+
+      recommendedListEl.innerHTML = filtradas
+        .map((r) => {
+          const ejerciciosHtml = r.ejercicios
+            .map((e) => `<li>${e}</li>`)
+            .join("");
+          return `
+            <article class="routine-card">
+              <div style="display:flex;gap:10px;align-items:flex-start;">
+                <div style="width:32px;height:32px;border-radius:999px;
+                            background:linear-gradient(135deg,#1d4ed8,#22c55e);
+                            display:flex;align-items:center;justify-content:center;
+                            font-size:13px;font-weight:600;">
+                  ${r.creador.nombre[0]}
+                </div>
+                <div style="flex:1;">
+                  <h3>${r.titulo}</h3>
+                  <div class="routine-meta">
+                    <span style="font-weight:600;">${r.creador.nombre}</span> ·
+                    <span>${r.creador.carrera}</span>
+                  </div>
+                  <div class="routine-meta" style="margin-top:2px;">
+                    <span class="routine-pill">${r.nivel.toUpperCase()}</span>
+                    <span class="routine-pill">Horario: ${r.creador.horario}</span>
+                  </div>
+                  <div class="routine-meta" style="margin-top:4px;">
+                    Objetivo: ${r.creador.objetivo} · Grupo: ${r.grupoLabel}
+                  </div>
+                  <p class="routine-meta" style="margin-top:4px;">${r.descripcion}</p>
+                  <ul>${ejerciciosHtml}</ul>
+                  <div style="margin-top:6px;text-align:right;">
+                    <button class="btn-primary" data-adopt-id="${r.id}">
+                      Adoptar esta rutina
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </article>
+          `;
+        })
+        .join("");
+    }
+
+    function adoptRoutine(routineId) {
+      const r = recommendedRoutines.find((x) => x.id === routineId);
+      if (!r) return;
+      myRoutines[r.grupoKey] = {
+        ...r,
+        origen: `Adoptada de ${r.creador.nombre}`,
+      };
+      renderMyRoutines();
+      alert(
+        `Se actualizó tu rutina de ${r.grupoLabel} con la de ${r.creador.nombre}.`
+      );
+    }
+
+    recommendedListEl.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-adopt-id]");
+      if (!btn) return;
+      adoptRoutine(btn.dataset.adoptId);
+    });
+
+    document.querySelectorAll('input[name="lesion"]').forEach((cb) => {
+      cb.addEventListener("change", renderRecommendedRoutines);
+    });
+
+    // Modal crear rutina
+    const btnNuevaRutina = document.getElementById("btn-nueva-rutina");
+    const routineModal = document.getElementById("routine-modal");
+    const routineModalTitle = document.getElementById("routine-modal-title");
+    const routineForm = document.getElementById("routine-form");
+    const routineModalClose = document.getElementById("routine-modal-close");
+    const routineModalCancel = document.getElementById("routine-modal-cancel");
+
+    const rName = document.getElementById("r-name");
+    const rGroup = document.getElementById("r-group");
+    const rLevel = document.getElementById("r-level");
+    const rDesc = document.getElementById("r-desc");
+    const rExercises = document.getElementById("r-exercises");
+
+    btnNuevaRutina.addEventListener("click", () => {
+      routineForm.reset();
+      routineModalTitle.textContent = "Nueva rutina";
+      routineModal.hidden = false;
+    });
+
+    [routineModalClose, routineModalCancel].forEach((btn) =>
+      btn.addEventListener("click", () => {
+        routineModal.hidden = true;
+      })
+    );
+
+    routineForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const nombre = rName.value.trim();
+      const grupoKey = rGroup.value;
+      const grupoLabel = rGroup.options[rGroup.selectedIndex].textContent;
+      const nivel = rLevel.value;
+      const desc = rDesc.value.trim();
+      const ejercicios = rExercises.value
+        .split("\n")
+        .map((x) => x.trim())
+        .filter(Boolean);
+
+      const rutina = {
+        id: "custom-" + Date.now(),
+        titulo: nombre,
+        nivel,
+        grupoKey,
+        grupoLabel,
+        descripcion: desc,
+        ejercicios,
+        origen: "Creada por ti",
+      };
+
+      myRoutines[grupoKey] = rutina;
+      routineModal.hidden = true;
+      renderMyRoutines();
+    });
+
+    // ------------------- NAV TABS -------------------
     const navTabs = document.querySelectorAll(".nav-tab");
     const sections = {
       explorar: document.getElementById("section-explorar"),
@@ -1337,7 +1448,7 @@
       });
     });
 
-    // MAPA
+    // ------------------- MAPA -------------------
     const initialSedeKey = "ibc";
     let currentSedeKey = initialSedeKey;
 
@@ -1352,7 +1463,13 @@
 
     const markersLayer = L.layerGroup().addTo(map);
     let sedeMarker = null;
-    let gymMarkers = {}; // id -> marker
+    let gymMarkers = {};
+
+    const sedeIcon = L.icon({
+      iconUrl: "pucv-logo.png",
+      iconSize: [40, 40],
+      iconAnchor: [20, 20],
+    });
 
     const defaultGymStyle = {
       radius: 7,
@@ -1370,21 +1487,11 @@
       weight: 2,
     };
 
-    const sedeIcon = L.icon({
-      iconUrl: "pucv-escudo.png",
-      iconSize: [40, 40],
-      iconAnchor: [20, 20],
-      popupAnchor: [0, -22],
-    });
-
-    // CONTROLES EXPLORAR
-    // Filtros
-const sedeSelect = document.getElementById("sede-select");
-const sedeLabel = document.getElementById("sede-label");
-const afluenciaFilter = document.getElementById("afluencia-filter");
-const maxDistanceInput = document.getElementById("max-distance");
-const gymCardsEl = document.getElementById("gym-cards");
-
+    const sedeSelect = document.getElementById("sede-select");
+    const sedeLabel = document.getElementById("sede-label");
+    const afluenciaFilter = document.getElementById("afluencia-filter");
+    const maxDistanceInput = document.getElementById("max-distance");
+    const gymCardsEl = document.getElementById("gym-cards");
 
     function afluenciaLabel(af) {
       if (af === "baja") return "Baja afluencia";
@@ -1499,7 +1606,7 @@ const gymCardsEl = document.getElementById("gym-cards");
       });
     }
 
-    // SELECCIÓN PARA COMPARAR GIMNASIOS
+    // selección para comparar
     let firstSelectedGym = null;
     let secondSelectedGym = null;
 
@@ -1529,49 +1636,6 @@ const gymCardsEl = document.getElementById("gym-cards");
         .forEach((c) => c.classList.remove("selected-compare"));
       Object.values(gymMarkers).forEach((m) => m.setStyle(defaultGymStyle));
     }
-
-    gymCardsEl.addEventListener("click", (e) => {
-      const btn = e.target.closest("button[data-action]");
-      if (!btn) return;
-      const card = btn.closest(".gym-card");
-      const gymId = card?.dataset.id;
-      if (!gymId) return;
-
-      const sede = sedes[currentSedeKey];
-      const gym = sede.gyms.find((g) => g.id === gymId);
-      if (!gym) return;
-
-      const action = btn.dataset.action;
-
-      if (action === "ver-detalle") {
-        alert(
-          `${gym.nombre}\n\nCadena: ${gym.cadena}\nDistancia: ${gym.distanciaKm.toFixed(
-            1
-          )} km\nAfluencia: ${afluenciaLabel(
-            gym.afluencia
-          )}\n\nComentario:\n${gym.comentarios}`
-        );
-        return;
-      }
-
-      if (action === "comparar") {
-        if (!firstSelectedGym) {
-          firstSelectedGym = gym;
-          btn.textContent = "Seleccionado ✓";
-          btn.disabled = true;
-          btn.style.opacity = "0.7";
-          highlightCardAndMarker(gym.id, true);
-          return;
-        }
-        if (firstSelectedGym && firstSelectedGym.id === gym.id) {
-          resetSelection();
-          return;
-        }
-        secondSelectedGym = gym;
-        highlightCardAndMarker(gym.id, true);
-        openCompare(firstSelectedGym, secondSelectedGym);
-      }
-    });
 
     // MODAL COMPARACIÓN
     const compareOverlay = document.getElementById("compare-overlay");
@@ -1637,382 +1701,78 @@ const gymCardsEl = document.getElementById("gym-cards");
       if (e.target === compareOverlay) closeCompare();
     });
 
-    // PERFIL + RUTINAS (localStorage)
-    const perfilEmail = document.getElementById("perfil-email");
-    const perfilPeso = document.getElementById("perfil-peso");
-    const perfilEstatura = document.getElementById("perfil-estatura");
-    const perfilEdad = document.getElementById("perfil-edad");
-    const perfilNivel = document.getElementById("perfil-nivel");
-    const perfilAnios = document.getElementById("perfil-anios");
-    const perfilDisp = document.getElementById("perfil-disponibilidad");
-    const perfilPreferencias = document.getElementById("perfil-preferencias");
-    const perfilObjetivos = document.getElementById("perfil-objetivos");
-    const saveProfileBtn = document.getElementById("save-profile-btn");
+    // MODAL DETALLE GIMNASIO
+    const gymDetailOverlay = document.getElementById("gym-detail-overlay");
+    const gymDetailTitle = document.getElementById("gym-detail-title");
+    const gymDetailSubtitle = document.getElementById("gym-detail-subtitle");
+    const gymDetailBody = document.getElementById("gym-detail-body");
+    const gymDetailClose = document.getElementById("gym-detail-close");
+    const gymDetailCloseBottom = document.getElementById("gym-detail-close-bottom");
 
-    const lesionesGroup = document.getElementById("perfil-lesiones-group");
-    const lesionesCheckboxes = lesionesGroup.querySelectorAll('input[type="checkbox"]');
-
-    const savedRoutinesEl = document.getElementById("saved-routines");
-    const recommendedRoutinesEl = document.getElementById("recommended-routines");
-
-    let currentUserKey = "anon";
-
-    function profileKey() {
-      return "matchgym_profile_" + currentUserKey;
-    }
-    function routinesKey() {
-      return "matchgym_routines_" + currentUserKey;
-    }
-
-    function getSelectedLesionesFromUI() {
-      return Array.from(lesionesCheckboxes)
-        .filter((cb) => cb.checked)
-        .map((cb) => cb.value);
-    }
-
-    function setSelectedLesionesFromProfile(arr) {
-      const set = new Set(arr || []);
-      lesionesCheckboxes.forEach((cb) => {
-        cb.checked = set.has(cb.value);
-      });
-    }
-
-    function loadProfile() {
-      const raw = localStorage.getItem(profileKey());
-      if (raw) {
-        try {
-          const p = JSON.parse(raw);
-          perfilPeso.value = p.peso ?? "";
-          perfilEstatura.value = p.estatura ?? "";
-          perfilEdad.value = p.edad ?? "";
-          if (p.nivel) perfilNivel.value = p.nivel;
-          perfilAnios.value = p.anios ?? "";
-          perfilDisp.value = p.disp ?? "";
-          perfilPreferencias.value = p.preferencias ?? "";
-          perfilObjetivos.value = p.objetivos ?? "";
-
-          if (Array.isArray(p.lesiones)) {
-            setSelectedLesionesFromProfile(p.lesiones);
-          } else if (typeof p.lesiones === "string" && p.lesiones.length > 0) {
-            setSelectedLesionesFromProfile(
-              p.lesiones.split(",").map((s) => s.trim())
-            );
-          }
-        } catch (e) {
-          console.warn("Perfil corrupto", e);
-        }
-      } else {
-        perfilNivel.value = "principiante";
-      }
-    }
-
-    function saveProfile() {
-      const data = {
-        peso: perfilPeso.value,
-        estatura: perfilEstatura.value,
-        edad: perfilEdad.value,
-        nivel: perfilNivel.value,
-        anios: perfilAnios.value,
-        disp: perfilDisp.value,
-        lesiones: getSelectedLesionesFromUI(),
-        preferencias: perfilPreferencias.value,
-        objetivos: perfilObjetivos.value,
-      };
-      localStorage.setItem(profileKey(), JSON.stringify(data));
-      alert("Perfil guardado 🙂");
-    }
-
-    saveProfileBtn.addEventListener("click", saveProfile);
-
-    lesionesCheckboxes.forEach((cb) =>
-      cb.addEventListener("change", () => {
-        renderRecommendedRoutines();
-      })
-    );
-
-    // RUTINAS
-    const baseDefaultRoutines = [
-      {
-        id: "own-pierna",
-        title: "Pierna",
-        nivel: "Intermedio",
-        muscleGroup: "Pierna",
-        desc: "Sentadilla (barra), peso muerto (barra) y curl de pierna sentado. Inspirada en enfoque heavy duty (pocas series muy intensas).",
-        exercises: [
-          "Sentadilla (barra)",
-          "Peso muerto (barra)",
-          "Curl de pierna sentado",
-        ],
-        origin: "propia",
-      },
-      {
-        id: "own-espalda",
-        title: "Espalda",
-        nivel: "Intermedio",
-        muscleGroup: "Espalda",
-        desc: "Remo inclinado, jalón al pecho y remo a un brazo. Pensada para combinar con tu split actual durante el semestre.",
-        exercises: ["Remo inclinado", "Jalón al pecho", "Remo a un brazo"],
-        origin: "propia",
-      },
-    ];
-
-    const recommendedRoutines = [
-      {
-        id: "juan-pierna-basica",
-        owner: "Juan",
-        carrera: "Ingeniería Civil PUCV",
-        nivel: "Principiante",
-        horario: "13:00–15:00",
-        objetivo: "Bajar grasa",
-        muscleGroup: "Pierna",
-        title: "Pierna básica",
-        desc: "Pierna — 3 ejercicios. Sentadilla en máquina, prensa y curl femoral. Ideal para retomar después de la universidad.",
-        exercises: [
-          "Sentadilla en máquina",
-          "Prensa de piernas",
-          "Curl femoral",
-        ],
-        contraindicaciones: ["rodilla"],
-      },
-      {
-        id: "carla-biceps",
-        owner: "Carla",
-        carrera: "Pedagogía en Física PUCV",
-        nivel: "Intermedio",
-        horario: "19:00–21:00",
-        objetivo: "Fuerza tren superior",
-        muscleGroup: "Brazos",
-        title: "Bíceps – 4 ejercicios",
-        desc: "Rutina de brazo para 2 días a la semana. Combina curls pesados y trabajo más controlado, siguiendo la lógica de 2 series efectivas.",
-        exercises: [
-          "Curl con barra Z",
-          "Curl martillo mancuernas",
-          "Curl concentrado",
-          "Curl en polea",
-        ],
-        contraindicaciones: [],
-      },
-      {
-        id: "alejandro-espalda",
-        owner: "Alejandro",
-        carrera: "Ingeniería en Construcción PUCV",
-        nivel: "Principiante",
-        horario: "7:00–9:00",
-        objetivo: "Ganar masa",
-        muscleGroup: "Espalda",
-        title: "Fuerza – Espalda 3 ejercicios",
-        desc: "Rutina simple de espalda para empezar: jalón al pecho, remo sentado y face pulls. Perfecta para quienes entrenan antes de clases.",
-        exercises: [
-          "Jalón al pecho",
-          "Remo sentado en polea",
-          "Face pulls",
-        ],
-        contraindicaciones: ["hombro", "lumbar"],
-      },
-    ];
-
-    let savedRoutines = [];
-
-    function loadSavedRoutines() {
-      const raw = localStorage.getItem(routinesKey());
-      if (raw) {
-        try {
-          savedRoutines = JSON.parse(raw);
-        } catch (e) {
-          console.warn("Routines corruptas", e);
-          savedRoutines = [...baseDefaultRoutines];
-        }
-      } else {
-        savedRoutines = [...baseDefaultRoutines];
-      }
-      renderSavedRoutines();
-      renderRecommendedRoutines();
-    }
-
-    function saveSavedRoutines() {
-      localStorage.setItem(routinesKey(), JSON.stringify(savedRoutines));
-    }
-
-    function renderSavedRoutines() {
-      savedRoutinesEl.innerHTML = "";
-      if (!savedRoutines.length) {
-        savedRoutinesEl.innerHTML =
-          '<p style="font-size:12px;color:var(--text-soft);">Aún no tienes rutinas guardadas. Adopta una rutina recomendada y aparecerá aquí.</p>';
-        return;
-      }
-
-      savedRoutines.forEach((r) => {
-        const card = document.createElement("article");
-        card.className = "routine-card";
-        card.innerHTML = `
-          <div>
-            <div class="routine-title">${r.title}</div>
-            <span class="routine-level">${r.nivel.toUpperCase()}</span>
-          </div>
-          <div class="routine-meta">
-            Grupo muscular: ${r.muscleGroup} ${
-          r.origin === "adoptada" ? `· Adoptada de ${r.adoptedFrom}` : ""
-        }
-          </div>
-          <p class="routine-desc">${r.desc}</p>
-          <ul class="routine-ex-list">
-            ${r.exercises.map((ex) => `<li>${ex}</li>`).join("")}
-          </ul>
-        `;
-        savedRoutinesEl.appendChild(card);
-      });
-    }
-
-    function renderRecommendedRoutines() {
-      recommendedRoutinesEl.innerHTML = "";
-      const lesionesSel = getSelectedLesionesFromUI();
-
-      const visibles = recommendedRoutines.filter((r) => {
-        if (!r.contraindicaciones || r.contraindicaciones.length === 0)
-          return true;
-        if (lesionesSel.length === 0) return true;
-        return !r.contraindicaciones.some((l) => lesionesSel.includes(l));
-      });
-
-      if (!visibles.length) {
-        recommendedRoutinesEl.innerHTML =
-          '<p style="font-size:12px;color:var(--text-soft);">Con las lesiones seleccionadas no hay rutinas sugeridas. Prueba desmarcar alguna lesión o agrega nuevas rutinas más adelante.</p>';
-        return;
-      }
-
-      visibles.forEach((r) => {
-        const card = document.createElement("article");
-        card.className = "user-routine-card";
-        card.dataset.id = r.id;
-        card.innerHTML = `
-          <div class="user-header">
-            <div class="avatar">${r.owner[0]}</div>
-            <div class="user-meta">
-              <span class="user-name-card">${r.owner}</span>
-              <span class="user-degree">${r.carrera}</span>
-            </div>
-          </div>
-          <div class="badge-row">
-            <span class="${
-              r.nivel === "Principiante"
-                ? "badge-level-basic"
-                : "badge-level-intermediate"
-            }">${r.nivel.toUpperCase()}</span>
-            <span class="badge-chip">Horario: ${r.horario}</span>
-            <span class="badge-chip">Objetivo: ${r.objetivo}</span>
-            <span class="badge-chip">Grupo: ${r.muscleGroup}</span>
-          </div>
-          <div class="user-routine-title">${r.title}</div>
-          <p class="user-routine-desc">${r.desc}</p>
-          <div class="routine-footer">
-            <button class="btn-ghost" data-action="detalle">Ver detalles</button>
-            <button class="btn-primary" data-action="adoptar">Adoptar esta rutina</button>
-          </div>
-        `;
-        recommendedRoutinesEl.appendChild(card);
-      });
-    }
-
-    function adoptRoutine(routineId) {
-      const r = recommendedRoutines.find((x) => x.id === routineId);
-      if (!r) return;
-      const idx = savedRoutines.findIndex(
-        (x) => x.muscleGroup === r.muscleGroup
-      );
-      const newEntry = {
-        id: "adopted-" + r.id,
-        title: r.title,
-        nivel: r.nivel,
-        muscleGroup: r.muscleGroup,
-        desc: r.desc,
-        exercises: r.exercises,
-        origin: "adoptada",
-        adoptedFrom: r.owner,
-      };
-      if (idx >= 0) {
-        savedRoutines[idx] = newEntry;
-      } else {
-        savedRoutines.push(newEntry);
-      }
-      saveSavedRoutines();
-      renderSavedRoutines();
-      alert(
-        `Rutina "${r.title}" adoptada para ${r.muscleGroup}. Si ya tenías una rutina de ese grupo, fue reemplazada.`
-      );
-    }
-
-    // MODAL RUTINA DETALLE
-    const routineOverlay = document.getElementById("routine-overlay");
-    const routineTitleEl = document.getElementById("routine-modal-title");
-    const routineSubtitleEl = document.getElementById("routine-modal-subtitle");
-    const routineBodyEl = document.getElementById("routine-modal-body");
-    const routineClose = document.getElementById("routine-close");
-    const routineCloseBottom = document.getElementById("routine-close-bottom");
-
-    function openRoutineModal(r) {
-      routineTitleEl.textContent = r.title;
-      routineSubtitleEl.textContent = `${r.owner} · ${r.carrera} · ${r.nivel} · Grupo: ${r.muscleGroup}`;
-      routineBodyEl.innerHTML = `
-        <p style="margin-bottom:8px;"><strong>Horario típico:</strong> ${r.horario}</p>
-        <p style="margin-bottom:8px;"><strong>Objetivo principal:</strong> ${r.objetivo}</p>
-        <p style="margin-bottom:8px;"><strong>Descripción:</strong><br>${r.desc}</p>
-        <p><strong>Ejercicios:</strong></p>
-        <ul style="margin-left:16px;margin-top:4px;">
-          ${r.exercises.map((ex) => `<li>${ex}</li>`).join("")}
-        </ul>
+    function openGymDetail(gym, sedeNombre) {
+      gymDetailTitle.textContent = gym.nombre;
+      gymDetailSubtitle.textContent = `${gym.cadena} · ${gym.distanciaKm.toFixed(
+        1
+      )} km desde ${sedeNombre}`;
+      gymDetailBody.innerHTML = `
+        <p><strong>Afluencia:</strong> ${afluenciaLabel(gym.afluencia)}</p>
+        <p><strong>Horario típico con más gente:</strong> ${gym.horarioPeak}</p>
+        <p style="margin-top:6px;">${gym.comentarios}</p>
+        <p style="margin-top:6px;"><strong>Plan mensual:</strong> ${formatoPrecio(
+          gym.precio
+        )} &nbsp;·&nbsp; <strong>Matrícula:</strong> ${formatoPrecio(
+        gym.matricula
+      )}</p>
       `;
-      routineOverlay.hidden = false;
+      gymDetailOverlay.hidden = false;
     }
 
-    function closeRoutineModal() {
-      routineOverlay.hidden = true;
+    function closeGymDetail() {
+      gymDetailOverlay.hidden = true;
     }
 
-    routineClose.addEventListener("click", closeRoutineModal);
-    routineCloseBottom.addEventListener("click", closeRoutineModal);
-    routineOverlay.addEventListener("click", (e) => {
-      if (e.target === routineOverlay) closeRoutineModal();
+    gymDetailClose.addEventListener("click", closeGymDetail);
+    gymDetailCloseBottom.addEventListener("click", closeGymDetail);
+    gymDetailOverlay.addEventListener("click", (e) => {
+      if (e.target === gymDetailOverlay) closeGymDetail();
     });
 
-    recommendedRoutinesEl.addEventListener("click", (e) => {
+    // Eventos tarjetas gimnasios
+    gymCardsEl.addEventListener("click", (e) => {
       const btn = e.target.closest("button[data-action]");
       if (!btn) return;
-      const card = btn.closest(".user-routine-card");
-      if (!card) return;
-      const id = card.dataset.id;
-      const r = recommendedRoutines.find((x) => x.id === id);
-      if (!r) return;
+      const card = btn.closest(".gym-card");
+      const gymId = card?.dataset.id;
+      if (!gymId) return;
+
+      const sede = sedes[currentSedeKey];
+      const gym = sede.gyms.find((g) => g.id === gymId);
+      if (!gym) return;
 
       const action = btn.dataset.action;
-      if (action === "detalle") {
-        openRoutineModal(r);
-      } else if (action === "adoptar") {
-        adoptRoutine(id);
+
+      if (action === "ver-detalle") {
+        openGymDetail(gym, sede.nombre);
+        return;
       }
-    });
 
-    // AUTH STATE
-    auth.onAuthStateChanged((user) => {
-      if (user && user.email && user.email.endsWith("@mail.pucv.cl")) {
-        loginOverlay.hidden = true;
-        const displayName = user.displayName || user.email;
-        userNameLabel.textContent = displayName;
-        userAvatar.textContent = (displayName[0] || "?").toUpperCase();
-        signOutBtn.hidden = false;
-
-        currentUserKey = user.uid || user.email;
-        perfilEmail.value = user.email;
-      } else {
-        loginOverlay.hidden = false;
-        userNameLabel.textContent = "Sesión no iniciada";
-        userAvatar.textContent = "--";
-        signOutBtn.hidden = true;
-
-        currentUserKey = "anon";
-        perfilEmail.value = "";
+      if (action === "comparar") {
+        if (!firstSelectedGym) {
+          firstSelectedGym = gym;
+          btn.textContent = "Seleccionado ✓";
+          btn.disabled = true;
+          btn.style.opacity = "0.7";
+          highlightCardAndMarker(gym.id, true);
+          return;
+        }
+        if (firstSelectedGym && firstSelectedGym.id === gym.id) {
+          resetSelection();
+          return;
+        }
+        secondSelectedGym = gym;
+        highlightCardAndMarker(gym.id, true);
+        openCompare(firstSelectedGym, secondSelectedGym);
       }
-      loadProfile();
-      loadSavedRoutines();
     });
 
     // Filtros mapa
@@ -2024,8 +1784,10 @@ const gymCardsEl = document.getElementById("gym-cards");
     afluenciaFilter.addEventListener("change", renderGyms);
     maxDistanceInput.addEventListener("change", renderGyms);
 
-    // Inicial
+    // Inicializaciones
     renderGyms();
+    renderMyRoutines();
+    renderRecommendedRoutines();
   </script>
 </body>
 </html>
