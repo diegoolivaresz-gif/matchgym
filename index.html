@@ -338,3 +338,755 @@
     }
     .login-card {
       width: 100%;
+      max-width: 430px;
+      background: #0b1020;
+      color: #f9fafb;
+      border-radius: 18px;
+      padding: 22px 22px 18px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.55);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .login-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: rgba(37, 99, 235, 0.15);
+      color: #bfdbfe;
+      margin-bottom: 10px;
+    }
+    .login-badge span {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #22c55e;
+    }
+    .login-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .login-sub {
+      font-size: 0.9rem;
+      color: #d1d5db;
+      margin-bottom: 12px;
+    }
+    .login-btn {
+      margin-top: 8px;
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #2563eb, #06b6d4);
+      color: white;
+    }
+    .login-small {
+      font-size: 0.78rem;
+      color: #9ca3af;
+      margin-top: 8px;
+    }
+    #msg-error {
+      margin-top: 6px;
+      font-size: 0.8rem;
+      color: #fca5a5;
+    }
+
+    #app-container {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease-out;
+    }
+    #app-container.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #map {
+      height: 320px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      margin-bottom: 14px;
+    }
+
+    @media (max-width: 720px) {
+      header { padding: 10px 16px; }
+      .app-shell { padding: 0 14px 30px; }
+      nav { gap: 10px; font-size: 13px; }
+      .section-header { flex-direction: column; align-items: flex-start; }
+      #map { height: 260px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Login overlay -->
+  <div id="login-overlay">
+    <div class="login-card">
+      <div class="login-badge"><span></span> Proyecto MatchGym · PUCV</div>
+      <div class="login-title">MatchGym PUCV</div>
+      <div class="login-sub">
+        Compara gimnasios, planes y beneficios cercanos a las sedes PUCV.  
+        Acceso exclusivo con correo institucional <strong>@mail.pucv.cl</strong>.
+      </div>
+      <button id="btn-login" class="login-btn">
+        Ingresar con Google PUCV
+      </button>
+      <div class="login-small">
+        Usamos tu correo solo para autenticarte y personalizar tus rutinas. No se comparten datos externos.
+      </div>
+      <div id="msg-error" style="display:none;"></div>
+    </div>
+  </div>
+
+  <!-- App real (se muestra solo si está logueado) -->
+  <div id="app-container">
+    <div class="browser-chrome">
+      <div class="traffic-lights">
+        <div class="dot red"></div>
+        <div class="dot yellow"></div>
+        <div class="dot green"></div>
+      </div>
+      <div class="address-bar">matchgym.pucv.cl</div>
+    </div>
+
+    <header>
+      <div class="logo">
+        <div class="logo-mark">MG</div>
+        <span>MatchGym · PUCV</span>
+      </div>
+      <nav>
+        <button data-view="explorar" class="active">Explorar gimnasios</button>
+        <button data-view="precios">Precios</button>
+        <button data-view="rutinas">Mis rutinas</button>
+        <button data-view="perfil">Mi perfil</button>
+      </nav>
+      <div class="avatar" id="avatar-iniciales" title="Perfil PUCV">PU</div>
+    </header>
+
+    <main class="app-shell">
+      <!-- EXPLORAR GIMNASIOS -->
+      <section id="view-explorar" class="view active">
+        <div class="section-header">
+          <div>
+            <h1>Explorar gimnasios</h1>
+            <div class="subtle">
+              SEDE: Edificio Isabel Brown Caces PUCV · Av. Brasil 2241, Valparaíso
+            </div>
+          </div>
+          <div class="filters">
+            <label>
+              Afluencia:
+              <select id="filter-afluencia">
+                <option value="todos">Todos</option>
+                <option value="poco">Poco concurrido</option>
+                <option value="moderado">Moderado</option>
+                <option value="alto">Muy concurrido</option>
+              </select>
+            </label>
+            <label>
+              Máx. distancia (km):
+              <input type="number" id="filter-distancia" min="0" step="0.5" value="3" />
+            </label>
+          </div>
+        </div>
+
+        <!-- Mapa interactivo -->
+        <div id="map"></div>
+
+        <div id="gym-list" class="grid"></div>
+      </section>
+
+      <!-- VER PRECIOS -->
+      <section id="view-precios" class="view">
+        <div class="section-header">
+          <div>
+            <h1>Ver precios</h1>
+            <div class="subtle">Compara planes mensuales y trimestrales de los gimnasios cercanos a tu sede.</div>
+          </div>
+          <div class="filters">
+            <label>
+              Plan:
+              <select id="plan-select">
+                <option value="mensual">Mensual</option>
+                <option value="trimestral">Trimestral</option>
+              </select>
+            </label>
+            <label>
+              Ordenar por:
+              <select id="sort-precios">
+                <option value="precio">Precio</option>
+                <option value="distancia">Distancia</option>
+                <option value="afluencia">Afluencia</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <div id="precios-list" class="grid"></div>
+      </section>
+
+      <!-- MIS RUTINAS -->
+      <section id="view-rutinas" class="view">
+        <div class="section-header">
+          <div>
+            <h1>Mis rutinas</h1>
+            <div class="subtle">Registra y organiza tus rutinas. Adopta rutinas recomendadas de otros estudiantes PUCV.</div>
+          </div>
+          <button class="btn btn-ghost" id="btn-nueva-rutina">+ Nueva rutina</button>
+        </div>
+
+        <h2>Mis rutinas guardadas</h2>
+        <div id="rutinas-personales" class="grid" style="margin-bottom: 24px;"></div>
+
+        <h2>Rutinas recomendadas</h2>
+        <div id="rutinas-recomendadas" class="grid"></div>
+      </section>
+
+      <!-- PERFIL -->
+      <section id="view-perfil" class="view">
+        <div class="section-header">
+          <div>
+            <h1>Mi perfil</h1>
+            <div class="subtle">Tu perfil se vincula a tu correo institucional PUCV para personalizar recomendaciones.</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="field-grid">
+            <div class="field">
+              <label>Correo institucional PUCV</label>
+              <input type="email" id="perfil-email" placeholder="nombre.apellido@mail.pucv.cl" />
+            </div>
+            <div class="field">
+              <label>Peso (kg)</label>
+              <input type="number" id="perfil-peso" />
+            </div>
+            <div class="field">
+              <label>Estatura (cm)</label>
+              <input type="number" id="perfil-estatura" />
+            </div>
+            <div class="field">
+              <label>Edad</label>
+              <input type="number" id="perfil-edad" />
+            </div>
+            <div class="field">
+              <label>Nivel</label>
+              <select id="perfil-nivel">
+                <option value="principiante">Principiante</option>
+                <option value="intermedio">Intermedio</option>
+                <option value="avanzado">Avanzado</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Años de entrenamiento</label>
+              <input type="number" id="perfil-anios" />
+            </div>
+            <div class="field">
+              <label>Disponibilidad semanal (días)</label>
+              <input type="number" id="perfil-disponibilidad" />
+            </div>
+            <div class="field">
+              <label>Condiciones / lesiones relevantes</label>
+              <input type="text" id="perfil-condiciones" placeholder="Ej: Lesión de rodilla" />
+            </div>
+            <div class="field">
+              <label>Preferencias de gimnasio</label>
+              <input type="text" id="perfil-preferencias" placeholder="Cerca de la sede, precio, baja afluencia" />
+            </div>
+            <div class="field" style="grid-column: 1/-1;">
+              <label>Objetivos</label>
+              <textarea id="perfil-objetivos" rows="2" placeholder="Ej: Ganar fuerza, hipertrofia"></textarea>
+            </div>
+          </div>
+          <div style="margin-top: 16px; display: flex; justify-content: space-between; align-items: center; gap: 12px;">
+            <div class="subtle">En futuras versiones podrás controlar qué datos se sincronizan en la plataforma.</div>
+            <button class="btn btn-primary" id="btn-guardar-perfil">Guardar perfil</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Firebase SDK (compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+  <!-- Leaflet JS -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+
+  <script>
+    // --------- Firebase (login institucional) ----------
+    const firebaseConfig = {
+      apiKey: "AIzaSyCC5XJy3oqmDoTKgDMefB1zjp7XAFgTxWo",
+      authDomain: "matchgym-e7df0.firebaseapp.com",
+      projectId: "matchgym-e7df0",
+      storageBucket: "matchgym-e7df0.firebasestorage.app",
+      messagingSenderId: "766710296254",
+      appId: "1:766710296254:web:a01ca1d2ee5d362b45b8ef",
+      measurementId: "G-D4VWL0H0K9"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const DOMINIO_PERMITIDO = "@mail.pucv.cl";
+
+    const loginOverlay = document.getElementById("login-overlay");
+    const appContainer = document.getElementById("app-container");
+    const btnLogin = document.getElementById("btn-login");
+    const msgError = document.getElementById("msg-error");
+    const avatarIniciales = document.getElementById("avatar-iniciales");
+    const perfilEmailInput = document.getElementById("perfil-email");
+
+    function mostrarError(texto) {
+      msgError.textContent = texto;
+      msgError.style.display = "block";
+    }
+
+    function inicialesDesdeNombre(nombre) {
+      if (!nombre) return "PU";
+      const partes = nombre.trim().split(" ");
+      if (partes.length === 1) return partes[0].substring(0,2).toUpperCase();
+      return (partes[0][0] + partes[partes.length-1][0]).toUpperCase();
+    }
+
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        const email = user.email || "";
+        if (!email.endsWith(DOMINIO_PERMITIDO)) {
+          auth.signOut();
+          mostrarError("Solo se permite acceso con correos " + DOMINIO_PERMITIDO);
+          return;
+        }
+
+        loginOverlay.style.display = "none";
+        appContainer.classList.add("active");
+
+        const nombre = user.displayName || email;
+        avatarIniciales.textContent = inicialesDesdeNombre(nombre);
+        if (perfilEmailInput) perfilEmailInput.value = email;
+      } else {
+        appContainer.classList.remove("active");
+        loginOverlay.style.display = "flex";
+      }
+    });
+
+    btnLogin.addEventListener("click", async () => {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      try {
+        await auth.signInWithPopup(provider);
+      } catch (err) {
+        console.error(err);
+        mostrarError("No se pudo iniciar sesión. Intenta nuevamente.");
+      }
+    });
+
+    // --------- Datos simulados (gimnasios, rutinas, perfil) ----------
+    const gyms = [
+      { id: "a", nombre: "PowerFit Brasil", direccion: "Av. Brasil 2100", distanciaKm: 0.4, afluencia: "poco", pico: "18–20 h", precioMensual: 19990, precioTrimestral: 54990, lat: -33.0445, lng: -71.6200 },
+      { id: "b", nombre: "Gym Valpo Center", direccion: "Calle Edwards 250", distanciaKm: 0.9, afluencia: "moderado", pico: "19–21 h", precioMensual: 24990, precioTrimestral: 69990, lat: -33.0432, lng: -71.6285 },
+      { id: "c", nombre: "Estación Fitness", direccion: "Av. España 1350", distanciaKm: 1.5, afluencia: "poco", pico: "17–19 h", precioMensual: 21990, precioTrimestral: 59990, lat: -33.0365, lng: -71.6220 },
+      { id: "d", nombre: "Costa Gym", direccion: "Errázuriz 1450", distanciaKm: 2.2, afluencia: "alto", pico: "18–22 h", precioMensual: 17990, precioTrimestral: 49990, lat: -33.0402, lng: -71.6110 },
+    ];
+
+    let rutinasPersonales = [
+      {
+        id: "r1",
+        nombre: "Pierna",
+        nivel: "intermedio",
+        descripcion: "Sentadilla (barra), Peso muerto (barra), Curl de pierna sentado",
+        ejercicios: [
+          { nombre: "Sentadilla (barra)", series: 3, repeticiones: "8-10" },
+          { nombre: "Peso muerto (barra)", series: 3, repeticiones: "6-8" },
+          { nombre: "Curl de pierna sentado", series: 3, repeticiones: "10-12" },
+        ],
+      },
+      {
+        id: "r2",
+        nombre: "Espalda",
+        nivel: "intermedio",
+        descripcion: "Remo inclinado, Jalón al pecho, Remo a un brazo",
+        ejercicios: [
+          { nombre: "Remo inclinado (barra)", series: 3, repeticiones: "8-10" },
+          { nombre: "Jalón al pecho (polea)", series: 3, repeticiones: "10-12" },
+          { nombre: "Remo a un brazo (mancuerna)", series: 3, repeticiones: "10-12" },
+        ],
+      },
+    ];
+
+    const rutinasRecomendadas = [
+      {
+        id: "rr1",
+        autor: "Juan",
+        carrera: "Ingeniería Civil PUCV",
+        nivelAutor: "principiante",
+        etiquetaNivel: "PRINCIPIANTE",
+        nombre: "Pierna básica",
+        descripcion: "Pierna — 3 ejercicios",
+        ejercicios: [
+          { nombre: "Prensa de piernas", series: 3, repeticiones: "12" },
+          { nombre: "Curl de pierna tumbado", series: 3, repeticiones: "12" },
+          { nombre: "Elevación de talones de pie", series: 3, repeticiones: "15" },
+        ],
+      },
+      {
+        id: "rr2",
+        autor: "Carla",
+        carrera: "Ingeniería Comercial PUCV",
+        nivelAutor: "intermedio",
+        etiquetaNivel: "INTERMEDIO",
+        nombre: "Bíceps – 4 ejercicios",
+        descripcion: "Rutina de brazo para 2 días a la semana",
+        ejercicios: [
+          { nombre: "Curl barra Z", series: 3, repeticiones: "8-10" },
+          { nombre: "Curl mancuerna alterno", series: 3, repeticiones: "10-12" },
+          { nombre: "Curl martillo", series: 3, repeticiones: "10-12" },
+          { nombre: "Curl en banco inclinado", series: 2, repeticiones: "12-15" },
+        ],
+      },
+      {
+        id: "rr3",
+        autor: "Alejandro",
+        carrera: "Ingeniería en Construcción PUCV",
+        nivelAutor: "principiante",
+        etiquetaNivel: "PRINCIPIANTE",
+        nombre: "Fuerza – Espalda 3 ejercicios",
+        descripcion: "Rutina simple de espalda para empezar",
+        ejercicios: [
+          { nombre: "Jalón al pecho", series: 3, repeticiones: "10-12" },
+          { nombre: "Remo en polea", series: 3, repeticiones: "10-12" },
+          { nombre: "Pull over en polea", series: 2, repeticiones: "12-15" },
+        ],
+      },
+    ];
+
+    const perfil = {
+      email: "",
+      peso: 80,
+      estatura: 175,
+      edad: 22,
+      nivel: "principiante",
+      anios: 1,
+      disponibilidad: 3,
+      condiciones: "Lesiones de rodilla leves",
+      preferencias: "Cerca de la sede, precio, poca afluencia",
+      objetivos: "Ganar fuerza, hipertrofia",
+    };
+
+    // ------ Navegación SPA ------
+    const navButtons = document.querySelectorAll("nav button");
+    const views = document.querySelectorAll(".view");
+
+    navButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const view = btn.getAttribute("data-view");
+        navButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        views.forEach(v => v.classList.remove("active"));
+        document.getElementById("view-" + view).classList.add("active");
+      });
+    });
+
+    // ------ Explorar + mapa ------
+    const gymListEl = document.getElementById("gym-list");
+    const filterAfluencia = document.getElementById("filter-afluencia");
+    const filterDistancia = document.getElementById("filter-distancia");
+
+    function afluenciaLabel(a) {
+      if (a === "poco") return "Poco concurrido";
+      if (a === "moderado") return "Moderado";
+      return "Muy concurrido";
+    }
+    function afluenciaColor(a) {
+      if (a === "poco") return "green";
+      if (a === "moderado") return "yellow";
+      return "red";
+    }
+
+    // mapa Leaflet
+    const map = L.map("map").setView([-33.0445, -71.6230], 14);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: "&copy; OpenStreetMap",
+    }).addTo(map);
+    const gymMarkers = L.layerGroup().addTo(map);
+
+    function renderGyms() {
+      const af = filterAfluencia.value;
+      const maxDist = parseFloat(filterDistancia.value || "999");
+
+      gymListEl.innerHTML = "";
+      gymMarkers.clearLayers();
+
+      const visibles = gyms
+        .filter(g => (af === "todos" || g.afluencia === af))
+        .filter(g => g.distanciaKm <= maxDist);
+
+      visibles.forEach(g => {
+        const card = document.createElement("article");
+        card.className = "card";
+        card.innerHTML = `
+          <h3>${g.nombre}</h3>
+          <div class="subtle">${g.direccion} · ${g.distanciaKm.toFixed(1)} km desde tu sede</div>
+          <div class="status">
+            <span class="status-dot ${afluenciaColor(g.afluencia)}"></span>
+            <span>${afluenciaLabel(g.afluencia)}</span>
+          </div>
+          <div class="subtle">Horario con más afluencia: ${g.pico}</div>
+        `;
+        gymListEl.appendChild(card);
+
+        const m = L.marker([g.lat, g.lng]).bindPopup(
+          "<strong>" + g.nombre + "</strong><br>" +
+          g.direccion + "<br>" +
+          g.distanciaKm.toFixed(1) + " km desde la sede"
+        );
+        gymMarkers.addLayer(m);
+      });
+
+      if (visibles.length > 0) {
+        const bounds = L.latLngBounds(visibles.map(g => [g.lat, g.lng]));
+        map.fitBounds(bounds, { padding: [20, 20] });
+      }
+    }
+
+    filterAfluencia.addEventListener("change", renderGyms);
+    filterDistancia.addEventListener("change", renderGyms);
+
+    // ------ Ver precios ------
+    const preciosListEl = document.getElementById("precios-list");
+    const planSelect = document.getElementById("plan-select");
+    const sortPrecios = document.getElementById("sort-precios");
+
+    function afluenciaOrden(a) {
+      if (a === "poco") return 1;
+      if (a === "moderado") return 2;
+      return 3;
+    }
+
+    function renderPrecios() {
+      const plan = planSelect.value;
+      const sortBy = sortPrecios.value;
+
+      const sorted = [...gyms].sort((a, b) => {
+        if (sortBy === "precio") {
+          const pa = plan === "mensual" ? a.precioMensual : a.precioTrimestral;
+          const pb = plan === "mensual" ? b.precioMensual : b.precioTrimestral;
+          return pa - pb;
+        }
+        if (sortBy === "distancia") return a.distanciaKm - b.distanciaKm;
+        if (sortBy === "afluencia") return afluenciaOrden(a.afluencia) - afluenciaOrden(b.afluencia);
+        return 0;
+      });
+
+      preciosListEl.innerHTML = "";
+      sorted.forEach(g => {
+        const precio = plan === "mensual" ? g.precioMensual : g.precioTrimestral;
+        const card = document.createElement("article");
+        card.className = "card";
+        card.innerHTML = `
+          <h3>${g.nombre}</h3>
+          <div class="subtle">${g.direccion} · ${g.distanciaKm.toFixed(1)} km</div>
+          <p style="margin:8px 0 4px;"><strong>$${precio.toLocaleString("es-CL")} / ${plan}</strong></p>
+          <div class="subtle">Afluencia: ${afluenciaLabel(g.afluencia)}</div>
+          <div style="margin-top:10px; display:flex; gap:8px;">
+            <button class="btn btn-primary">Comparar</button>
+            <button class="btn btn-ghost">Ver detalles</button>
+          </div>
+        `;
+        preciosListEl.appendChild(card);
+      });
+    }
+
+    planSelect.addEventListener("change", renderPrecios);
+    sortPrecios.addEventListener("change", renderPrecios);
+
+    // ------ Rutinas ------
+    const rutinasPersonalesEl = document.getElementById("rutinas-personales");
+    const rutinasRecomendadasEl = document.getElementById("rutinas-recomendadas");
+    const btnNuevaRutina = document.getElementById("btn-nueva-rutina");
+
+    function renderRutinaCard(r, esPersonal = true) {
+      const card = document.createElement("article");
+      card.className = "card";
+      card.dataset.rutinaId = r.id;
+      card.innerHTML = esPersonal
+        ? `
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
+            <div>
+              <h3>${r.nombre}</h3>
+              <div class="subtle">${r.descripcion}</div>
+              <span class="badge-level">${r.nivel.toUpperCase()}</span>
+            </div>
+          </div>
+          <div class="routine-actions">
+            <button class="btn btn-primary" data-action="empezar">Empezar rutina</button>
+            <button class="btn btn-ghost" data-action="editar">Editar</button>
+          </div>
+          <div class="routine-details" hidden></div>
+        `
+        : `
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
+            <div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <div class="avatar" style="width:30px;height:30px;font-size:12px;">${r.autor[0]}</div>
+                <div>
+                  <strong>${r.autor}</strong>
+                  <div class="subtle">${r.carrera}</div>
+                </div>
+              </div>
+              <div style="margin-top:8px;">
+                <span class="badge-level">${r.etiquetaNivel}</span>
+              </div>
+              <div style="margin-top:8px; font-size:13px;"><strong>${r.nombre}</strong></div>
+              <div class="subtle">${r.descripcion}</div>
+            </div>
+          </div>
+          <div class="routine-actions">
+            <button class="btn btn-ghost" data-action="ver">Ver detalles</button>
+            <button class="btn btn-primary" data-action="adoptar">Adoptar esta rutina</button>
+          </div>
+          <div class="routine-details" hidden></div>
+        `;
+
+      card.addEventListener("click", e => {
+        const actionBtn = e.target.closest("button[data-action]");
+        if (!actionBtn) return;
+        const action = actionBtn.dataset.action;
+        const details = card.querySelector(".routine-details");
+
+        if (action === "empezar" || action === "ver") {
+          if (details.hasAttribute("hidden")) {
+            const ejercicios = r.ejercicios
+              .map(ej => `
+                <tr>
+                  <td>${ej.nombre}</td>
+                  <td>${ej.series}</td>
+                  <td>${ej.repeticiones}</td>
+                </tr>
+              `)
+              .join("");
+            details.innerHTML = `
+              <div class="subtle">Ejercicios de la rutina:</div>
+              <table class="table-mini">
+                <thead>
+                  <tr><th>Ejercicio</th><th>Series</th><th>Reps</th></tr>
+                </thead>
+                <tbody>${ejercicios}</tbody>
+              </table>
+            `;
+            details.removeAttribute("hidden");
+          } else {
+            details.setAttribute("hidden", "true");
+          }
+        }
+
+        if (action === "adoptar") {
+          const nueva = {
+            id: "r" + (rutinasPersonales.length + 1),
+            nombre: r.nombre,
+            nivel: r.nivelAutor,
+            descripcion: r.descripcion,
+            ejercicios: r.ejercicios,
+          };
+          rutinasPersonales.push(nueva);
+          renderRutinasPersonales();
+          alert('Rutina adoptada en "Mis rutinas".');
+        }
+
+        if (action === "editar") {
+          alert("En una versión futura aquí podrías editar la rutina. En el prototipo dejamos solo este mensaje.");
+        }
+      });
+
+      return card;
+    }
+
+    function renderRutinasPersonales() {
+      rutinasPersonalesEl.innerHTML = "";
+      rutinasPersonales.forEach(r => {
+        rutinasPersonalesEl.appendChild(renderRutinaCard(r, true));
+      });
+    }
+
+    function renderRutinasRecomendadas() {
+      rutinasRecomendadasEl.innerHTML = "";
+      rutinasRecomendadas.forEach(r => {
+        rutinasRecomendadasEl.appendChild(renderRutinaCard(r, false));
+      });
+    }
+
+    btnNuevaRutina.addEventListener("click", () => {
+      const nombre = prompt("Nombre de la nueva rutina:");
+      if (!nombre) return;
+      const descripcion = prompt("Descripción breve (ejercicios principales):");
+      rutinasPersonales.push({
+        id: "r" + (rutinasPersonales.length + 1),
+        nombre,
+        nivel: "personalizada",
+        descripcion: descripcion || "Rutina personalizada",
+        ejercicios: [],
+      });
+      renderRutinasPersonales();
+    });
+
+    // ------ Perfil ------
+    const perfilPeso = document.getElementById("perfil-peso");
+    const perfilEstatura = document.getElementById("perfil-estatura");
+    const perfilEdad = document.getElementById("perfil-edad");
+    const perfilNivel = document.getElementById("perfil-nivel");
+    const perfilAnios = document.getElementById("perfil-anios");
+    const perfilDisp = document.getElementById("perfil-disponibilidad");
+    const perfilCond = document.getElementById("perfil-condiciones");
+    const perfilPref = document.getElementById("perfil-preferencias");
+    const perfilObj = document.getElementById("perfil-objetivos");
+    const btnGuardarPerfil = document.getElementById("btn-guardar-perfil");
+
+    function cargarPerfil() {
+      perfilEmailInput.value = perfil.email || perfilEmailInput.value;
+      perfilPeso.value = perfil.peso;
+      perfilEstatura.value = perfil.estatura;
+      perfilEdad.value = perfil.edad;
+      perfilNivel.value = perfil.nivel;
+      perfilAnios.value = perfil.anios;
+      perfilDisp.value = perfil.disponibilidad;
+      perfilCond.value = perfil.condiciones;
+      perfilPref.value = perfil.preferencias;
+      perfilObj.value = perfil.objetivos;
+    }
+
+    btnGuardarPerfil.addEventListener("click", () => {
+      perfil.email = perfilEmailInput.value;
+      perfil.peso = Number(perfilPeso.value);
+      perfil.estatura = Number(perfilEstatura.value);
+      perfil.edad = Number(perfilEdad.value);
+      perfil.nivel = perfilNivel.value;
+      perfil.anios = Number(perfilAnios.value);
+      perfil.disponibilidad = Number(perfilDisp.value);
+      perfil.condiciones = perfilCond.value;
+      perfil.preferencias = perfilPref.value;
+      perfil.objetivos = perfilObj.value;
+      alert("Perfil actualizado en el prototipo (datos simulados).");
+    });
+
+    // ------ Inicialización ------
+    renderGyms();
+    renderPrecios();
+    renderRutinasPersonales();
+    renderRutinasRecomendadas();
+    cargarPerfil();
+  </script>
+</body>
+</html>
