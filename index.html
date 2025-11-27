@@ -69,12 +69,12 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
 
     .brand-logo {
-      width: 40px;
-      height: 40px;
+      width: 56px;
+      height: 56px;
       border-radius: 999px;
       background: rgba(15, 23, 42, 0.95);
       display: flex;
@@ -91,7 +91,7 @@
     }
 
     .brand-text h1 {
-      font-size: 18px;
+      font-size: 22px;
       font-weight: 700;
       letter-spacing: 0.03em;
       display: flex;
@@ -115,7 +115,7 @@
     }
 
     .pucv-logo-wrapper img {
-      height: 26px;
+      height: 32px;
       width: auto;
     }
 
@@ -389,7 +389,7 @@
 
     .gym-price strong { font-size: 13px; }
 
-    /* Modal comparación */
+    /* Modal genérico */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -504,10 +504,10 @@
     }
 
     .login-card {
-      width: min(380px, 92vw);
+      width: min(420px, 92vw);
       background: rgba(15, 23, 42, 0.96);
       border-radius: 24px;
-      padding: 20px 20px 18px;
+      padding: 24px 22px 20px;
       border: 1px solid rgba(148, 163, 184, 0.45);
       box-shadow: 0 26px 80px rgba(15, 23, 42, 0.95);
     }
@@ -515,12 +515,18 @@
     .login-title {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 8px;
+      gap: 14px;
+      margin-bottom: 10px;
     }
 
-    .login-title h2 { font-size: 18px; }
+    .login-title h2 { font-size: 22px; }
     .login-title span { font-size: 11px; color: var(--text-soft); }
+
+    /* logo más grande solo en login */
+    .login-card .brand-logo {
+      width: 72px;
+      height: 72px;
+    }
 
     .login-body p {
       font-size: 12px;
@@ -541,7 +547,7 @@
     .google-btn {
       width: 100%;
       margin-top: 6px;
-      padding: 8px 10px;
+      padding: 10px 10px;
       border-radius: 999px;
       background: linear-gradient(135deg, #f97316, #22c55e);
       color: #0b1120;
@@ -637,6 +643,29 @@
       border: 1px solid rgba(148, 163, 184, 0.5);
       font-size: 10px;
       color: var(--text-soft);
+    }
+
+    /* chips lesiones */
+    .lesiones-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .lesiones-chips label {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .lesiones-chips input[type="checkbox"] {
+      accent-color: #38bdf8;
     }
 
     /* Mis rutinas */
@@ -747,7 +776,7 @@
       gap: 2px;
     }
 
-    .user-name {
+    .user-name-card {
       font-size: 12px;
       font-weight: 600;
     }
@@ -982,9 +1011,9 @@
       <div style="margin-top:16px;">
         <div class="routines-block-title">Rutinas recomendadas (otros estudiantes)</div>
         <div class="routines-block-sub">
-          Basadas en estudiantes PUCV con nivel, objetivo y disponibilidad similares.
-          Puedes ver los detalles de su plan y adoptar la rutina para que se agregue
-          a tus rutinas guardadas.
+          Se filtran según las <strong>lesiones/condiciones</strong> que marcaste en
+          tu perfil. Si marcas rodilla o lumbar, se ocultan las rutinas que podrían
+          molestarte.
         </div>
         <div id="recommended-routines" class="routines-grid"></div>
 
@@ -1034,11 +1063,11 @@
           </div>
 
           <div class="perfil-field">
-            <label for="perfil-nivel">Nivel</label>
+            <label for="perfil-nivel">Nivel / experiencia</label>
             <select id="perfil-nivel">
-              <option>Principiante</option>
-              <option>Intermedio</option>
-              <option>Avanzado</option>
+              <option value="principiante">Principiante (0–1 año)</option>
+              <option value="intermedio">Intermedio (2–4 años)</option>
+              <option value="avanzado">Avanzado (4+ años)</option>
             </select>
           </div>
 
@@ -1053,8 +1082,12 @@
           </div>
 
           <div class="perfil-field">
-            <label for="perfil-lesiones">Condiciones / lesiones relevantes</label>
-            <input id="perfil-lesiones" type="text" placeholder="Ej: lesiones de rodilla leves" />
+            <label>Condiciones / lesiones relevantes</label>
+            <div id="perfil-lesiones-group" class="lesiones-chips">
+              <label><input type="checkbox" value="rodilla" /> Lesión de rodilla</label>
+              <label><input type="checkbox" value="lumbar" /> Lesión lumbar</label>
+              <label><input type="checkbox" value="hombro" /> Lesión de hombro</label>
+            </div>
           </div>
 
           <div class="perfil-field wide">
@@ -1082,7 +1115,7 @@
     </section>
   </div>
 
-  <!-- MODAL COMPARACIÓN -->
+  <!-- MODAL COMPARACIÓN GIMNASIOS -->
   <div id="compare-overlay" class="modal-overlay" hidden>
     <div class="modal">
       <div class="modal-header">
@@ -1104,6 +1137,24 @@
       </table>
       <div class="modal-footer">
         <button id="compare-close-bottom">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DETALLE RUTINA -->
+  <div id="routine-overlay" class="modal-overlay" hidden>
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h3 id="routine-modal-title"></h3>
+          <small id="routine-modal-subtitle"></small>
+        </div>
+        <button id="routine-close" class="modal-close">×</button>
+      </div>
+      <div id="routine-modal-body"
+           style="font-size:12px;color:var(--text-soft);max-height:260px;overflow-y:auto;"></div>
+      <div class="modal-footer">
+        <button id="routine-close-bottom">Cerrar</button>
       </div>
     </div>
   </div>
@@ -1320,7 +1371,7 @@
     };
 
     const sedeIcon = L.icon({
-      iconUrl: "pucv-escudo.png", // escudo PUCV tal cual
+      iconUrl: "pucv-escudo.png",
       iconSize: [40, 40],
       iconAnchor: [20, 20],
       popupAnchor: [0, -22],
@@ -1330,6 +1381,7 @@
     const sedeSelect = document.getElementById("sede-select");
     const sedeLabel = document.getElementById("sede-label");
     const afluenciaFilter = document.getElementById("afluencia-filter");
+    the
     const maxDistanceInput = document.getElementById("max-distance");
     const gymCardsEl = document.getElementById("gym-cards");
 
@@ -1446,7 +1498,7 @@
       });
     }
 
-    // SELECCIÓN PARA COMPARAR
+    // SELECCIÓN PARA COMPARAR GIMNASIOS
     let firstSelectedGym = null;
     let secondSelectedGym = null;
 
@@ -1520,7 +1572,7 @@
       }
     });
 
-    // MODAL
+    // MODAL COMPARACIÓN
     const compareOverlay = document.getElementById("compare-overlay");
     const compareClose = document.getElementById("compare-close");
     const compareCloseBottom = document.getElementById("compare-close-bottom");
@@ -1592,10 +1644,12 @@
     const perfilNivel = document.getElementById("perfil-nivel");
     const perfilAnios = document.getElementById("perfil-anios");
     const perfilDisp = document.getElementById("perfil-disponibilidad");
-    const perfilLesiones = document.getElementById("perfil-lesiones");
     const perfilPreferencias = document.getElementById("perfil-preferencias");
     const perfilObjetivos = document.getElementById("perfil-objetivos");
     const saveProfileBtn = document.getElementById("save-profile-btn");
+
+    const lesionesGroup = document.getElementById("perfil-lesiones-group");
+    const lesionesCheckboxes = lesionesGroup.querySelectorAll('input[type="checkbox"]');
 
     const savedRoutinesEl = document.getElementById("saved-routines");
     const recommendedRoutinesEl = document.getElementById("recommended-routines");
@@ -1609,6 +1663,19 @@
       return "matchgym_routines_" + currentUserKey;
     }
 
+    function getSelectedLesionesFromUI() {
+      return Array.from(lesionesCheckboxes)
+        .filter((cb) => cb.checked)
+        .map((cb) => cb.value);
+    }
+
+    function setSelectedLesionesFromProfile(arr) {
+      const set = new Set(arr || []);
+      lesionesCheckboxes.forEach((cb) => {
+        cb.checked = set.has(cb.value);
+      });
+    }
+
     function loadProfile() {
       const raw = localStorage.getItem(profileKey());
       if (raw) {
@@ -1620,15 +1687,21 @@
           if (p.nivel) perfilNivel.value = p.nivel;
           perfilAnios.value = p.anios ?? "";
           perfilDisp.value = p.disp ?? "";
-          perfilLesiones.value = p.lesiones ?? "";
           perfilPreferencias.value = p.preferencias ?? "";
           perfilObjetivos.value = p.objetivos ?? "";
+
+          if (Array.isArray(p.lesiones)) {
+            setSelectedLesionesFromProfile(p.lesiones);
+          } else if (typeof p.lesiones === "string" && p.lesiones.length > 0) {
+            setSelectedLesionesFromProfile(
+              p.lesiones.split(",").map((s) => s.trim())
+            );
+          }
         } catch (e) {
           console.warn("Perfil corrupto", e);
         }
       } else {
-        // Defaults suaves
-        perfilNivel.value = "Principiante";
+        perfilNivel.value = "principiante";
       }
     }
 
@@ -1640,7 +1713,7 @@
         nivel: perfilNivel.value,
         anios: perfilAnios.value,
         disp: perfilDisp.value,
-        lesiones: perfilLesiones.value,
+        lesiones: getSelectedLesionesFromUI(),
         preferencias: perfilPreferencias.value,
         objetivos: perfilObjetivos.value,
       };
@@ -1649,6 +1722,12 @@
     }
 
     saveProfileBtn.addEventListener("click", saveProfile);
+
+    lesionesCheckboxes.forEach((cb) =>
+      cb.addEventListener("change", () => {
+        renderRecommendedRoutines();
+      })
+    );
 
     // RUTINAS
     const baseDefaultRoutines = [
@@ -1661,7 +1740,7 @@
         exercises: [
           "Sentadilla (barra)",
           "Peso muerto (barra)",
-          "Curl de pierna sentado"
+          "Curl de pierna sentado",
         ],
         origin: "propia",
       },
@@ -1671,11 +1750,7 @@
         nivel: "Intermedio",
         muscleGroup: "Espalda",
         desc: "Remo inclinado, jalón al pecho y remo a un brazo. Pensada para combinar con tu split actual durante el semestre.",
-        exercises: [
-          "Remo inclinado",
-          "Jalón al pecho",
-          "Remo a un brazo"
-        ],
+        exercises: ["Remo inclinado", "Jalón al pecho", "Remo a un brazo"],
         origin: "propia",
       },
     ];
@@ -1694,8 +1769,9 @@
         exercises: [
           "Sentadilla en máquina",
           "Prensa de piernas",
-          "Curl femoral"
+          "Curl femoral",
         ],
+        contraindicaciones: ["rodilla"],
       },
       {
         id: "carla-biceps",
@@ -1711,8 +1787,9 @@
           "Curl con barra Z",
           "Curl martillo mancuernas",
           "Curl concentrado",
-          "Curl en polea"
+          "Curl en polea",
         ],
+        contraindicaciones: [],
       },
       {
         id: "alejandro-espalda",
@@ -1727,8 +1804,9 @@
         exercises: [
           "Jalón al pecho",
           "Remo sentado en polea",
-          "Face pulls"
+          "Face pulls",
         ],
+        contraindicaciones: ["hombro", "lumbar"],
       },
     ];
 
@@ -1786,7 +1864,22 @@
 
     function renderRecommendedRoutines() {
       recommendedRoutinesEl.innerHTML = "";
-      recommendedRoutines.forEach((r) => {
+      const lesionesSel = getSelectedLesionesFromUI();
+
+      const visibles = recommendedRoutines.filter((r) => {
+        if (!r.contraindicaciones || r.contraindicaciones.length === 0)
+          return true;
+        if (lesionesSel.length === 0) return true;
+        return !r.contraindicaciones.some((l) => lesionesSel.includes(l));
+      });
+
+      if (!visibles.length) {
+        recommendedRoutinesEl.innerHTML =
+          '<p style="font-size:12px;color:var(--text-soft);">Con las lesiones seleccionadas no hay rutinas sugeridas. Prueba desmarcar alguna lesión o agrega nuevas rutinas más adelante.</p>';
+        return;
+      }
+
+      visibles.forEach((r) => {
         const card = document.createElement("article");
         card.className = "user-routine-card";
         card.dataset.id = r.id;
@@ -1794,7 +1887,7 @@
           <div class="user-header">
             <div class="avatar">${r.owner[0]}</div>
             <div class="user-meta">
-              <span class="user-name">${r.owner}</span>
+              <span class="user-name-card">${r.owner}</span>
               <span class="user-degree">${r.carrera}</span>
             </div>
           </div>
@@ -1847,6 +1940,39 @@
       );
     }
 
+    // MODAL RUTINA DETALLE
+    const routineOverlay = document.getElementById("routine-overlay");
+    const routineTitleEl = document.getElementById("routine-modal-title");
+    const routineSubtitleEl = document.getElementById("routine-modal-subtitle");
+    const routineBodyEl = document.getElementById("routine-modal-body");
+    const routineClose = document.getElementById("routine-close");
+    const routineCloseBottom = document.getElementById("routine-close-bottom");
+
+    function openRoutineModal(r) {
+      routineTitleEl.textContent = r.title;
+      routineSubtitleEl.textContent = `${r.owner} · ${r.carrera} · ${r.nivel} · Grupo: ${r.muscleGroup}`;
+      routineBodyEl.innerHTML = `
+        <p style="margin-bottom:8px;"><strong>Horario típico:</strong> ${r.horario}</p>
+        <p style="margin-bottom:8px;"><strong>Objetivo principal:</strong> ${r.objetivo}</p>
+        <p style="margin-bottom:8px;"><strong>Descripción:</strong><br>${r.desc}</p>
+        <p><strong>Ejercicios:</strong></p>
+        <ul style="margin-left:16px;margin-top:4px;">
+          ${r.exercises.map((ex) => `<li>${ex}</li>`).join("")}
+        </ul>
+      `;
+      routineOverlay.hidden = false;
+    }
+
+    function closeRoutineModal() {
+      routineOverlay.hidden = true;
+    }
+
+    routineClose.addEventListener("click", closeRoutineModal);
+    routineCloseBottom.addEventListener("click", closeRoutineModal);
+    routineOverlay.addEventListener("click", (e) => {
+      if (e.target === routineOverlay) closeRoutineModal();
+    });
+
     recommendedRoutinesEl.addEventListener("click", (e) => {
       const btn = e.target.closest("button[data-action]");
       if (!btn) return;
@@ -1858,15 +1984,7 @@
 
       const action = btn.dataset.action;
       if (action === "detalle") {
-        alert(
-          `${r.title}\n\nPropietario: ${r.owner} (${r.carrera})\nNivel: ${
-            r.nivel
-          }\nGrupo muscular: ${r.muscleGroup}\nObjetivo: ${
-            r.objetivo
-          }\nHorario típico: ${r.horario}\n\nDescripción:\n${
-            r.desc
-          }\n\nEjercicios:\n- ${r.exercises.join("\n- ")}`
-        );
+        openRoutineModal(r);
       } else if (action === "adoptar") {
         adoptRoutine(id);
       }
