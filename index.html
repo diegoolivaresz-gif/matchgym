@@ -983,46 +983,46 @@
     </section>
 
     <!-- MIS RUTINAS -->
-    <section id="section-rutinas" class="main-card" hidden>
-      <div class="routines-header">
-        <div class="routines-header-text">
-          <h2>Mis rutinas</h2>
-          <p>
-            Respecto a los <strong>antecedentes que registraste en tu perfil</strong>
-            (peso, nivel, lesiones y días disponibles), MatchGym te sugiere rutinas
-            pensadas para estudiantes PUCV con un contexto parecido al tuyo.
-            Puedes <strong>adoptar rutinas de otros estudiantes</strong> para no
-            partir desde cero.
-          </p>
-        </div>
-      </div>
+    <<!-- MIS RUTINAS (con adopción + creación) -->
+<section id="section-rutinas" class="main-card" hidden>
+  <div class="section-header">
+    <div>
+      <h2>Mis rutinas</h2>
+      <p>
+        Rutinas que estás usando actualmente. Al adoptar una rutina nueva de un mismo
+        grupo muscular, se reemplaza la anterior (no se acumulan por acumular).
+      </p>
+    </div>
+    <button id="btn-nueva-rutina" class="btn-primary">
+      + Nueva rutina
+    </button>
+  </div>
 
-      <!-- Guardadas -->
-      <div style="margin-top:4px;">
-        <div class="routines-block-title">Mis rutinas guardadas</div>
-        <div class="routines-block-sub">
-          Rutinas que estás usando actualmente. Al adoptar una rutina nueva de un
-          mismo grupo muscular, se reemplaza la anterior (no se acumulan por acumular).
-        </div>
-        <div id="saved-routines" class="routines-grid"></div>
-      </div>
+  <h3 class="subsection-title">Mis rutinas guardadas</h3>
+  <p class="subsection-help">
+    Estas son las rutinas que estás usando ahora mismo. Algunas pueden venir
+    de otros estudiantes (adoptadas) y otras pueden ser creadas por ti.
+  </p>
+  <div id="my-routines-list" class="routine-cards"></div>
 
-      <!-- Recomendadas -->
-      <div style="margin-top:16px;">
-        <div class="routines-block-title">Rutinas recomendadas (otros estudiantes)</div>
-        <div class="routines-block-sub">
-          Se filtran según las <strong>lesiones/condiciones</strong> que marcaste en
-          tu perfil. Si marcas rodilla o lumbar, se ocultan las rutinas que podrían
-          molestarte.
-        </div>
-        <div id="recommended-routines" class="routines-grid"></div>
+  <h3 class="subsection-title" style="margin-top:16px;">
+    Rutinas recomendadas (otros estudiantes)
+  </h3>
+  <p class="subsection-help">
+    Se filtran según las <strong>lesiones/condiciones</strong> que marcaste en tu perfil.
+    Si indicas rodilla o lumbar, se ocultan las rutinas que podrían molestarte.
+  </p>
+  <div id="recommended-routines-list" class="routine-cards"></div>
+</section>
 
-        <p class="routines-note">
-          Más adelante, estas recomendaciones se generarán automáticamente usando tu
-          historial de progreso y las rutinas que mejor han funcionado a otros usuarios.
-        </p>
-      </div>
-    </section>
+<!-- MODAL CREAR RUTINA -->
+<div id="routine-modal" class="modal-overlay" hidden>
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <h3 id="routine-modal-title">Nueva rutina</h3>
+        <small>Define un nombre, grupo muscular y la lista de ejercicios.</small>
+      </div
 
     <!-- MI PERFIL -->
     <section id="section-perfil" class="main-card" hidden>
