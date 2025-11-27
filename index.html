@@ -15,7 +15,6 @@
 
   <style>
     :root {
-      /* PUCV vibes */
       --bg: #f4f6fb;
       --card: #ffffff;
       --border: #dde3f0;
@@ -39,41 +38,18 @@
       color: var(--text-main);
     }
 
-    /* Barra superior tipo navegador */
-    .browser-chrome {
-      background: #e7ecf7;
-      padding: 6px 14px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      border-bottom: 1px solid #ced6eb;
-    }
-    .traffic-lights {
-      display: flex;
-      gap: 6px;
-    }
-    .dot {
-      width: 11px;
-      height: 11px;
-      border-radius: 50%;
-    }
-    .dot.red { background: #ff5f57; }
-    .dot.yellow { background: #febc2e; }
-    .dot.green { background: #28c840; }
-    .address-bar {
-      flex: 1;
-      background: white;
-      border-radius: 999px;
-      border: 1px solid #d0d7ec;
-      padding: 4px 14px;
-      font-size: 13px;
-      color: #5f6368;
-    }
-
     header {
       background: linear-gradient(90deg, #ffffff, #f6f8ff);
       border-bottom: 1px solid var(--border);
-      padding: 12px 40px;
+      padding: 14px 40px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+    }
+    .header-top {
+      width: 100%;
+      max-width: 1120px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -144,6 +120,23 @@
       border: 1px solid #c8d3f3;
     }
 
+    .header-bottom {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .pucv-logo {
+      height: 60px;
+      object-fit: contain;
+    }
+    .header-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
     .app-shell {
       max-width: 1120px;
       margin: 18px auto 40px;
@@ -177,15 +170,13 @@
       color: var(--text-muted);
     }
 
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      padding: 3px 9px;
-      border-radius: 999px;
+    .badge-level {
       font-size: 11px;
-      background: #eef0f5;
-      color: var(--text-muted);
-      margin-right: 4px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-weight: 500;
     }
 
     .status {
@@ -282,19 +273,11 @@
       min-height: 34px;
     }
 
-    .badge-level {
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 999px;
-      background: var(--primary-soft);
-      color: var(--primary);
-      font-weight: 500;
-    }
-
     .routine-actions {
       display: flex;
       gap: 8px;
       margin-top: 10px;
+      flex-wrap: wrap;
     }
 
     .routine-details {
@@ -418,10 +401,63 @@
       margin-bottom: 14px;
     }
 
+    /* Modales */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.65);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 30;
+    }
+    .modal {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 18px 20px;
+      max-width: 480px;
+      width: 90%;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+      border: 1px solid var(--border);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .modal-header h3 {
+      margin: 0;
+    }
+    .modal-close {
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+      color: var(--text-muted);
+    }
+
+    #compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-top: 8px;
+    }
+    #compare-table th, #compare-table td {
+      border-bottom: 1px solid var(--border);
+      padding: 4px 6px;
+      text-align: left;
+    }
+    #compare-table th {
+      background: #f5f7ff;
+    }
+
     @media (max-width: 720px) {
-      header { padding: 10px 16px; }
+      header { padding: 12px 18px 16px; }
+      .header-top { flex-direction: column; align-items: flex-start; gap: 10px; }
+      nav { gap: 10px; font-size: 13px; flex-wrap: wrap; }
       .app-shell { padding: 0 14px 30px; }
-      nav { gap: 10px; font-size: 13px; }
       .section-header { flex-direction: column; align-items: flex-start; }
       #map { height: 260px; }
     }
@@ -449,27 +485,27 @@
 
   <!-- App real (se muestra solo si está logueado) -->
   <div id="app-container">
-    <div class="browser-chrome">
-      <div class="traffic-lights">
-        <div class="dot red"></div>
-        <div class="dot yellow"></div>
-        <div class="dot green"></div>
-      </div>
-      <div class="address-bar">matchgym.pucv.cl</div>
-    </div>
-
     <header>
-      <div class="logo">
-        <div class="logo-mark">MG</div>
-        <span>MatchGym · PUCV</span>
+      <div class="header-top">
+        <div class="logo">
+          <div class="logo-mark">MG</div>
+          <span>MatchGym · PUCV</span>
+        </div>
+        <nav>
+          <button data-view="explorar" class="active">Explorar gimnasios</button>
+          <button data-view="precios">Ver precios</button>
+          <button data-view="rutinas">Mis rutinas</button>
+          <button data-view="perfil">Mi perfil</button>
+        </nav>
+        <div class="avatar" id="avatar-iniciales" title="Perfil PUCV">PU</div>
       </div>
-      <nav>
-        <button data-view="explorar" class="active">Explorar gimnasios</button>
-        <button data-view="precios">Precios</button>
-        <button data-view="rutinas">Mis rutinas</button>
-        <button data-view="perfil">Mi perfil</button>
-      </nav>
-      <div class="avatar" id="avatar-iniciales" title="Perfil PUCV">PU</div>
+      <div class="header-bottom">
+        <!-- REEMPLAZA EL SRC POR EL LOGO OFICIAL PUCV SI QUIERES -->
+        <img class="pucv-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Escudo_PUCV.svg/240px-Escudo_PUCV.svg.png" alt="Logo PUCV" />
+        <div class="header-sub">
+          Herramienta de apoyo estudiantil para elegir gimnasios y rutinas cercanas a las sedes de la Pontificia Universidad Católica de Valparaíso.
+        </div>
+      </div>
     </header>
 
     <main class="app-shell">
@@ -478,11 +514,20 @@
         <div class="section-header">
           <div>
             <h1>Explorar gimnasios</h1>
-            <div class="subtle">
+            <div class="subtle" id="texto-sede">
               SEDE: Edificio Isabel Brown Caces PUCV · Av. Brasil 2241, Valparaíso
             </div>
           </div>
           <div class="filters">
+            <label>
+              Sede:
+              <select id="sede-select">
+                <option value="isabel-brown">Isabel Brown (Brasil 2241)</option>
+                <option value="casa-central">Casa Central</option>
+                <option value="curauma">Sede Curauma</option>
+                <option value="sausalito">Sede Sausalito</option>
+              </select>
+            </label>
             <label>
               Afluencia:
               <select id="filter-afluencia">
@@ -510,7 +555,7 @@
         <div class="section-header">
           <div>
             <h1>Ver precios</h1>
-            <div class="subtle">Compara planes mensuales y trimestrales de los gimnasios cercanos a tu sede.</div>
+            <div class="subtle">Compara planes mensuales y trimestrales de los gimnasios cercanos a tu sede seleccionada.</div>
           </div>
           <div class="filters">
             <label>
@@ -532,6 +577,9 @@
         </div>
 
         <div id="precios-list" class="grid"></div>
+        <div class="subtle" id="texto-compare-hint" style="margin-top:8px;">
+          Tip: haz clic en <strong>Comparar</strong> en un gimnasio, luego en otro, para ver pros y contras.
+        </div>
       </section>
 
       <!-- MIS RUTINAS -->
@@ -539,16 +587,22 @@
         <div class="section-header">
           <div>
             <h1>Mis rutinas</h1>
-            <div class="subtle">Registra y organiza tus rutinas. Adopta rutinas recomendadas de otros estudiantes PUCV.</div>
+            <div class="subtle">
+              Combina rutinas creadas por ti, adoptadas de estudiantes PUCV y sugeridas según tus antecedentes de salud.
+            </div>
           </div>
           <button class="btn btn-ghost" id="btn-nueva-rutina">+ Nueva rutina</button>
         </div>
 
-        <h2>Mis rutinas guardadas</h2>
+        <h2>Rutinas sugeridas para ti</h2>
+        <div class="subtle" id="mensaje-sugeridas" style="margin-bottom:8px;"></div>
+        <div id="rutinas-sugeridas" class="grid" style="margin-bottom: 24px;"></div>
+
+        <h2>Rutinas creadas por mí</h2>
         <div id="rutinas-personales" class="grid" style="margin-bottom: 24px;"></div>
 
-        <h2>Rutinas recomendadas</h2>
-        <div id="rutinas-recomendadas" class="grid"></div>
+        <h2>Rutinas adoptadas de otros estudiantes PUCV</h2>
+        <div id="rutinas-adoptadas" class="grid"></div>
       </section>
 
       <!-- PERFIL -->
@@ -596,7 +650,7 @@
             </div>
             <div class="field">
               <label>Condiciones / lesiones relevantes</label>
-              <input type="text" id="perfil-condiciones" placeholder="Ej: Lesión de rodilla" />
+              <input type="text" id="perfil-condiciones" placeholder="Ej: Dolor de rodillas, lesión hombro" />
             </div>
             <div class="field">
               <label>Preferencias de gimnasio</label>
@@ -608,12 +662,49 @@
             </div>
           </div>
           <div style="margin-top: 16px; display: flex; justify-content: space-between; align-items: center; gap: 12px;">
-            <div class="subtle">En futuras versiones podrás controlar qué datos se sincronizan en la plataforma.</div>
+            <div class="subtle">Las recomendaciones se ajustan a tus antecedentes (por ejemplo, dolor de rodillas, años de entrenamiento, etc.).</div>
             <button class="btn btn-primary" id="btn-guardar-perfil">Guardar perfil</button>
           </div>
         </div>
       </section>
     </main>
+  </div>
+
+  <!-- Modales -->
+  <div id="details-overlay" class="modal-overlay" hidden>
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="details-title">Detalles gimnasio</h3>
+        <button class="modal-close" data-close="details">&times;</button>
+      </div>
+      <div id="details-body" class="subtle"></div>
+      <div style="margin-top:10px; text-align:right;">
+        <button class="btn btn-ghost" data-close="details">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="compare-overlay" class="modal-overlay" hidden>
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Comparación de gimnasios</h3>
+        <button class="modal-close" data-close="compare">&times;</button>
+      </div>
+      <table id="compare-table">
+        <thead>
+          <tr>
+            <th>Aspecto</th>
+            <th id="compare-name-a">Gimnasio A</th>
+            <th id="compare-name-b">Gimnasio B</th>
+          </tr>
+        </thead>
+        <tbody id="compare-body"></tbody>
+      </table>
+      <div id="compare-texto" class="subtle" style="margin-top:10px;"></div>
+      <div style="margin-top:10px; text-align:right;">
+        <button class="btn btn-ghost" data-close="compare">Cerrar</button>
+      </div>
+    </div>
   </div>
 
   <!-- Firebase SDK (compat) -->
@@ -693,99 +784,184 @@
       }
     });
 
-    // --------- Datos simulados (gimnasios, rutinas, perfil) ----------
-    const gyms = [
-      { id: "a", nombre: "PowerFit Brasil", direccion: "Av. Brasil 2100", distanciaKm: 0.4, afluencia: "poco", pico: "18–20 h", precioMensual: 19990, precioTrimestral: 54990, lat: -33.0445, lng: -71.6200 },
-      { id: "b", nombre: "Gym Valpo Center", direccion: "Calle Edwards 250", distanciaKm: 0.9, afluencia: "moderado", pico: "19–21 h", precioMensual: 24990, precioTrimestral: 69990, lat: -33.0432, lng: -71.6285 },
-      { id: "c", nombre: "Estación Fitness", direccion: "Av. España 1350", distanciaKm: 1.5, afluencia: "poco", pico: "17–19 h", precioMensual: 21990, precioTrimestral: 59990, lat: -33.0365, lng: -71.6220 },
-      { id: "d", nombre: "Costa Gym", direccion: "Errázuriz 1450", distanciaKm: 2.2, afluencia: "alto", pico: "18–22 h", precioMensual: 17990, precioTrimestral: 49990, lat: -33.0402, lng: -71.6110 },
-    ];
-
-    let rutinasPersonales = [
-      {
-        id: "r1",
-        nombre: "Pierna",
-        nivel: "intermedio",
-        descripcion: "Sentadilla (barra), Peso muerto (barra), Curl de pierna sentado",
-        ejercicios: [
-          { nombre: "Sentadilla (barra)", series: 3, repeticiones: "8-10" },
-          { nombre: "Peso muerto (barra)", series: 3, repeticiones: "6-8" },
-          { nombre: "Curl de pierna sentado", series: 3, repeticiones: "10-12" },
-        ],
+    // --------- Datos base: sedes y gimnasios ----------
+    const sedes = {
+      "isabel-brown": {
+        nombre: "Edificio Isabel Brown Caces PUCV · Av. Brasil 2241, Valparaíso",
+        lat: -33.0454,
+        lng: -71.6204,
       },
-      {
-        id: "r2",
-        nombre: "Espalda",
-        nivel: "intermedio",
-        descripcion: "Remo inclinado, Jalón al pecho, Remo a un brazo",
-        ejercicios: [
-          { nombre: "Remo inclinado (barra)", series: 3, repeticiones: "8-10" },
-          { nombre: "Jalón al pecho (polea)", series: 3, repeticiones: "10-12" },
-          { nombre: "Remo a un brazo (mancuerna)", series: 3, repeticiones: "10-12" },
-        ],
+      "casa-central": {
+        nombre: "Casa Central PUCV · Av. Brasil 2950, Valparaíso",
+        lat: -33.0440,
+        lng: -71.6217,
       },
-    ];
-
-    const rutinasRecomendadas = [
-      {
-        id: "rr1",
-        autor: "Juan",
-        carrera: "Ingeniería Civil PUCV",
-        nivelAutor: "principiante",
-        etiquetaNivel: "PRINCIPIANTE",
-        nombre: "Pierna básica",
-        descripcion: "Pierna — 3 ejercicios",
-        ejercicios: [
-          { nombre: "Prensa de piernas", series: 3, repeticiones: "12" },
-          { nombre: "Curl de pierna tumbado", series: 3, repeticiones: "12" },
-          { nombre: "Elevación de talones de pie", series: 3, repeticiones: "15" },
-        ],
+      "curauma": {
+        nombre: "Sede Curauma PUCV",
+        lat: -33.0932,
+        lng: -71.5835,
       },
-      {
-        id: "rr2",
-        autor: "Carla",
-        carrera: "Ingeniería Comercial PUCV",
-        nivelAutor: "intermedio",
-        etiquetaNivel: "INTERMEDIO",
-        nombre: "Bíceps – 4 ejercicios",
-        descripcion: "Rutina de brazo para 2 días a la semana",
-        ejercicios: [
-          { nombre: "Curl barra Z", series: 3, repeticiones: "8-10" },
-          { nombre: "Curl mancuerna alterno", series: 3, repeticiones: "10-12" },
-          { nombre: "Curl martillo", series: 3, repeticiones: "10-12" },
-          { nombre: "Curl en banco inclinado", series: 2, repeticiones: "12-15" },
-        ],
+      "sausalito": {
+        nombre: "Sede Sausalito PUCV",
+        lat: -33.0195,
+        lng: -71.5445,
       },
-      {
-        id: "rr3",
-        autor: "Alejandro",
-        carrera: "Ingeniería en Construcción PUCV",
-        nivelAutor: "principiante",
-        etiquetaNivel: "PRINCIPIANTE",
-        nombre: "Fuerza – Espalda 3 ejercicios",
-        descripcion: "Rutina simple de espalda para empezar",
-        ejercicios: [
-          { nombre: "Jalón al pecho", series: 3, repeticiones: "10-12" },
-          { nombre: "Remo en polea", series: 3, repeticiones: "10-12" },
-          { nombre: "Pull over en polea", series: 2, repeticiones: "12-15" },
-        ],
-      },
-    ];
-
-    const perfil = {
-      email: "",
-      peso: 80,
-      estatura: 175,
-      edad: 22,
-      nivel: "principiante",
-      anios: 1,
-      disponibilidad: 3,
-      condiciones: "Lesiones de rodilla leves",
-      preferencias: "Cerca de la sede, precio, poca afluencia",
-      objetivos: "Ganar fuerza, hipertrofia",
     };
 
-    // ------ Navegación SPA ------
+    const gyms = [
+      // Isabel Brown (gimnasios reales)
+      {
+        id: "sf-puerto",
+        sede: "isabel-brown",
+        nombre: "SmartFit Estación Puerto",
+        direccion: "Errázuriz, Estación Puerto",
+        afluencia: "moderado",
+        pico: "18–21 h",
+        precioMensual: 19990,
+        precioTrimestral: 54990,
+        lat: -33.04028,
+        lng: -71.62009,
+        beneficios: ["Cadena internacional", "Buena conectividad (Metro)", "Clases grupales seleccionadas"],
+      },
+      {
+        id: "sportlife",
+        sede: "isabel-brown",
+        nombre: "Sportlife Valparaíso",
+        direccion: "Bellavista, frente a Plaza Cívica",
+        afluencia: "alto",
+        pico: "18–22 h",
+        precioMensual: 27990,
+        precioTrimestral: 74990,
+        lat: -33.03892,
+        lng: -71.62078,
+        beneficios: ["Más máquinas", "Área peso libre amplia", "Ambiente competitivo"],
+      },
+      {
+        id: "seven",
+        sede: "isabel-brown",
+        nombre: "Gimnasio Seven",
+        direccion: "Pedro Montt, frente a Parque Italia",
+        afluencia: "poco",
+        pico: "19–21 h",
+        precioMensual: 23990,
+        precioTrimestral: 65990,
+        lat: -33.04713,
+        lng: -71.60641,
+        beneficios: ["Menor afluencia", "Ambiente familiar", "Cercano a sedes PUCV/UV"],
+      },
+      {
+        id: "sf-victoria",
+        sede: "isabel-brown",
+        nombre: "SmartFit Plaza Victoria",
+        direccion: "Plaza Victoria",
+        afluencia: "alto",
+        pico: "17–21 h",
+        precioMensual: 20990,
+        precioTrimestral: 57990,
+        lat: -33.04552,
+        lng: -71.61258,
+        beneficios: ["Ubicación céntrica", "Clases grupales", "Buena iluminación"],
+      },
+      {
+        id: "pacific-ross",
+        sede: "isabel-brown",
+        nombre: "Pacific Gym Paseo Ross",
+        direccion: "Paseo Ross, sector comercial",
+        afluencia: "moderado",
+        pico: "18–20 h",
+        precioMensual: 18990,
+        precioTrimestral: 52990,
+        lat: -33.04589,
+        lng: -71.60505,
+        beneficios: ["Precio competitivo", "Ambiente relajado", "Cerca de comercio"],
+      },
+
+      // Casa Central (ficticios)
+      {
+        id: "cc-power",
+        sede: "casa-central",
+        nombre: "Power Gym Brasil",
+        direccion: "Av. Brasil 3000",
+        afluencia: "moderado",
+        pico: "18–21 h",
+        precioMensual: 21990,
+        precioTrimestral: 59990,
+        lat: -33.0442,
+        lng: -71.6235,
+        beneficios: ["Muy cerca de Casa Central", "Zona de peso libre", "Plan estudiante"],
+      },
+      {
+        id: "cc-24h",
+        sede: "casa-central",
+        nombre: "24/7 Fitness Valpo",
+        direccion: "Av. Argentina 100",
+        afluencia: "poco",
+        pico: "20–23 h",
+        precioMensual: 25990,
+        precioTrimestral: 69990,
+        lat: -33.0428,
+        lng: -71.6260,
+        beneficios: ["Abierto 24/7", "Ideal para estudiar y entrenar tarde", "Menor afluencia nocturna"],
+      },
+
+      // Curauma (ficticios)
+      {
+        id: "curauma-fit",
+        sede: "curauma",
+        nombre: "Curauma Fit Center",
+        direccion: "Av. Universidad, Curauma",
+        afluencia: "poco",
+        pico: "19–21 h",
+        precioMensual: 21990,
+        precioTrimestral: 59990,
+        lat: -33.0905,
+        lng: -71.5810,
+        beneficios: ["Cerca de campus", "Opciones al aire libre", "Estacionamiento amplio"],
+      },
+      {
+        id: "curauma-box",
+        sede: "curauma",
+        nombre: "Box Training Curauma",
+        direccion: "Sector deportivo Curauma",
+        afluencia: "moderado",
+        pico: "18–20 h",
+        precioMensual: 24990,
+        precioTrimestral: 64990,
+        lat: -33.0940,
+        lng: -71.5850,
+        beneficios: ["Enfoque funcional", "Clases pequeñas", "Coaching grupal"],
+      },
+
+      // Sausalito (ficticios)
+      {
+        id: "sau-gym",
+        sede: "sausalito",
+        nombre: "Sausalito Fitness",
+        direccion: "Cerca Estadio Sausalito",
+        afluencia: "moderado",
+        pico: "18–21 h",
+        precioMensual: 22990,
+        precioTrimestral: 61990,
+        lat: -33.0190,
+        lng: -71.5430,
+        beneficios: ["Cerca de áreas verdes", "Opciones de running", "Duchas y lockers"],
+      },
+      {
+        id: "sau-box",
+        sede: "sausalito",
+        nombre: "Box Valpo Sausalito",
+        direccion: "Sector deportivo Sausalito",
+        afluencia: "poco",
+        pico: "19–21 h",
+        precioMensual: 25990,
+        precioTrimestral: 69990,
+        lat: -33.0200,
+        lng: -71.5460,
+        beneficios: ["Menor afluencia", "Entrenamiento funcional", "Clases guiadas"],
+      },
+    ];
+
+    // -------- Navegación SPA --------
     const navButtons = document.querySelectorAll("nav button");
     const views = document.querySelectorAll(".view");
 
@@ -799,10 +975,12 @@
       });
     });
 
-    // ------ Explorar + mapa ------
+    // -------- Explorar + mapa --------
     const gymListEl = document.getElementById("gym-list");
     const filterAfluencia = document.getElementById("filter-afluencia");
     const filterDistancia = document.getElementById("filter-distancia");
+    const sedeSelect = document.getElementById("sede-select");
+    const textoSede = document.getElementById("texto-sede");
 
     function afluenciaLabel(a) {
       if (a === "poco") return "Poco concurrido";
@@ -815,15 +993,42 @@
       return "red";
     }
 
-    // mapa Leaflet
+    function haversineKm(lat1, lon1, lat2, lon2) {
+      const R = 6371;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a =
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(lat1 * Math.PI/180) *
+        Math.cos(lat2 * Math.PI/180) *
+        Math.sin(dLon/2) * Math.sin(dLon/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return R * c;
+    }
+
     const map = L.map("map").setView([-33.0445, -71.6230], 14);
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 19,
       attribution: "&copy; OpenStreetMap",
     }).addTo(map);
+
     const gymMarkers = L.layerGroup().addTo(map);
+    let originMarker = null;
 
     function renderGyms() {
+      const sedeId = sedeSelect.value;
+      const sede = sedes[sedeId];
+      textoSede.textContent = "SEDE: " + sede.nombre;
+
+      if (originMarker) map.removeLayer(originMarker);
+      originMarker = L.circleMarker([sede.lat, sede.lng], {
+        radius: 8,
+        color: "#004b9b",
+        fillColor: "#f2b705",
+        fillOpacity: 0.95,
+        weight: 2,
+      }).addTo(map).bindPopup("<strong>Sede PUCV</strong><br>" + sede.nombre);
+
       const af = filterAfluencia.value;
       const maxDist = parseFloat(filterDistancia.value || "999");
 
@@ -831,6 +1036,11 @@
       gymMarkers.clearLayers();
 
       const visibles = gyms
+        .filter(g => g.sede === sedeId)
+        .map(g => {
+          const dist = haversineKm(sede.lat, sede.lng, g.lat, g.lng);
+          return { ...g, distanciaKm: dist };
+        })
         .filter(g => (af === "todos" || g.afluencia === af))
         .filter(g => g.distanciaKm <= maxDist);
 
@@ -839,7 +1049,7 @@
         card.className = "card";
         card.innerHTML = `
           <h3>${g.nombre}</h3>
-          <div class="subtle">${g.direccion} · ${g.distanciaKm.toFixed(1)} km desde tu sede</div>
+          <div class="subtle">${g.direccion} · ${g.distanciaKm.toFixed(1)} km desde la sede</div>
           <div class="status">
             <span class="status-dot ${afluenciaColor(g.afluencia)}"></span>
             <span>${afluenciaLabel(g.afluencia)}</span>
@@ -857,18 +1067,119 @@
       });
 
       if (visibles.length > 0) {
-        const bounds = L.latLngBounds(visibles.map(g => [g.lat, g.lng]));
+        const bounds = L.latLngBounds(visibles.map(g => [g.lat, g.lng]).concat([[sede.lat, sede.lng]]));
         map.fitBounds(bounds, { padding: [20, 20] });
+      } else {
+        map.setView([sede.lat, sede.lng], 14);
       }
     }
 
     filterAfluencia.addEventListener("change", renderGyms);
     filterDistancia.addEventListener("change", renderGyms);
+    sedeSelect.addEventListener("change", () => {
+      renderGyms();
+      renderPrecios(); // para que Precios use misma sede
+    });
 
-    // ------ Ver precios ------
+    // ------ Ver precios + modales ------
     const preciosListEl = document.getElementById("precios-list");
     const planSelect = document.getElementById("plan-select");
     const sortPrecios = document.getElementById("sort-precios");
+
+    const detailsOverlay = document.getElementById("details-overlay");
+    const detailsTitle = document.getElementById("details-title");
+    const detailsBody = document.getElementById("details-body");
+
+    const compareOverlay = document.getElementById("compare-overlay");
+    const compareNameA = document.getElementById("compare-name-a");
+    const compareNameB = document.getElementById("compare-name-b");
+    const compareBody = document.getElementById("compare-body");
+    const compareTexto = document.getElementById("compare-texto");
+
+    let selectedCompareGym = null; // primer gimnasio elegido para comparar
+
+    function openDetails(gym) {
+      detailsTitle.textContent = gym.nombre;
+      const sedeId = sedeSelect.value;
+      const sede = sedes[sedeId];
+      const dist = haversineKm(sede.lat, sede.lng, gym.lat, gym.lng);
+
+      detailsBody.innerHTML = `
+        <p><strong>Dirección:</strong> ${gym.direccion}</p>
+        <p><strong>Distancia aproximada desde la sede:</strong> ${dist.toFixed(1)} km</p>
+        <p><strong>Afluencia:</strong> ${afluenciaLabel(gym.afluencia)}</p>
+        <p><strong>Horario de mayor concurrencia:</strong> ${gym.pico}</p>
+        <p><strong>Precio mensual referencia:</strong> $${gym.precioMensual.toLocaleString("es-CL")}</p>
+        <p><strong>Precio trimestral referencia:</strong> $${gym.precioTrimestral.toLocaleString("es-CL")}</p>
+        <p><strong>Beneficios destacados:</strong></p>
+        <ul>${(gym.beneficios || []).map(b => `<li>${b}</li>`).join("")}</ul>
+      `;
+      detailsOverlay.hidden = false;
+    }
+
+    function closeDetails() {
+      detailsOverlay.hidden = true;
+    }
+
+    function openCompare(gymA, gymB) {
+      compareNameA.textContent = gymA.nombre;
+      compareNameB.textContent = gymB.nombre;
+      compareBody.innerHTML = "";
+
+      const sedeId = sedeSelect.value;
+      const sede = sedes[sedeId];
+      const distA = haversineKm(sede.lat, sede.lng, gymA.lat, gymA.lng);
+      const distB = haversineKm(sede.lat, sede.lng, gymB.lat, gymB.lng);
+
+      const rows = [
+        ["Precio mensual", `$${gymA.precioMensual.toLocaleString("es-CL")}`, `$${gymB.precioMensual.toLocaleString("es-CL")}`],
+        ["Precio trimestral", `$${gymA.precioTrimestral.toLocaleString("es-CL")}`, `$${gymB.precioTrimestral.toLocaleString("es-CL")}`],
+        ["Distancia desde sede", `${distA.toFixed(1)} km`, `${distB.toFixed(1)} km`],
+        ["Afluencia", afluenciaLabel(gymA.afluencia), afluenciaLabel(gymB.afluencia)],
+        ["Horario más lleno", gymA.pico, gymB.pico],
+      ];
+
+      rows.forEach(([label, a, b]) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${label}</td><td>${a}</td><td>${b}</td>`;
+        compareBody.appendChild(tr);
+      });
+
+      // Texto automático de pros y contras simple:
+      let texto = "";
+      if (gymA.precioMensual > gymB.precioMensual) {
+        texto += `${gymA.nombre} es más caro pero podría ofrecer mejores máquinas o servicios.\n`;
+      } else if (gymA.precioMensual < gymB.precioMensual) {
+        texto += `${gymA.nombre} es más económico que ${gymB.nombre}.\n`;
+      }
+
+      if (distA < distB) {
+        texto += `${gymA.nombre} está más cerca de la sede, lo que reduce tiempos de traslado.\n`;
+      } else if (distA > distB) {
+        texto += `${gymB.nombre} está más cerca de la sede.\n`;
+      }
+
+      if (gymA.afluencia !== gymB.afluencia) {
+        texto += `En términos de afluencia, ${afluenciaLabel(gymA.afluencia)} vs ${afluenciaLabel(gymB.afluencia)}: menos afluencia implica generalmente máquinas más disponibles.\n`;
+      }
+
+      compareTexto.textContent = texto.trim() || "Ambos gimnasios tienen características muy similares. Elige según comodidad personal.";
+      compareOverlay.hidden = false;
+    }
+
+    function closeCompare() {
+      compareOverlay.hidden = true;
+      selectedCompareGym = null;
+      document.getElementById("texto-compare-hint").textContent =
+        "Tip: haz clic en Comparar en un gimnasio, luego en otro, para ver pros y contras.";
+    }
+
+    document.querySelectorAll("[data-close='details']").forEach(btn => {
+      btn.addEventListener("click", closeDetails);
+    });
+    document.querySelectorAll("[data-close='compare']").forEach(btn => {
+      btn.addEventListener("click", closeCompare);
+    });
 
     function afluenciaOrden(a) {
       if (a === "poco") return 1;
@@ -879,8 +1190,17 @@
     function renderPrecios() {
       const plan = planSelect.value;
       const sortBy = sortPrecios.value;
+      const sedeId = sedeSelect.value;
+      const sede = sedes[sedeId];
 
-      const sorted = [...gyms].sort((a, b) => {
+      const gymsSede = gyms
+        .filter(g => g.sede === sedeId)
+        .map(g => ({
+          ...g,
+          distanciaKm: haversineKm(sede.lat, sede.lng, g.lat, g.lng),
+        }));
+
+      const sorted = gymsSede.sort((a, b) => {
         if (sortBy === "precio") {
           const pa = plan === "mensual" ? a.precioMensual : a.precioTrimestral;
           const pb = plan === "mensual" ? b.precioMensual : b.precioTrimestral;
@@ -901,13 +1221,40 @@
           <div class="subtle">${g.direccion} · ${g.distanciaKm.toFixed(1)} km</div>
           <p style="margin:8px 0 4px;"><strong>$${precio.toLocaleString("es-CL")} / ${plan}</strong></p>
           <div class="subtle">Afluencia: ${afluenciaLabel(g.afluencia)}</div>
-          <div style="margin-top:10px; display:flex; gap:8px;">
-            <button class="btn btn-primary">Comparar</button>
-            <button class="btn btn-ghost">Ver detalles</button>
+          <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="btn btn-primary" data-action="comparar" data-gym-id="${g.id}">Comparar</button>
+            <button class="btn btn-ghost" data-action="detalles" data-gym-id="${g.id}">Ver detalles</button>
           </div>
         `;
         preciosListEl.appendChild(card);
       });
+
+      preciosListEl.addEventListener("click", (e) => {
+        const btn = e.target.closest("button[data-action]");
+        if (!btn) return;
+        const action = btn.dataset.action;
+        const id = btn.dataset.gymId;
+        const gym = gyms.find(g => g.id === id);
+        if (!gym) return;
+
+        if (action === "detalles") {
+          openDetails(gym);
+        }
+        if (action === "comparar") {
+          if (!selectedCompareGym) {
+            selectedCompareGym = gym;
+            document.getElementById("texto-compare-hint").textContent =
+              `Has seleccionado "${gym.nombre}". Ahora elige otro gimnasio para comparar.`;
+          } else if (selectedCompareGym.id === gym.id) {
+            // mismo gimnasio: reset
+            selectedCompareGym = null;
+            document.getElementById("texto-compare-hint").textContent =
+              "Tip: haz clic en Comparar en un gimnasio, luego en otro, para ver pros y contras.";
+          } else {
+            openCompare(selectedCompareGym, gym);
+          }
+        }
+      }, { once: true });
     }
 
     planSelect.addEventListener("change", renderPrecios);
@@ -915,51 +1262,154 @@
 
     // ------ Rutinas ------
     const rutinasPersonalesEl = document.getElementById("rutinas-personales");
-    const rutinasRecomendadasEl = document.getElementById("rutinas-recomendadas");
+    const rutinasAdoptadasEl = document.getElementById("rutinas-adoptadas");
+    const rutinasSugeridasEl = document.getElementById("rutinas-sugeridas");
+    const mensajeSugeridasEl = document.getElementById("mensaje-sugeridas");
     const btnNuevaRutina = document.getElementById("btn-nueva-rutina");
 
-    function renderRutinaCard(r, esPersonal = true) {
+    let rutinasPersonales = [
+      {
+        id: "rp1",
+        origen: "propia",
+        nombre: "Pierna (barra)",
+        nivel: "intermedio",
+        descripcion: "Sentadilla, Peso muerto, Curl de pierna sentado",
+        foco: "pierna",
+        impactoRodilla: "alto",
+        ejercicios: [
+          { nombre: "Sentadilla (barra)", series: 3, repeticiones: "8-10" },
+          { nombre: "Peso muerto (barra)", series: 3, repeticiones: "6-8" },
+          { nombre: "Curl de pierna sentado", series: 3, repeticiones: "10-12" },
+        ],
+      },
+    ];
+
+    let rutinasAdoptadas = [];
+
+    const rutinasBaseRecomendadas = [
+      {
+        id: "rr1",
+        origen: "estudiante",
+        autor: "Juan",
+        carrera: "Ingeniería Civil PUCV",
+        nivelAutor: "principiante",
+        etiquetaNivel: "PRINCIPIANTE",
+        nombre: "Pierna baja en impacto",
+        descripcion: "Trabajo de pierna evitando cargas muy pesadas.",
+        foco: "pierna",
+        impactoRodilla: "bajo",
+        ejercicios: [
+          { nombre: "Prensa de piernas liviana", series: 3, repeticiones: "12-15" },
+          { nombre: "Extensión de cadera en máquina", series: 3, repeticiones: "12-15" },
+          { nombre: "Elevaciones de talón en máquina", series: 3, repeticiones: "15" },
+        ],
+      },
+      {
+        id: "rr2",
+        origen: "estudiante",
+        autor: "Carla",
+        carrera: "Ingeniería Comercial PUCV",
+        nivelAutor: "intermedio",
+        etiquetaNivel: "INTERMEDIO",
+        nombre: "Bíceps – 4 ejercicios",
+        descripcion: "Rutina de brazo pensada para 2 días a la semana.",
+        foco: "brazo",
+        impactoRodilla: "ninguno",
+        ejercicios: [
+          { nombre: "Curl barra Z", series: 3, repeticiones: "8-10" },
+          { nombre: "Curl mancuerna alterno", series: 3, repeticiones: "10-12" },
+          { nombre: "Curl martillo", series: 3, repeticiones: "10-12" },
+          { nombre: "Curl en banco inclinado", series: 2, repeticiones: "12-15" },
+        ],
+      },
+      {
+        id: "rr3",
+        origen: "estudiante",
+        autor: "Alejandro",
+        carrera: "Ingeniería en Construcción PUCV",
+        nivelAutor: "principiante",
+        etiquetaNivel: "PRINCIPIANTE",
+        nombre: "Espalda básica sin impacto",
+        descripcion: "Rutina simple de espalda, sin impacto en rodillas.",
+        foco: "espalda",
+        impactoRodilla: "ninguno",
+        ejercicios: [
+          { nombre: "Jalón al pecho", series: 3, repeticiones: "10-12" },
+          { nombre: "Remo en polea", series: 3, repeticiones: "10-12" },
+          { nombre: "Pull over en polea", series: 2, repeticiones: "12-15" },
+        ],
+      },
+    ];
+
+    function renderRutinaCard(r, tipoLista) {
+      const esPropia = tipoLista === "propia";
+      const esAdoptada = tipoLista === "adoptada";
+      const esRecomendada = tipoLista === "recomendada" || tipoLista === "sugerida";
+
       const card = document.createElement("article");
       card.className = "card";
       card.dataset.rutinaId = r.id;
-      card.innerHTML = esPersonal
-        ? `
+
+      let header = "";
+      if (esPropia) {
+        header = `
           <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
             <div>
               <h3>${r.nombre}</h3>
-              <div class="subtle">${r.descripcion}</div>
-              <span class="badge-level">${r.nivel.toUpperCase()}</span>
+              <div class="subtle">Rutina creada por ti</div>
+              <span class="badge-level">${(r.nivel || "personalizada").toUpperCase()}</span>
             </div>
           </div>
-          <div class="routine-actions">
-            <button class="btn btn-primary" data-action="empezar">Empezar rutina</button>
-            <button class="btn btn-ghost" data-action="editar">Editar</button>
+        `;
+      } else if (esAdoptada) {
+        header = `
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
+            <div>
+              <h3>${r.nombre}</h3>
+              <div class="subtle">Adoptada de estudiantes PUCV</div>
+              <span class="badge-level">${(r.etiquetaNivel || "ADOPTADA").toUpperCase()}</span>
+            </div>
           </div>
-          <div class="routine-details" hidden></div>
-        `
-        : `
+        `;
+      } else if (esRecomendada) {
+        header = `
           <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
             <div>
               <div style="display:flex; align-items:center; gap:8px;">
-                <div class="avatar" style="width:30px;height:30px;font-size:12px;">${r.autor[0]}</div>
+                <div class="avatar" style="width:30px;height:30px;font-size:12px;">${(r.autor || "P")[0]}</div>
                 <div>
-                  <strong>${r.autor}</strong>
-                  <div class="subtle">${r.carrera}</div>
+                  <strong>${r.autor || "Estudiante PUCV"}</strong>
+                  <div class="subtle">${r.carrera || "Carrera PUCV"}</div>
                 </div>
               </div>
               <div style="margin-top:8px;">
-                <span class="badge-level">${r.etiquetaNivel}</span>
+                <span class="badge-level">${r.etiquetaNivel || "RECOMENDADA"}</span>
               </div>
               <div style="margin-top:8px; font-size:13px;"><strong>${r.nombre}</strong></div>
               <div class="subtle">${r.descripcion}</div>
             </div>
           </div>
-          <div class="routine-actions">
+        `;
+      }
+
+      card.innerHTML = `
+        ${header}
+        ${!esRecomendada ? `<div class="subtle" style="margin-top:6px;">${r.descripcion}</div>` : ""}
+        <div class="routine-actions">
+          ${esPropia ? `
+            <button class="btn btn-primary" data-action="empezar">Empezar rutina</button>
+            <button class="btn btn-ghost" data-action="editar">Editar</button>
+          ` : ""}
+          ${esAdoptada ? `
+            <button class="btn btn-primary" data-action="empezar">Empezar rutina</button>
+          ` : ""}
+          ${esRecomendada ? `
             <button class="btn btn-ghost" data-action="ver">Ver detalles</button>
             <button class="btn btn-primary" data-action="adoptar">Adoptar esta rutina</button>
-          </div>
-          <div class="routine-details" hidden></div>
-        `;
+          ` : ""}
+        </div>
+        <div class="routine-details" hidden></div>
+      `;
 
       card.addEventListener("click", e => {
         const actionBtn = e.target.closest("button[data-action]");
@@ -969,7 +1419,7 @@
 
         if (action === "empezar" || action === "ver") {
           if (details.hasAttribute("hidden")) {
-            const ejercicios = r.ejercicios
+            const ejercicios = (r.ejercicios || [])
               .map(ej => `
                 <tr>
                   <td>${ej.nombre}</td>
@@ -994,20 +1444,18 @@
         }
 
         if (action === "adoptar") {
-          const nueva = {
-            id: "r" + (rutinasPersonales.length + 1),
-            nombre: r.nombre,
-            nivel: r.nivelAutor,
-            descripcion: r.descripcion,
-            ejercicios: r.ejercicios,
-          };
-          rutinasPersonales.push(nueva);
-          renderRutinasPersonales();
-          alert('Rutina adoptada en "Mis rutinas".');
+          const yaAdoptada = rutinasAdoptadas.some(x => x.id === r.id);
+          if (yaAdoptada) {
+            alert("Esta rutina ya está en tu lista de adoptadas.");
+            return;
+          }
+          rutinasAdoptadas.push({ ...r });
+          renderRutinasAdoptadas();
+          alert('Rutina adoptada en "Rutinas adoptadas de otros estudiantes PUCV".');
         }
 
         if (action === "editar") {
-          alert("En una versión futura aquí podrías editar la rutina. En el prototipo dejamos solo este mensaje.");
+          alert("En una versión futura aquí podrás editar el detalle completo de la rutina. En el prototipo dejamos solo este mensaje.");
         }
       });
 
@@ -1016,16 +1464,61 @@
 
     function renderRutinasPersonales() {
       rutinasPersonalesEl.innerHTML = "";
+      if (rutinasPersonales.length === 0) {
+        rutinasPersonalesEl.innerHTML = `<div class="subtle">Aún no has creado rutinas propias. Usa el botón "Nueva rutina".</div>`;
+        return;
+      }
       rutinasPersonales.forEach(r => {
-        rutinasPersonalesEl.appendChild(renderRutinaCard(r, true));
+        rutinasPersonalesEl.appendChild(renderRutinaCard(r, "propia"));
       });
     }
 
-    function renderRutinasRecomendadas() {
-      rutinasRecomendadasEl.innerHTML = "";
-      rutinasRecomendadas.forEach(r => {
-        rutinasRecomendadasEl.appendChild(renderRutinaCard(r, false));
+    function renderRutinasAdoptadas() {
+      rutinasAdoptadasEl.innerHTML = "";
+      if (rutinasAdoptadas.length === 0) {
+        rutinasAdoptadasEl.innerHTML = `<div class="subtle">Cuando adoptes rutinas de otros estudiantes, aparecerán aquí.</div>`;
+        return;
+      }
+      rutinasAdoptadas.forEach(r => {
+        rutinasAdoptadasEl.appendChild(renderRutinaCard(r, "adoptada"));
       });
+    }
+
+    function perfilTieneDolorRodillas(cond) {
+      if (!cond) return false;
+      const c = cond.toLowerCase();
+      return c.includes("rodilla") || c.includes("rodillas");
+    }
+
+    function generarRutinasSugeridas(perfil) {
+      // Si tiene dolor de rodillas, prioriza impactoRodilla bajo/ninguno
+      const tieneRodilla = perfilTieneDolorRodillas(perfil.condiciones);
+      let candidatas = rutinasBaseRecomendadas;
+
+      if (tieneRodilla) {
+        candidatas = candidatas.filter(r => r.impactoRodilla !== "alto");
+      }
+
+      if (perfil.nivel === "principiante") {
+        candidatas = candidatas.filter(r => (r.nivelAutor || "principiante") === "principiante");
+      }
+
+      if (candidatas.length === 0) candidatas = rutinasBaseRecomendadas;
+      return candidatas;
+    }
+
+    function renderRutinasSugeridas(perfil) {
+      const sugeridas = generarRutinasSugeridas(perfil);
+      rutinasSugeridasEl.innerHTML = "";
+      sugeridas.forEach(r => {
+        rutinasSugeridasEl.appendChild(renderRutinaCard(r, "sugerida"));
+      });
+
+      let mensaje = "En base a tu nivel y datos de perfil, estas rutinas pueden ser un buen punto de partida.";
+      if (perfilTieneDolorRodillas(perfil.condiciones)) {
+        mensaje = "Debido a los antecedentes entregados en tu perfil (por ejemplo, dolor de rodillas), priorizamos rutinas de menor impacto articular y con foco en tren superior o trabajo de pierna más controlado.";
+      }
+      mensajeSugeridasEl.textContent = mensaje;
     }
 
     btnNuevaRutina.addEventListener("click", () => {
@@ -1033,10 +1526,13 @@
       if (!nombre) return;
       const descripcion = prompt("Descripción breve (ejercicios principales):");
       rutinasPersonales.push({
-        id: "r" + (rutinasPersonales.length + 1),
+        id: "rp" + (rutinasPersonales.length + 1),
+        origen: "propia",
         nombre,
         nivel: "personalizada",
-        descripcion: descripcion || "Rutina personalizada",
+        descripcion: descripcion || "Rutina personalizada creada por ti",
+        foco: "mixto",
+        impactoRodilla: "desconocido",
         ejercicios: [],
       });
       renderRutinasPersonales();
@@ -1054,6 +1550,19 @@
     const perfilObj = document.getElementById("perfil-objetivos");
     const btnGuardarPerfil = document.getElementById("btn-guardar-perfil");
 
+    const perfil = {
+      email: "",
+      peso: 80,
+      estatura: 175,
+      edad: 22,
+      nivel: "principiante",
+      anios: 1,
+      disponibilidad: 3,
+      condiciones: "Dolor leve de rodillas",
+      preferencias: "Cerca de la sede, precio, poca afluencia",
+      objetivos: "Ganar fuerza, hipertrofia",
+    };
+
     function cargarPerfil() {
       perfilEmailInput.value = perfil.email || perfilEmailInput.value;
       perfilPeso.value = perfil.peso;
@@ -1069,24 +1578,27 @@
 
     btnGuardarPerfil.addEventListener("click", () => {
       perfil.email = perfilEmailInput.value;
-      perfil.peso = Number(perfilPeso.value);
-      perfil.estatura = Number(perfilEstatura.value);
-      perfil.edad = Number(perfilEdad.value);
-      perfil.nivel = perfilNivel.value;
-      perfil.anios = Number(perfilAnios.value);
-      perfil.disponibilidad = Number(perfilDisp.value);
-      perfil.condiciones = perfilCond.value;
-      perfil.preferencias = perfilPref.value;
-      perfil.objetivos = perfilObj.value;
-      alert("Perfil actualizado en el prototipo (datos simulados).");
+      perfil.peso = Number(perfilPeso.value || perfil.peso);
+      perfil.estatura = Number(perfilEstatura.value || perfil.estatura);
+      perfil.edad = Number(perfilEdad.value || perfil.edad);
+      perfil.nivel = perfilNivel.value || perfil.nivel;
+      perfil.anios = Number(perfilAnios.value || perfil.anios);
+      perfil.disponibilidad = Number(perfilDisp.value || perfil.disponibilidad);
+      perfil.condiciones = perfilCond.value || perfil.condiciones;
+      perfil.preferencias = perfilPref.value || perfil.preferencias;
+      perfil.objetivos = perfilObj.value || perfil.objetivos;
+
+      renderRutinasSugeridas(perfil);
+      alert("Perfil actualizado en el prototipo (datos simulados). Las sugerencias de rutinas se ajustaron a tus antecedentes.");
     });
 
     // ------ Inicialización ------
     renderGyms();
     renderPrecios();
-    renderRutinasPersonales();
-    renderRutinasRecomendadas();
     cargarPerfil();
+    renderRutinasPersonales();
+    renderRutinasAdoptadas();
+    renderRutinasSugeridas(perfil);
   </script>
 </body>
 </html>
