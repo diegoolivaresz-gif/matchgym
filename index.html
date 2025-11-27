@@ -25,24 +25,19 @@
   <style>
     :root {
       --bg: #050816;
-      --bg-soft: #080d1f;
-      --bg-card: #0f172a;
+      --bg-card: #0b1120;
       --accent: #00b4ff;
       --accent-soft: rgba(0, 180, 255, 0.08);
       --accent-strong: #0284c7;
       --text: #e5e7eb;
       --text-soft: #9ca3af;
-      --danger: #f97373;
+      --danger: #ef4444;
       --radius-lg: 18px;
       --radius-xl: 22px;
       --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.7);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
@@ -53,21 +48,15 @@
       overflow-x: hidden;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button {
-      font-family: inherit;
-      border: none;
-      cursor: pointer;
-    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; border: none; cursor: pointer; }
 
     .app-shell {
       max-width: 1180px;
       margin: 0 auto;
       padding: 18px 16px 40px;
+      position: relative;
+      z-index: 1;
     }
 
     header.app-header {
@@ -113,9 +102,7 @@
       gap: 6px;
     }
 
-    .brand-text h1 span.dot {
-      color: var(--accent);
-    }
+    .brand-text h1 span.dot { color: var(--accent); }
 
     .brand-text .subtitle {
       font-size: 11px;
@@ -123,34 +110,20 @@
       margin-top: 2px;
     }
 
-    /* Logo PUCV */
-
-    .pucv-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+    /* Logo PUCV (usa tu archivo pucv-logo.png) */
+    .pucv-logo-wrapper {
       margin-top: 6px;
-      padding: 5px 9px 5px 6px;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.95);
-      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.8);
-    }
-
-    .pucv-logo-circle {
-      width: 22px;
-      height: 22px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 30% 20%, #ffffff, #bfdbfe 35%, #1d4ed8 90%);
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-weight: 800;
-      color: #0f172a;
-      border: 2px solid #eff6ff;
+      gap: 8px;
     }
 
-    .pucv-badge span {
+    .pucv-logo-wrapper img {
+      height: 26px;
+      width: auto;
+    }
+
+    .pucv-logo-wrapper span {
       font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 0.08em;
@@ -239,6 +212,7 @@
       justify-content: space-between;
       align-items: baseline;
       margin-bottom: 10px;
+      gap: 10px;
     }
 
     .section-header h2 {
@@ -265,13 +239,23 @@
     }
 
     select,
-    input[type="number"] {
+    input[type="number"],
+    textarea {
       font-size: 11px;
       padding: 4px 7px;
       border-radius: 999px;
       border: 1px solid rgba(148, 163, 184, 0.5);
       background: rgba(15, 23, 42, 0.95);
       color: var(--text);
+      width: auto;
+    }
+
+    textarea {
+      border-radius: 14px;
+      width: 100%;
+      min-height: 70px;
+      resize: vertical;
+      padding: 7px 9px;
     }
 
     .explorar-layout {
@@ -286,6 +270,7 @@
       border-radius: 20px;
       overflow: hidden;
       border: 1px solid rgba(148, 163, 184, 0.25);
+      z-index: 1;
     }
 
     .gym-cards {
@@ -307,11 +292,16 @@
       column-gap: 10px;
       row-gap: 6px;
       font-size: 11px;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease,
+        background 0.15s ease;
     }
 
-    .gym-card h3 {
-      font-size: 13px;
-      margin-bottom: 3px;
+    .gym-card h3 { font-size: 13px; margin-bottom: 3px; }
+
+    .gym-card.selected-compare {
+      border-color: rgba(239, 68, 68, 0.9);
+      box-shadow: 0 0 0 1px rgba(248, 113, 113, 0.6);
+      background: rgba(24, 24, 27, 0.98);
     }
 
     .gym-chip {
@@ -391,9 +381,7 @@
       color: #e5e7eb;
     }
 
-    .btn-primary:hover {
-      filter: brightness(1.05);
-    }
+    .btn-primary:hover { filter: brightness(1.05); }
 
     .gym-price {
       text-align: right;
@@ -401,10 +389,9 @@
       color: #e2e8f0;
     }
 
-    .gym-price strong {
-      font-size: 13px;
-    }
+    .gym-price strong { font-size: 13px; }
 
+    /* Modal comparación */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -412,11 +399,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 30;
+      z-index: 40;
     }
 
     .modal {
-      width: min(620px, 92vw);
+      width: min(640px, 92vw);
       background: #020617;
       border-radius: 22px;
       border: 1px solid rgba(148, 163, 184, 0.45);
@@ -429,15 +416,25 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 8px;
+      gap: 12px;
     }
 
-    .modal-header h3 {
-      font-size: 14px;
+    .modal-header h3 { font-size: 14px; }
+    .modal-header small { font-size: 11px; color: var(--text-soft); }
+
+    .modal-gym-head {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: center;
     }
 
-    .modal-header small {
-      font-size: 11px;
-      color: var(--text-soft);
+    .gym-logo {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+      border-radius: 999px;
+      background: #020617;
     }
 
     .modal-close {
@@ -452,9 +449,7 @@
       justify-content: center;
     }
 
-    .modal-close:hover {
-      background: rgba(15, 23, 42, 1);
-    }
+    .modal-close:hover { background: rgba(15, 23, 42, 1); }
 
     .compare-table {
       width: 100%;
@@ -499,6 +494,7 @@
       color: #e5e7eb;
     }
 
+    /* Login */
     .login-overlay {
       position: fixed;
       inset: 0;
@@ -506,7 +502,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 20;
+      z-index: 60; /* por encima del mapa y del modal */
     }
 
     .login-card {
@@ -525,14 +521,8 @@
       margin-bottom: 8px;
     }
 
-    .login-title h2 {
-      font-size: 18px;
-    }
-
-    .login-title span {
-      font-size: 11px;
-      color: var(--text-soft);
-    }
+    .login-title h2 { font-size: 18px; }
+    .login-title span { font-size: 11px; color: var(--text-soft); }
 
     .login-body p {
       font-size: 12px;
@@ -566,10 +556,7 @@
       border: none;
     }
 
-    .google-btn img {
-      width: 16px;
-      height: 16px;
-    }
+    .google-btn img { width: 16px; height: 16px; }
 
     .login-small {
       margin-top: 8px;
@@ -585,18 +572,45 @@
       min-height: 14px;
     }
 
-    [hidden] {
-      display: none !important;
+    /* Perfil */
+    .perfil-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 14px;
+      font-size: 12px;
     }
 
-    @media (max-width: 880px) {
-      .explorar-layout {
-        grid-template-columns: minmax(0, 1fr);
-      }
+    .perfil-group { margin-bottom: 10px; }
 
-      #gym-map {
-        height: 260px;
-      }
+    .perfil-group label {
+      font-size: 11px;
+      color: var(--text-soft);
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .perfil-group small {
+      font-size: 10px;
+      color: var(--text-soft);
+    }
+
+    .perfil-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      font-size: 10px;
+      color: var(--text-soft);
+    }
+
+    [hidden] { display: none !important; }
+
+    @media (max-width: 880px) {
+      .explorar-layout { grid-template-columns: minmax(0, 1fr); }
+      #gym-map { height: 260px; }
+      .perfil-grid { grid-template-columns: minmax(0, 1fr); }
     }
   </style>
 </head>
@@ -650,9 +664,8 @@
           <div class="subtitle">
             Herramienta para elegir gimnasios y rutinas cerca de las sedes PUCV
           </div>
-
-          <div class="pucv-badge">
-            <div class="pucv-logo-circle">PU</div>
+          <div class="pucv-logo-wrapper">
+            <img src="pucv-logo.png" alt="PUCV" />
             <span>Pontificia Universidad Católica de Valparaíso</span>
           </div>
         </div>
@@ -669,9 +682,6 @@
       <button class="nav-tab active" data-section="explorar">
         Explorar gimnasios
       </button>
-      <button class="nav-tab" data-section="precios">
-        Ver precios
-      </button>
       <button class="nav-tab" data-section="rutinas">
         Mis rutinas
       </button>
@@ -680,6 +690,7 @@
       </button>
     </nav>
 
+    <!-- EXPLORAR GIMNASIOS -->
     <section id="section-explorar" class="main-card">
       <div class="section-header">
         <div>
@@ -720,52 +731,95 @@
       </div>
     </section>
 
-    <section id="section-precios" class="main-card" hidden>
-      <div class="section-header">
-        <div>
-          <h2>Ver precios</h2>
-          <p>Vista resumida de precios mensuales y matrícula por gimnasio.</p>
-        </div>
-      </div>
-      <p style="font-size:12px;color:var(--text-soft);">
-        (En esta iteración la lógica principal está en <strong>Explorar gimnasios</strong>. Aquí
-        puedes mostrar una tabla estática resumida si el profe lo pide.)
-      </p>
-    </section>
-
+    <!-- MIS RUTINAS (maqueta) -->
     <section id="section-rutinas" class="main-card" hidden>
       <div class="section-header">
         <div>
           <h2>Mis rutinas</h2>
           <p>
-            Próximo paso: separar rutinas creadas por ti vs. rutinas sugeridas por MatchGym
-            según tus antecedentes (dolor de rodillas, tiempo disponible, etc.).
+            Próximo paso: separar rutinas creadas por ti vs. rutinas sugeridas por
+            MatchGym según tus antecedentes (dolor de rodillas, tiempo disponible, etc.).
           </p>
         </div>
       </div>
       <p style="font-size:12px;color:var(--text-soft);">
-        De momento es solo maqueta para estabilizar login + mapa. Luego la rediseñamos
+        De momento es solo maqueta para estabilizar login + mapa. Luego lo rediseñamos
         con el estilo “editor de planes” que te gusta.
       </p>
     </section>
 
+    <!-- MI PERFIL (pide antecedentes) -->
     <section id="section-perfil" class="main-card" hidden>
       <div class="section-header">
         <div>
           <h2>Mi perfil</h2>
           <p>
-            Resumen de tus antecedentes: horario disponible, dolores articulares,
-            objetivos, etc.
+            Resumen de tus antecedentes: objetivos, dolores articulares y horarios.
+            Esto es lo que MatchGym usará para sugerirte rutinas.
           </p>
         </div>
+        <div class="perfil-badge">
+          <span>“Debido a tus antecedentes, las mejores rutinas son…”</span>
+        </div>
       </div>
-      <p style="font-size:12px;color:var(--text-soft);">
-        También queda como maqueta por ahora. Lo usaremos después para justificar frases
-        tipo “Debido a tus antecedentes, estas son las mejores rutinas…”.
-      </p>
+
+      <div class="perfil-grid">
+        <div>
+          <div class="perfil-group">
+            <label for="objetivo">Objetivo principal</label>
+            <select id="objetivo">
+              <option>Ganar masa muscular</option>
+              <option>Perder grasa / definición</option>
+              <option>Mejorar resistencia</option>
+              <option>Rehabilitación / mantenimiento suave</option>
+            </select>
+          </div>
+
+          <div class="perfil-group">
+            <label>Dolores o molestias relevantes</label>
+            <small>(marca todas las que apliquen)</small>
+            <div style="margin-top:4px;font-size:11px;color:var(--text-soft);">
+              <label><input type="checkbox" /> Rodillas</label> ·
+              <label><input type="checkbox" /> Hombros</label> ·
+              <label><input type="checkbox" /> Zona lumbar</label> ·
+              <label><input type="checkbox" /> Cuello</label>
+            </div>
+          </div>
+
+          <div class="perfil-group">
+            <label for="restricciones">Restricciones médicas / recomendaciones</label>
+            <textarea id="restricciones"
+              placeholder="Ej: evitar impacto fuerte en rodillas, preferir elíptica y bicicleta."></textarea>
+          </div>
+        </div>
+
+        <div>
+          <div class="perfil-group">
+            <label for="dias-entreno">Días disponibles para entrenar</label>
+            <textarea id="dias-entreno"
+              placeholder="Ej: Lunes, miércoles y viernes en la tarde; sábado en la mañana."></textarea>
+          </div>
+
+          <div class="perfil-group">
+            <label for="experiencia">Experiencia en entrenamiento</label>
+            <select id="experiencia">
+              <option>Principiante (menos de 6 meses)</option>
+              <option>Intermedio (6 meses – 2 años)</option>
+              <option>Avanzado (más de 2 años)</option>
+            </select>
+          </div>
+
+          <div class="perfil-group">
+            <label for="comentarios-extra">Comentarios extra</label>
+            <textarea id="comentarios-extra"
+              placeholder="Cualquier info extra que explique por qué eliges ciertos gimnasios o rutinas."></textarea>
+          </div>
+        </div>
+      </div>
     </section>
   </div>
 
+  <!-- MODAL COMPARACIÓN -->
   <div id="compare-overlay" class="modal-overlay" hidden>
     <div class="modal">
       <div class="modal-header">
@@ -779,8 +833,8 @@
         <thead>
           <tr>
             <th>Aspecto</th>
-            <th id="col-a">Gimnasio A</th>
-            <th id="col-b">Gimnasio B</th>
+            <th id="col-a"></th>
+            <th id="col-b"></th>
           </tr>
         </thead>
         <tbody id="compare-body"></tbody>
@@ -792,6 +846,7 @@
   </div>
 
   <script>
+    // FIREBASE
     const firebaseConfig = {
       apiKey: "AIzaSyCC5XJy3oqmDoTKgDMefB1zjp7XAFgTxWo",
       authDomain: "matchgym-e7df0.firebaseapp.com",
@@ -806,6 +861,7 @@
     const auth = firebase.auth();
     const provider = new firebase.auth.GoogleAuthProvider();
 
+    // SEDES Y GIMNASIOS
     const sedes = {
       ibc: {
         nombre: "Edificio Isabel Brown Caces PUCV · Av. Brasil 2241",
@@ -815,6 +871,7 @@
             id: "smartfit-puerto",
             nombre: "SmartFit Estación Puerto",
             cadena: "SmartFit",
+            logo: "smartfit-logo.png", // opcional
             coords: [-33.0389, -71.6273],
             distanciaKm: 0.7,
             afluencia: "media",
@@ -828,6 +885,7 @@
             id: "sportlife-brasil",
             nombre: "Sportlife Valparaíso",
             cadena: "Sportlife",
+            logo: "sportlife-logo.png",
             coords: [-33.0442, -71.6226],
             distanciaKm: 0.6,
             afluencia: "alta",
@@ -841,6 +899,7 @@
             id: "smartfit-victoria",
             nombre: "SmartFit Plaza Victoria",
             cadena: "SmartFit",
+            logo: "smartfit-logo.png",
             coords: [-33.0448, -71.6196],
             distanciaKm: 0.8,
             afluencia: "alta",
@@ -854,6 +913,7 @@
             id: "seven",
             nombre: "Gimnasio Seven",
             cadena: "Seven",
+            logo: "seven-logo.png",
             coords: [-33.0452, -71.6174],
             distanciaKm: 1.0,
             afluencia: "media",
@@ -867,6 +927,7 @@
             id: "pacific-ross",
             nombre: "Pacific Gym Mall Paseo Ross",
             cadena: "Pacific",
+            logo: "pacific-logo.png",
             coords: [-33.0437, -71.6203],
             distanciaKm: 1.3,
             afluencia: "baja",
@@ -886,6 +947,7 @@
             id: "gym-casa-central",
             nombre: "Gimnasio Casa Central PUCV",
             cadena: "PUCV",
+            logo: "pucv-logo.png",
             coords: [-33.0439, -71.6248],
             distanciaKm: 0.0,
             afluencia: "media",
@@ -905,6 +967,7 @@
             id: "curauma-fit",
             nombre: "Curauma Fitness",
             cadena: "Local",
+            logo: "curauma-logo.png",
             coords: [-33.0704, -71.4306],
             distanciaKm: 0.4,
             afluencia: "media",
@@ -917,34 +980,13 @@
       },
     };
 
+    // LOGIN UI
     const loginOverlay = document.getElementById("login-overlay");
     const loginBtn = document.getElementById("google-login-btn");
     const loginError = document.getElementById("login-error");
     const userNameLabel = document.getElementById("user-name-label");
     const userAvatar = document.getElementById("user-avatar");
     const signOutBtn = document.getElementById("sign-out-btn");
-
-    const navTabs = document.querySelectorAll(".nav-tab");
-    const sections = {
-      explorar: document.getElementById("section-explorar"),
-      precios: document.getElementById("section-precios"),
-      rutinas: document.getElementById("section-rutinas"),
-      perfil: document.getElementById("section-perfil"),
-    };
-
-    const sedeSelect = document.getElementById("sede-select");
-    const sedeLabel = document.getElementById("sede-label");
-    const afluenciaFilter = document.getElementById("afluencia-filter");
-    const maxDistanceInput = document.getElementById("max-distance");
-    const gymCardsEl = document.getElementById("gym-cards");
-
-    const compareOverlay = document.getElementById("compare-overlay");
-    const compareClose = document.getElementById("compare-close");
-    const compareCloseBottom = document.getElementById("compare-close-bottom");
-    const compareNamesEl = document.getElementById("compare-names");
-    const compareBodyEl = document.getElementById("compare-body");
-    const colAEl = document.getElementById("col-a");
-    const colBEl = document.getElementById("col-b");
 
     loginBtn.addEventListener("click", async () => {
       loginError.textContent = "";
@@ -962,9 +1004,7 @@
       }
     });
 
-    signOutBtn.addEventListener("click", () => {
-      auth.signOut();
-    });
+    signOutBtn.addEventListener("click", () => auth.signOut());
 
     auth.onAuthStateChanged((user) => {
       if (user && user.email && user.email.endsWith("@mail.pucv.cl")) {
@@ -981,17 +1021,24 @@
       }
     });
 
+    // NAV TABS
+    const navTabs = document.querySelectorAll(".nav-tab");
+    const sections = {
+      explorar: document.getElementById("section-explorar"),
+      rutinas: document.getElementById("section-rutinas"),
+      perfil: document.getElementById("section-perfil"),
+    };
+
     navTabs.forEach((tab) => {
       tab.addEventListener("click", () => {
         navTabs.forEach((t) => t.classList.remove("active"));
         tab.classList.add("active");
-        const sectionKey = tab.dataset.section;
-        Object.entries(sections).forEach(([key, el]) => {
-          el.hidden = key !== sectionKey;
-        });
+        const key = tab.dataset.section;
+        Object.entries(sections).forEach(([k, el]) => (el.hidden = k !== key));
       });
     });
 
+    // MAPA
     const initialSedeKey = "ibc";
     let currentSedeKey = initialSedeKey;
 
@@ -1006,53 +1053,30 @@
 
     const markersLayer = L.layerGroup().addTo(map);
     let sedeMarker = null;
+    let gymMarkers = {}; // id -> marker
 
-    function renderGyms() {
-      const sede = sedes[currentSedeKey];
-      sedeLabel.textContent = sede.nombre;
+    const defaultGymStyle = {
+      radius: 7,
+      color: "#0ea5e9",
+      fillColor: "#38bdf8",
+      fillOpacity: 0.95,
+      weight: 2,
+    };
 
-      const maxDist = parseFloat(maxDistanceInput.value || "3");
-      const filter = afluenciaFilter.value;
+    const selectedGymStyle = {
+      radius: 8,
+      color: "#ef4444",
+      fillColor: "#f97373",
+      fillOpacity: 0.95,
+      weight: 2,
+    };
 
-      markersLayer.clearLayers();
-
-      if (sedeMarker) map.removeLayer(sedeMarker);
-      sedeMarker = L.circleMarker(sede.center, {
-        radius: 7,
-        color: "#38bdf8",
-        fillColor: "#0ea5e9",
-        fillOpacity: 0.9,
-      })
-        .addTo(map)
-        .bindPopup("Sede PUCV (origen)");
-
-      const gymsFiltrados = sede.gyms.filter((g) => {
-        if (g.distanciaKm > maxDist) return false;
-        if (filter !== "todos" && g.afluencia !== filter) return false;
-        return true;
-      });
-
-      gymsFiltrados.forEach((gym) => {
-        const marker = L.marker(gym.coords).addTo(markersLayer);
-        marker.bindPopup(
-          `<strong>${gym.nombre}</strong><br>${gym.distanciaKm.toFixed(
-            1
-          )} km desde la sede`
-        );
-      });
-
-      if (gymsFiltrados.length > 0) {
-        const group = L.featureGroup([
-          sedeMarker,
-          ...gymsFiltrados.map((g) => L.marker(g.coords)),
-        ]);
-        map.fitBounds(group.getBounds().pad(0.2));
-      } else {
-        map.setView(sede.center, 15.5);
-      }
-
-      renderGymCards(gymsFiltrados);
-    }
+    // CONTROLES EXPLORAR
+    const sedeSelect = document.getElementById("sede-select");
+    const sedeLabel = document.getElementById("sede-label");
+    const afluenciaFilter = document.getElementById("afluencia-filter");
+    const maxDistanceInput = document.getElementById("max-distance");
+    const gymCardsEl = document.getElementById("gym-cards");
 
     function afluenciaLabel(af) {
       if (af === "baja") return "Baja afluencia";
@@ -1070,14 +1094,63 @@
 
     function formatoPrecio(v) {
       if (!v || v === 0) return "Incluido (ejemplo)";
-      return (
-        "$" + v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-      );
+      return "$" + v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    function renderGyms() {
+      const sede = sedes[currentSedeKey];
+      sedeLabel.textContent = sede.nombre;
+
+      const maxDist = parseFloat(maxDistanceInput.value || "3");
+      const filter = afluenciaFilter.value;
+
+      markersLayer.clearLayers();
+      gymMarkers = {};
+
+      if (sedeMarker) map.removeLayer(sedeMarker);
+      sedeMarker = L.circleMarker(sede.center, {
+        radius: 7,
+        color: "#38bdf8",
+        fillColor: "#0ea5e9",
+        fillOpacity: 0.9,
+        weight: 2,
+      })
+        .addTo(map)
+        .bindPopup("Sede PUCV (origen)");
+
+      const gymsFiltrados = sede.gyms.filter((g) => {
+        if (g.distanciaKm > maxDist) return false;
+        if (filter !== "todos" && g.afluencia !== filter) return false;
+        return true;
+      });
+
+      const tempMarkers = [];
+
+      gymsFiltrados.forEach((gym) => {
+        const marker = L.circleMarker(gym.coords, defaultGymStyle)
+          .addTo(markersLayer)
+          .bindPopup(
+            `<strong>${gym.nombre}</strong><br>${gym.distanciaKm.toFixed(
+              1
+            )} km desde la sede`
+          );
+        gymMarkers[gym.id] = marker;
+        tempMarkers.push(marker);
+      });
+
+      if (gymsFiltrados.length > 0) {
+        const group = L.featureGroup([sedeMarker, ...tempMarkers]);
+        map.fitBounds(group.getBounds().pad(0.2));
+      } else {
+        map.setView(sede.center, 15.5);
+      }
+
+      renderGymCards(gymsFiltrados);
+      resetSelection(); // si cambias filtros, limpiar comparaciones
     }
 
     function renderGymCards(gyms) {
       gymCardsEl.innerHTML = "";
-
       if (gyms.length === 0) {
         gymCardsEl.innerHTML =
           '<p style="font-size:12px;color:var(--text-soft);">No hay gimnasios que cumplan con los filtros actuales.</p>';
@@ -1120,12 +1193,43 @@
             </div>
           </div>
         `;
-
         gymCardsEl.appendChild(card);
       });
     }
 
+    // SELECCIÓN PARA COMPARAR
     let firstSelectedGym = null;
+    let secondSelectedGym = null;
+
+    function highlightCardAndMarker(gymId, isSelected) {
+      const card = gymCardsEl.querySelector(`.gym-card[data-id="${gymId}"]`);
+      if (card) {
+        card.classList.toggle("selected-compare", isSelected);
+      }
+      const marker = gymMarkers[gymId];
+      if (marker) {
+        marker.setStyle(isSelected ? selectedGymStyle : defaultGymStyle);
+      }
+    }
+
+    function resetSelection() {
+      firstSelectedGym = null;
+      secondSelectedGym = null;
+      // reset botones
+      gymCardsEl
+        .querySelectorAll('button[data-action="comparar"]')
+        .forEach((b) => {
+          b.textContent = "Comparar";
+          b.disabled = false;
+          b.style.opacity = "1";
+        });
+      // reset cards
+      gymCardsEl
+        .querySelectorAll(".gym-card.selected-compare")
+        .forEach((c) => c.classList.remove("selected-compare"));
+      // reset markers
+      Object.values(gymMarkers).forEach((m) => m.setStyle(defaultGymStyle));
+    }
 
     gymCardsEl.addEventListener("click", (e) => {
       const btn = e.target.closest("button[data-action]");
@@ -1152,30 +1256,55 @@
       }
 
       if (action === "comparar") {
+        // Si aún no hay selección
         if (!firstSelectedGym) {
           firstSelectedGym = gym;
           btn.textContent = "Seleccionado ✓";
           btn.disabled = true;
           btn.style.opacity = "0.7";
-        } else {
-          openCompare(firstSelectedGym, gym);
-          firstSelectedGym = null;
-          const allCompareBtns = gymCardsEl.querySelectorAll(
-            'button[data-action="comparar"]'
-          );
-          allCompareBtns.forEach((b) => {
-            b.textContent = "Comparar";
-            b.disabled = false;
-            b.style.opacity = "1";
-          });
+          highlightCardAndMarker(gym.id, true);
+          return;
         }
+        // Si vuelve a hacer click sobre el mismo gimnasio, cancelar selección
+        if (firstSelectedGym && firstSelectedGym.id === gym.id) {
+          resetSelection();
+          return;
+        }
+        // Segundo gimnasio: abrir comparación
+        secondSelectedGym = gym;
+        highlightCardAndMarker(gym.id, true);
+        openCompare(firstSelectedGym, secondSelectedGym);
       }
     });
 
+    // MODAL
+    const compareOverlay = document.getElementById("compare-overlay");
+    const compareClose = document.getElementById("compare-close");
+    const compareCloseBottom = document.getElementById("compare-close-bottom");
+    const compareNamesEl = document.getElementById("compare-names");
+    const compareBodyEl = document.getElementById("compare-body");
+    const colAEl = document.getElementById("col-a");
+    const colBEl = document.getElementById("col-b");
+
+    function getLogoUrl(g) {
+      return g.logo || "pucv-logo.png"; // fallback
+    }
+
     function openCompare(gymA, gymB) {
       compareNamesEl.textContent = `${gymA.nombre} vs. ${gymB.nombre}`;
-      colAEl.textContent = gymA.nombre;
-      colBEl.textContent = gymB.nombre;
+
+      colAEl.innerHTML = `
+        <div class="modal-gym-head">
+          <img src="${getLogoUrl(gymA)}" class="gym-logo" alt="${gymA.cadena}" />
+          <span>${gymA.nombre}</span>
+        </div>
+      `;
+      colBEl.innerHTML = `
+        <div class="modal-gym-head">
+          <img src="${getLogoUrl(gymB)}" class="gym-logo" alt="${gymB.cadena}" />
+          <span>${gymB.nombre}</span>
+        </div>
+      `;
 
       const rows = [
         ["Cadena", gymA.cadena, gymB.cadena],
@@ -1203,6 +1332,7 @@
 
     function closeCompare() {
       compareOverlay.hidden = true;
+      resetSelection();
     }
 
     compareClose.addEventListener("click", closeCompare);
@@ -1211,6 +1341,7 @@
       if (e.target === compareOverlay) closeCompare();
     });
 
+    // Filtros
     sedeSelect.addEventListener("change", () => {
       currentSedeKey = sedeSelect.value;
       map.setView(sedes[currentSedeKey].center, 15.5);
@@ -1219,6 +1350,7 @@
     afluenciaFilter.addEventListener("change", renderGyms);
     maxDistanceInput.addEventListener("change", renderGyms);
 
+    // Inicial
     renderGyms();
   </script>
 </body>
