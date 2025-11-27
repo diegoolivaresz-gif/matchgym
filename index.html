@@ -73,24 +73,21 @@
     }
 
     .brand-logo {
-      width: 34px;
-      height: 34px;
+      width: 40px;
+      height: 40px;
       border-radius: 999px;
-      background: conic-gradient(
-        from 210deg,
-        #facc15,
-        #f97316,
-        #0ea5e9,
-        #22c55e,
-        #facc15
-      );
+      background: rgba(15, 23, 42, 0.95);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #0f172a;
-      font-weight: 800;
-      font-size: 15px;
       box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.85);
+      overflow: hidden;
+    }
+
+    .brand-logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
 
     .brand-text h1 {
@@ -110,7 +107,6 @@
       margin-top: 2px;
     }
 
-    /* Logo PUCV (usa tu archivo pucv-logo.png) */
     .pucv-logo-wrapper {
       margin-top: 6px;
       display: flex;
@@ -223,7 +219,7 @@
     .section-header p {
       font-size: 11px;
       color: var(--text-soft);
-      max-width: 420px;
+      max-width: 480px;
     }
 
     .section-controls {
@@ -240,6 +236,8 @@
 
     select,
     input[type="number"],
+    input[type="text"],
+    input[type="email"],
     textarea {
       font-size: 11px;
       padding: 4px 7px;
@@ -572,26 +570,62 @@
       min-height: 14px;
     }
 
-    /* Perfil */
+    /* Perfil estilo formulario */
+    .perfil-form-card {
+      margin-top: 4px;
+      background: rgba(15, 23, 42, 0.96);
+      border-radius: 18px;
+      padding: 14px 14px 12px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+    }
+
     .perfil-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-      gap: 14px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px 12px;
       font-size: 12px;
     }
 
-    .perfil-group { margin-bottom: 10px; }
-
-    .perfil-group label {
-      font-size: 11px;
-      color: var(--text-soft);
-      display: block;
-      margin-bottom: 3px;
+    .perfil-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
 
-    .perfil-group small {
-      font-size: 10px;
+    .perfil-field label {
+      font-size: 11px;
       color: var(--text-soft);
+    }
+
+    .perfil-field input,
+    .perfil-field select {
+      width: 100%;
+    }
+
+    .perfil-field.wide {
+      grid-column: 1 / -1;
+    }
+
+    .perfil-field textarea {
+      border-radius: 12px;
+      min-height: 52px;
+    }
+
+    .perfil-note {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-top: 10px;
+    }
+
+    .perfil-actions {
+      margin-top: 10px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .perfil-actions .btn-primary {
+      padding: 6px 14px;
+      font-size: 12px;
     }
 
     .perfil-badge {
@@ -605,7 +639,7 @@
       color: var(--text-soft);
     }
 
-    /* ---------- MIS RUTINAS ---------- */
+    /* Mis rutinas */
     .routines-header {
       display: flex;
       justify-content: space-between;
@@ -626,16 +660,10 @@
       margin-top: 3px;
     }
 
-    .routines-header-actions .btn-primary {
-      padding-inline: 10px;
-      font-size: 11px;
-      white-space: nowrap;
-    }
-
     .routines-block-title {
       font-size: 15px;
       font-weight: 600;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .routines-block-sub {
@@ -678,32 +706,22 @@
       border: 1px solid rgba(59, 130, 246, 0.6);
     }
 
-    .routine-desc {
-      font-size: 11px;
-      color: var(--text-soft);
-    }
-
     .routine-meta {
       font-size: 11px;
       color: #cbd5f5;
     }
 
-    .routine-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      margin-top: 4px;
-    }
-
-    .routine-footer .btn-primary,
-    .routine-footer .btn-ghost {
+    .routine-desc {
       font-size: 11px;
-      padding-inline: 10px;
-      padding-block: 4px;
+      color: var(--text-soft);
     }
 
-    /* Rutinas sociales */
+    .routine-ex-list {
+      font-size: 11px;
+      color: #e5e7eb;
+      margin-left: 14px;
+    }
+
     .user-header {
       display: flex;
       align-items: center;
@@ -744,24 +762,7 @@
       flex-wrap: wrap;
       gap: 5px;
       margin-top: 4px;
-    }
-
-    .badge-level-intermediate,
-    .badge-level-basic {
-      padding: 2px 7px;
-      border-radius: 999px;
       font-size: 10px;
-      border: 1px solid rgba(148, 163, 184, 0.6);
-    }
-
-    .badge-level-intermediate {
-      background: rgba(59, 130, 246, 0.18);
-      color: #bfdbfe;
-    }
-
-    .badge-level-basic {
-      background: rgba(234, 179, 8, 0.12);
-      color: #fef3c7;
     }
 
     .badge-chip {
@@ -773,15 +774,46 @@
       color: var(--text-soft);
     }
 
+    .badge-level-basic,
+    .badge-level-intermediate {
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+    }
+
+    .badge-level-basic {
+      background: rgba(234, 179, 8, 0.12);
+      color: #fef3c7;
+    }
+
+    .badge-level-intermediate {
+      background: rgba(59, 130, 246, 0.18);
+      color: #bfdbfe;
+    }
+
     .user-routine-title {
       font-size: 13px;
       font-weight: 600;
-      margin-top: 4px;
+      margin-top: 5px;
     }
 
     .user-routine-desc {
       font-size: 11px;
       color: var(--text-soft);
+    }
+
+    .routine-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .routine-footer .btn-primary,
+    .routine-footer .btn-ghost {
+      padding-inline: 10px;
+      padding-block: 4px;
+      font-size: 11px;
     }
 
     .routines-note {
@@ -795,7 +827,7 @@
     @media (max-width: 880px) {
       .explorar-layout { grid-template-columns: minmax(0, 1fr); }
       #gym-map { height: 260px; }
-      .perfil-grid { grid-template-columns: minmax(0, 1fr); }
+      .perfil-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .routines-header { flex-direction: column; align-items: flex-start; }
     }
   </style>
@@ -805,7 +837,9 @@
   <div id="login-overlay" class="login-overlay" hidden>
     <div class="login-card">
       <div class="login-title">
-        <div class="brand-logo">MG</div>
+        <div class="brand-logo">
+          <img src="matchgym_logo_transparent.png" alt="MatchGym" class="brand-logo-img" />
+        </div>
         <div>
           <h2>MatchGym · PUCV</h2>
           <span>Acceso exclusivo con correo institucional</span>
@@ -840,7 +874,9 @@
   <div class="app-shell">
     <header class="app-header">
       <div class="brand">
-        <div class="brand-logo">MG</div>
+        <div class="brand-logo">
+          <img src="matchgym_logo_transparent.png" alt="MatchGym" class="brand-logo-img" />
+        </div>
         <div class="brand-text">
           <h1>
             MatchGym
@@ -917,166 +953,44 @@
       </div>
     </section>
 
-    <!-- MIS RUTINAS: con base social para adoptar rutinas de otros -->
+    <!-- MIS RUTINAS -->
     <section id="section-rutinas" class="main-card" hidden>
       <div class="routines-header">
         <div class="routines-header-text">
           <h2>Mis rutinas</h2>
           <p>
-            Registra tus propias rutinas y
-            <strong>adopta planes que ya usan otros estudiantes PUCV con antecedentes similares</strong>
-            (carrera, horario, objetivo y nivel). Esa es la parte social de MatchGym:
-            ver qué le funciona a gente como tú dentro de la universidad.
+            Respecto a los <strong>antecedentes que registraste en tu perfil</strong>
+            (peso, nivel, lesiones y días disponibles), MatchGym te sugiere rutinas
+            pensadas para estudiantes PUCV con un contexto parecido al tuyo.
+            Puedes <strong>adoptar rutinas de otros estudiantes</strong> para no
+            partir desde cero.
           </p>
         </div>
-        <div class="routines-header-actions">
-          <button class="btn-primary">+ Nueva rutina</button>
-        </div>
       </div>
 
-      <!-- Mis rutinas guardadas -->
+      <!-- Guardadas -->
       <div style="margin-top:4px;">
         <div class="routines-block-title">Mis rutinas guardadas</div>
-
-        <div class="routines-grid">
-          <!-- Pierna -->
-          <article class="routine-card">
-            <div>
-              <div class="routine-title">Pierna</div>
-              <span class="routine-level">INTERMEDIO</span>
-            </div>
-            <p class="routine-desc">
-              Sentadilla (barra), Peso muerto (barra), Curl de pierna sentado.
-              Inspirada en enfoque "heavy duty": pocas series, muy intensas.
-            </p>
-            <div class="routine-meta">
-              3 ejercicios · 45–60 min · 2× semana
-            </div>
-            <div class="routine-footer">
-              <span style="font-size:11px;color:var(--text-soft);">
-                Guardada en tu perfil
-              </span>
-              <div style="display:flex;gap:6px;">
-                <button class="btn-primary">Empezar rutina</button>
-                <button class="btn-ghost">Editar</button>
-              </div>
-            </div>
-          </article>
-
-          <!-- Espalda -->
-          <article class="routine-card">
-            <div>
-              <div class="routine-title">Espalda</div>
-              <span class="routine-level">INTERMEDIO</span>
-            </div>
-            <p class="routine-desc">
-              Remo inclinado, Jalón al pecho, Remo a un brazo.
-              Pensada para combinar con tu split actual durante el semestre.
-            </p>
-            <div class="routine-meta">
-              3 ejercicios · 40–50 min · 2× semana
-            </div>
-            <div class="routine-footer">
-              <span style="font-size:11px;color:var(--text-soft);">
-                Guardada en tu perfil
-              </span>
-              <div style="display:flex;gap:6px;">
-                <button class="btn-primary">Empezar rutina</button>
-                <button class="btn-ghost">Editar</button>
-              </div>
-            </div>
-          </article>
+        <div class="routines-block-sub">
+          Rutinas que estás usando actualmente. Al adoptar una rutina nueva de un
+          mismo grupo muscular, se reemplaza la anterior (no se acumulan por acumular).
         </div>
+        <div id="saved-routines" class="routines-grid"></div>
       </div>
 
-      <!-- Rutinas recomendadas (social) -->
+      <!-- Recomendadas -->
       <div style="margin-top:16px;">
-        <div class="routines-block-title">Rutinas recomendadas</div>
+        <div class="routines-block-title">Rutinas recomendadas (otros estudiantes)</div>
         <div class="routines-block-sub">
-          Basadas en estudiantes PUCV con un perfil parecido al tuyo
-          (edad, carrera, nivel y frecuencia de entrenamiento).
+          Basadas en estudiantes PUCV con nivel, objetivo y disponibilidad similares.
+          Puedes ver los detalles de su plan y adoptar la rutina para que se agregue
+          a tus rutinas guardadas.
         </div>
-
-        <div class="routines-grid">
-          <!-- Juan -->
-          <article class="user-routine-card">
-            <div class="user-header">
-              <div class="avatar">J</div>
-              <div class="user-meta">
-                <span class="user-name">Juan</span>
-                <span class="user-degree">Ingeniería Civil PUCV</span>
-              </div>
-            </div>
-            <div class="badge-row">
-              <span class="badge-level-basic">PRINCIPIANTE</span>
-              <span class="badge-chip">Horario: 13:00–15:00</span>
-              <span class="badge-chip">Objetivo: bajar grasa</span>
-            </div>
-            <div class="user-routine-title">Pierna básica</div>
-            <p class="user-routine-desc">
-              Pierna — 3 ejercicios. Sentadilla en máquina, prensa y curl femoral.
-              Ideal para retomar después de la universidad, con 2–3 días de tren superior.
-            </p>
-            <div class="routine-footer">
-              <button class="btn-ghost">Ver detalles</button>
-              <button class="btn-primary">Adoptar esta rutina</button>
-            </div>
-          </article>
-
-          <!-- Carla -->
-          <article class="user-routine-card">
-            <div class="user-header">
-              <div class="avatar">C</div>
-              <div class="user-meta">
-                <span class="user-name">Carla</span>
-                <span class="user-degree">Pedagogía en Física PUCV</span>
-              </div>
-            </div>
-            <div class="badge-row">
-              <span class="badge-level-intermediate">INTERMEDIO</span>
-              <span class="badge-chip">Horario: 19:00–21:00</span>
-              <span class="badge-chip">Objetivo: fuerza tren superior</span>
-            </div>
-            <div class="user-routine-title">Bíceps – 4 ejercicios</div>
-            <p class="user-routine-desc">
-              Rutina de brazo para 2 días a la semana. Combina curls pesados y trabajo
-              más controlado, siguiendo la lógica de 2 series efectivas por ejercicio.
-            </p>
-            <div class="routine-footer">
-              <button class="btn-ghost">Ver detalles</button>
-              <button class="btn-primary">Adoptar esta rutina</button>
-            </div>
-          </article>
-
-          <!-- Alejandro -->
-          <article class="user-routine-card">
-            <div class="user-header">
-              <div class="avatar">A</div>
-              <div class="user-meta">
-                <span class="user-name">Alejandro</span>
-                <span class="user-degree">Ingeniería en Construcción PUCV</span>
-              </div>
-            </div>
-            <div class="badge-row">
-              <span class="badge-level-basic">PRINCIPIANTE</span>
-              <span class="badge-chip">Horario: 7:00–9:00</span>
-              <span class="badge-chip">Objetivo: ganar masa</span>
-            </div>
-            <div class="user-routine-title">Fuerza – Espalda 3 ejercicios</div>
-            <p class="user-routine-desc">
-              Rutina simple de espalda para empezar: jalón al pecho, remo sentado y
-              face pulls. Perfecta para quienes entrenan antes de clases.
-            </p>
-            <div class="routine-footer">
-              <button class="btn-ghost">Ver detalles</button>
-              <button class="btn-primary">Adoptar esta rutina</button>
-            </div>
-          </article>
-        </div>
+        <div id="recommended-routines" class="routines-grid"></div>
 
         <p class="routines-note">
-          Más adelante, estas rutinas recomendadas se generarán automáticamente a partir
-          de tu perfil y del historial de otros estudiantes (qué rutinas les funcionaron).
+          Más adelante, estas recomendaciones se generarán automáticamente usando tu
+          historial de progreso y las rutinas que mejor han funcionado a otros usuarios.
         </p>
       </div>
     </section>
@@ -1087,66 +1001,82 @@
         <div>
           <h2>Mi perfil</h2>
           <p>
-            Resumen de tus antecedentes: objetivos, dolores articulares y horarios.
-            Esto es lo que MatchGym usará para sugerirte rutinas.
+            Tu perfil se vincula a tu correo institucional PUCV y se usa para
+            personalizar recomendaciones de gimnasios y rutinas (nivel, objetivos,
+            lesiones y tiempo disponible).
           </p>
         </div>
         <div class="perfil-badge">
-          <span>“Debido a tus antecedentes, las mejores rutinas son…”</span>
+          “Debido a tus antecedentes, las mejores rutinas son…”
         </div>
       </div>
 
-      <div class="perfil-grid">
-        <div>
-          <div class="perfil-group">
-            <label for="objetivo">Objetivo principal</label>
-            <select id="objetivo">
-              <option>Ganar masa muscular</option>
-              <option>Perder grasa / definición</option>
-              <option>Mejorar resistencia</option>
-              <option>Rehabilitación / mantenimiento suave</option>
+      <div class="perfil-form-card">
+        <div class="perfil-grid">
+          <div class="perfil-field wide">
+            <label for="perfil-email">Correo institucional PUCV</label>
+            <input id="perfil-email" type="email" readonly placeholder="@mail.pucv.cl" />
+          </div>
+
+          <div class="perfil-field">
+            <label for="perfil-peso">Peso (kg)</label>
+            <input id="perfil-peso" type="number" min="30" max="250" />
+          </div>
+
+          <div class="perfil-field">
+            <label for="perfil-estatura">Estatura (cm)</label>
+            <input id="perfil-estatura" type="number" min="130" max="220" />
+          </div>
+
+          <div class="perfil-field">
+            <label for="perfil-edad">Edad</label>
+            <input id="perfil-edad" type="number" min="15" max="80" />
+          </div>
+
+          <div class="perfil-field">
+            <label for="perfil-nivel">Nivel</label>
+            <select id="perfil-nivel">
+              <option>Principiante</option>
+              <option>Intermedio</option>
+              <option>Avanzado</option>
             </select>
           </div>
 
-          <div class="perfil-group">
-            <label>Dolores o molestias relevantes</label>
-            <small>(marca todas las que apliquen)</small>
-            <div style="margin-top:4px;font-size:11px;color:var(--text-soft);">
-              <label><input type="checkbox" /> Rodillas</label> ·
-              <label><input type="checkbox" /> Hombros</label> ·
-              <label><input type="checkbox" /> Zona lumbar</label> ·
-              <label><input type="checkbox" /> Cuello</label>
-            </div>
+          <div class="perfil-field">
+            <label for="perfil-anios">Años de entrenamiento</label>
+            <input id="perfil-anios" type="number" min="0" max="20" />
           </div>
 
-          <div class="perfil-group">
-            <label for="restricciones">Restricciones médicas / recomendaciones</label>
-            <textarea id="restricciones"
-              placeholder="Ej: evitar impacto fuerte en rodillas, preferir elíptica y bicicleta."></textarea>
+          <div class="perfil-field">
+            <label for="perfil-disponibilidad">Disponibilidad semanal (días)</label>
+            <input id="perfil-disponibilidad" type="number" min="1" max="7" />
+          </div>
+
+          <div class="perfil-field">
+            <label for="perfil-lesiones">Condiciones / lesiones relevantes</label>
+            <input id="perfil-lesiones" type="text" placeholder="Ej: lesiones de rodilla leves" />
+          </div>
+
+          <div class="perfil-field wide">
+            <label for="perfil-preferencias">Preferencias de gimnasio</label>
+            <input id="perfil-preferencias" type="text"
+                   placeholder="Ej: Cerca de la sede, precio, poca afluencia" />
+          </div>
+
+          <div class="perfil-field wide">
+            <label for="perfil-objetivos">Objetivos</label>
+            <textarea id="perfil-objetivos"
+              placeholder="Ej: Ganar fuerza, hipertrofia."></textarea>
           </div>
         </div>
 
-        <div>
-          <div class="perfil-group">
-            <label for="dias-entreno">Días disponibles para entrenar</label>
-            <textarea id="dias-entreno"
-              placeholder="Ej: Lunes, miércoles y viernes en la tarde; sábado en la mañana."></textarea>
-          </div>
+        <p class="perfil-note">
+          Podrás controlar quién ve tus rutinas y datos en la plataforma cuando
+          incorporemos el módulo social completo.
+        </p>
 
-          <div class="perfil-group">
-            <label for="experiencia">Experiencia en entrenamiento</label>
-            <select id="experiencia">
-              <option>Principiante (menos de 6 meses)</option>
-              <option>Intermedio (6 meses – 2 años)</option>
-              <option>Avanzado (más de 2 años)</option>
-            </select>
-          </div>
-
-          <div class="perfil-group">
-            <label for="comentarios-extra">Comentarios extra</label>
-            <textarea id="comentarios-extra"
-              placeholder="Cualquier info extra que explique por qué eliges ciertos gimnasios o rutinas."></textarea>
-          </div>
+        <div class="perfil-actions">
+          <button id="save-profile-btn" class="btn-primary">Guardar perfil</button>
         </div>
       </div>
     </section>
@@ -1204,7 +1134,7 @@
             id: "smartfit-puerto",
             nombre: "SmartFit Estación Puerto",
             cadena: "SmartFit",
-            logo: "smartfit-logo.png", // opcional
+            logo: "smartfit-logo.png",
             coords: [-33.0389, -71.6273],
             distanciaKm: 0.7,
             afluencia: "media",
@@ -1339,21 +1269,6 @@
 
     signOutBtn.addEventListener("click", () => auth.signOut());
 
-    auth.onAuthStateChanged((user) => {
-      if (user && user.email && user.email.endsWith("@mail.pucv.cl")) {
-        loginOverlay.hidden = true;
-        const displayName = user.displayName || user.email;
-        userNameLabel.textContent = displayName;
-        userAvatar.textContent = (displayName[0] || "?").toUpperCase();
-        signOutBtn.hidden = false;
-      } else {
-        loginOverlay.hidden = false;
-        userNameLabel.textContent = "Sesión no iniciada";
-        userAvatar.textContent = "--";
-        signOutBtn.hidden = true;
-      }
-    });
-
     // NAV TABS
     const navTabs = document.querySelectorAll(".nav-tab");
     const sections = {
@@ -1404,6 +1319,13 @@
       weight: 2,
     };
 
+    const sedeIcon = L.icon({
+      iconUrl: "pucv-escudo.png", // escudo PUCV tal cual
+      iconSize: [40, 40],
+      iconAnchor: [20, 20],
+      popupAnchor: [0, -22],
+    });
+
     // CONTROLES EXPLORAR
     const sedeSelect = document.getElementById("sede-select");
     const sedeLabel = document.getElementById("sede-label");
@@ -1441,13 +1363,7 @@
       gymMarkers = {};
 
       if (sedeMarker) map.removeLayer(sedeMarker);
-      sedeMarker = L.circleMarker(sede.center, {
-        radius: 7,
-        color: "#38bdf8",
-        fillColor: "#0ea5e9",
-        fillOpacity: 0.9,
-        weight: 2,
-      })
+      sedeMarker = L.marker(sede.center, { icon: sedeIcon })
         .addTo(map)
         .bindPopup("Sede PUCV (origen)");
 
@@ -1668,7 +1584,319 @@
       if (e.target === compareOverlay) closeCompare();
     });
 
-    // Filtros
+    // PERFIL + RUTINAS (localStorage)
+    const perfilEmail = document.getElementById("perfil-email");
+    const perfilPeso = document.getElementById("perfil-peso");
+    const perfilEstatura = document.getElementById("perfil-estatura");
+    const perfilEdad = document.getElementById("perfil-edad");
+    const perfilNivel = document.getElementById("perfil-nivel");
+    const perfilAnios = document.getElementById("perfil-anios");
+    const perfilDisp = document.getElementById("perfil-disponibilidad");
+    const perfilLesiones = document.getElementById("perfil-lesiones");
+    const perfilPreferencias = document.getElementById("perfil-preferencias");
+    const perfilObjetivos = document.getElementById("perfil-objetivos");
+    const saveProfileBtn = document.getElementById("save-profile-btn");
+
+    const savedRoutinesEl = document.getElementById("saved-routines");
+    const recommendedRoutinesEl = document.getElementById("recommended-routines");
+
+    let currentUserKey = "anon";
+
+    function profileKey() {
+      return "matchgym_profile_" + currentUserKey;
+    }
+    function routinesKey() {
+      return "matchgym_routines_" + currentUserKey;
+    }
+
+    function loadProfile() {
+      const raw = localStorage.getItem(profileKey());
+      if (raw) {
+        try {
+          const p = JSON.parse(raw);
+          perfilPeso.value = p.peso ?? "";
+          perfilEstatura.value = p.estatura ?? "";
+          perfilEdad.value = p.edad ?? "";
+          if (p.nivel) perfilNivel.value = p.nivel;
+          perfilAnios.value = p.anios ?? "";
+          perfilDisp.value = p.disp ?? "";
+          perfilLesiones.value = p.lesiones ?? "";
+          perfilPreferencias.value = p.preferencias ?? "";
+          perfilObjetivos.value = p.objetivos ?? "";
+        } catch (e) {
+          console.warn("Perfil corrupto", e);
+        }
+      } else {
+        // Defaults suaves
+        perfilNivel.value = "Principiante";
+      }
+    }
+
+    function saveProfile() {
+      const data = {
+        peso: perfilPeso.value,
+        estatura: perfilEstatura.value,
+        edad: perfilEdad.value,
+        nivel: perfilNivel.value,
+        anios: perfilAnios.value,
+        disp: perfilDisp.value,
+        lesiones: perfilLesiones.value,
+        preferencias: perfilPreferencias.value,
+        objetivos: perfilObjetivos.value,
+      };
+      localStorage.setItem(profileKey(), JSON.stringify(data));
+      alert("Perfil guardado 🙂");
+    }
+
+    saveProfileBtn.addEventListener("click", saveProfile);
+
+    // RUTINAS
+    const baseDefaultRoutines = [
+      {
+        id: "own-pierna",
+        title: "Pierna",
+        nivel: "Intermedio",
+        muscleGroup: "Pierna",
+        desc: "Sentadilla (barra), peso muerto (barra) y curl de pierna sentado. Inspirada en enfoque heavy duty (pocas series muy intensas).",
+        exercises: [
+          "Sentadilla (barra)",
+          "Peso muerto (barra)",
+          "Curl de pierna sentado"
+        ],
+        origin: "propia",
+      },
+      {
+        id: "own-espalda",
+        title: "Espalda",
+        nivel: "Intermedio",
+        muscleGroup: "Espalda",
+        desc: "Remo inclinado, jalón al pecho y remo a un brazo. Pensada para combinar con tu split actual durante el semestre.",
+        exercises: [
+          "Remo inclinado",
+          "Jalón al pecho",
+          "Remo a un brazo"
+        ],
+        origin: "propia",
+      },
+    ];
+
+    const recommendedRoutines = [
+      {
+        id: "juan-pierna-basica",
+        owner: "Juan",
+        carrera: "Ingeniería Civil PUCV",
+        nivel: "Principiante",
+        horario: "13:00–15:00",
+        objetivo: "Bajar grasa",
+        muscleGroup: "Pierna",
+        title: "Pierna básica",
+        desc: "Pierna — 3 ejercicios. Sentadilla en máquina, prensa y curl femoral. Ideal para retomar después de la universidad.",
+        exercises: [
+          "Sentadilla en máquina",
+          "Prensa de piernas",
+          "Curl femoral"
+        ],
+      },
+      {
+        id: "carla-biceps",
+        owner: "Carla",
+        carrera: "Pedagogía en Física PUCV",
+        nivel: "Intermedio",
+        horario: "19:00–21:00",
+        objetivo: "Fuerza tren superior",
+        muscleGroup: "Brazos",
+        title: "Bíceps – 4 ejercicios",
+        desc: "Rutina de brazo para 2 días a la semana. Combina curls pesados y trabajo más controlado, siguiendo la lógica de 2 series efectivas.",
+        exercises: [
+          "Curl con barra Z",
+          "Curl martillo mancuernas",
+          "Curl concentrado",
+          "Curl en polea"
+        ],
+      },
+      {
+        id: "alejandro-espalda",
+        owner: "Alejandro",
+        carrera: "Ingeniería en Construcción PUCV",
+        nivel: "Principiante",
+        horario: "7:00–9:00",
+        objetivo: "Ganar masa",
+        muscleGroup: "Espalda",
+        title: "Fuerza – Espalda 3 ejercicios",
+        desc: "Rutina simple de espalda para empezar: jalón al pecho, remo sentado y face pulls. Perfecta para quienes entrenan antes de clases.",
+        exercises: [
+          "Jalón al pecho",
+          "Remo sentado en polea",
+          "Face pulls"
+        ],
+      },
+    ];
+
+    let savedRoutines = [];
+
+    function loadSavedRoutines() {
+      const raw = localStorage.getItem(routinesKey());
+      if (raw) {
+        try {
+          savedRoutines = JSON.parse(raw);
+        } catch (e) {
+          console.warn("Routines corruptas", e);
+          savedRoutines = [...baseDefaultRoutines];
+        }
+      } else {
+        savedRoutines = [...baseDefaultRoutines];
+      }
+      renderSavedRoutines();
+      renderRecommendedRoutines();
+    }
+
+    function saveSavedRoutines() {
+      localStorage.setItem(routinesKey(), JSON.stringify(savedRoutines));
+    }
+
+    function renderSavedRoutines() {
+      savedRoutinesEl.innerHTML = "";
+      if (!savedRoutines.length) {
+        savedRoutinesEl.innerHTML =
+          '<p style="font-size:12px;color:var(--text-soft);">Aún no tienes rutinas guardadas. Adopta una rutina recomendada y aparecerá aquí.</p>';
+        return;
+      }
+
+      savedRoutines.forEach((r) => {
+        const card = document.createElement("article");
+        card.className = "routine-card";
+        card.innerHTML = `
+          <div>
+            <div class="routine-title">${r.title}</div>
+            <span class="routine-level">${r.nivel.toUpperCase()}</span>
+          </div>
+          <div class="routine-meta">
+            Grupo muscular: ${r.muscleGroup} ${
+          r.origin === "adoptada" ? `· Adoptada de ${r.adoptedFrom}` : ""
+        }
+          </div>
+          <p class="routine-desc">${r.desc}</p>
+          <ul class="routine-ex-list">
+            ${r.exercises.map((ex) => `<li>${ex}</li>`).join("")}
+          </ul>
+        `;
+        savedRoutinesEl.appendChild(card);
+      });
+    }
+
+    function renderRecommendedRoutines() {
+      recommendedRoutinesEl.innerHTML = "";
+      recommendedRoutines.forEach((r) => {
+        const card = document.createElement("article");
+        card.className = "user-routine-card";
+        card.dataset.id = r.id;
+        card.innerHTML = `
+          <div class="user-header">
+            <div class="avatar">${r.owner[0]}</div>
+            <div class="user-meta">
+              <span class="user-name">${r.owner}</span>
+              <span class="user-degree">${r.carrera}</span>
+            </div>
+          </div>
+          <div class="badge-row">
+            <span class="${
+              r.nivel === "Principiante"
+                ? "badge-level-basic"
+                : "badge-level-intermediate"
+            }">${r.nivel.toUpperCase()}</span>
+            <span class="badge-chip">Horario: ${r.horario}</span>
+            <span class="badge-chip">Objetivo: ${r.objetivo}</span>
+            <span class="badge-chip">Grupo: ${r.muscleGroup}</span>
+          </div>
+          <div class="user-routine-title">${r.title}</div>
+          <p class="user-routine-desc">${r.desc}</p>
+          <div class="routine-footer">
+            <button class="btn-ghost" data-action="detalle">Ver detalles</button>
+            <button class="btn-primary" data-action="adoptar">Adoptar esta rutina</button>
+          </div>
+        `;
+        recommendedRoutinesEl.appendChild(card);
+      });
+    }
+
+    function adoptRoutine(routineId) {
+      const r = recommendedRoutines.find((x) => x.id === routineId);
+      if (!r) return;
+      const idx = savedRoutines.findIndex(
+        (x) => x.muscleGroup === r.muscleGroup
+      );
+      const newEntry = {
+        id: "adopted-" + r.id,
+        title: r.title,
+        nivel: r.nivel,
+        muscleGroup: r.muscleGroup,
+        desc: r.desc,
+        exercises: r.exercises,
+        origin: "adoptada",
+        adoptedFrom: r.owner,
+      };
+      if (idx >= 0) {
+        savedRoutines[idx] = newEntry;
+      } else {
+        savedRoutines.push(newEntry);
+      }
+      saveSavedRoutines();
+      renderSavedRoutines();
+      alert(
+        `Rutina "${r.title}" adoptada para ${r.muscleGroup}. Si ya tenías una rutina de ese grupo, fue reemplazada.`
+      );
+    }
+
+    recommendedRoutinesEl.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-action]");
+      if (!btn) return;
+      const card = btn.closest(".user-routine-card");
+      if (!card) return;
+      const id = card.dataset.id;
+      const r = recommendedRoutines.find((x) => x.id === id);
+      if (!r) return;
+
+      const action = btn.dataset.action;
+      if (action === "detalle") {
+        alert(
+          `${r.title}\n\nPropietario: ${r.owner} (${r.carrera})\nNivel: ${
+            r.nivel
+          }\nGrupo muscular: ${r.muscleGroup}\nObjetivo: ${
+            r.objetivo
+          }\nHorario típico: ${r.horario}\n\nDescripción:\n${
+            r.desc
+          }\n\nEjercicios:\n- ${r.exercises.join("\n- ")}`
+        );
+      } else if (action === "adoptar") {
+        adoptRoutine(id);
+      }
+    });
+
+    // AUTH STATE
+    auth.onAuthStateChanged((user) => {
+      if (user && user.email && user.email.endsWith("@mail.pucv.cl")) {
+        loginOverlay.hidden = true;
+        const displayName = user.displayName || user.email;
+        userNameLabel.textContent = displayName;
+        userAvatar.textContent = (displayName[0] || "?").toUpperCase();
+        signOutBtn.hidden = false;
+
+        currentUserKey = user.uid || user.email;
+        perfilEmail.value = user.email;
+      } else {
+        loginOverlay.hidden = false;
+        userNameLabel.textContent = "Sesión no iniciada";
+        userAvatar.textContent = "--";
+        signOutBtn.hidden = true;
+
+        currentUserKey = "anon";
+        perfilEmail.value = "";
+      }
+      loadProfile();
+      loadSavedRoutines();
+    });
+
+    // Filtros mapa
     sedeSelect.addEventListener("change", () => {
       currentSedeKey = sedeSelect.value;
       map.setView(sedes[currentSedeKey].center, 15.5);
