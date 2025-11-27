@@ -1,0 +1,1793 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>MatchGym · PUCV</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Leaflet -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+
+  <!-- Firebase compat -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+
+  <style>
+    :root {
+      --bg: #050816;
+      --bg-card: #0b1120;
+      --accent: #00b4ff;
+      --accent-soft: rgba(0, 180, 255, 0.08);
+      --accent-strong: #0284c7;
+      --text: #e5e7eb;
+      --text-soft: #9ca3af;
+      --danger: #ef4444;
+      --radius-lg: 18px;
+      --radius-xl: 22px;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.7);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #111827, #020617 55%);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; border: none; cursor: pointer; }
+
+    .app-shell {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 18px 16px 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    header.app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 999px;
+      background: radial-gradient(circle at top, #020617, #020617);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.85);
+      overflow: hidden;
+    }
+
+    .brand-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .brand-text h1 {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .brand-text h1 span.dot { color: var(--accent); }
+
+    .brand-text .subtitle {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-top: 2px;
+    }
+
+    .pucv-logo-wrapper {
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pucv-logo-wrapper img {
+      height: 26px;
+      width: auto;
+    }
+
+    .pucv-logo-wrapper span {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #cbd5f5;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-name {
+      font-size: 12px;
+      color: var(--text-soft);
+      max-width: 160px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      text-align: right;
+    }
+
+    .avatar-chip {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #0f172a, #1d4ed8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.9);
+    }
+
+    .signout-btn {
+      margin-left: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-soft);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+    }
+
+    .signout-btn:hover {
+      background: rgba(15, 23, 42, 1);
+      color: #e5e7eb;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      padding: 4px;
+    }
+
+    .nav-tab {
+      flex: 1;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      color: var(--text-soft);
+      text-align: center;
+      background: transparent;
+    }
+
+    .nav-tab.active {
+      background: var(--accent-soft);
+      color: #e0f2fe;
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.4);
+    }
+
+    .main-card {
+      border-radius: var(--radius-xl);
+      background: radial-gradient(circle at top left, #111827, #020617 70%);
+      border: 1px solid rgba(148, 163, 184, 0.13);
+      box-shadow: var(--shadow-soft);
+      padding: 14px 16px 18px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 10px;
+      gap: 10px;
+    }
+
+    .section-header h2 {
+      font-size: 17px;
+      letter-spacing: 0.03em;
+    }
+
+    .section-header p {
+      font-size: 11px;
+      color: var(--text-soft);
+      max-width: 420px;
+    }
+
+    .section-controls {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      font-size: 11px;
+    }
+
+    .section-controls label {
+      color: var(--text-soft);
+      margin-right: 2px;
+    }
+
+    select,
+    input[type="number"],
+    textarea {
+      font-size: 11px;
+      padding: 4px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text);
+      width: auto;
+    }
+
+    textarea {
+      border-radius: 14px;
+      width: 100%;
+      min-height: 70px;
+      resize: vertical;
+      padding: 7px 9px;
+    }
+
+    .explorar-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+      gap: 14px;
+    }
+
+    #gym-map {
+      width: 100%;
+      height: 310px;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      z-index: 1;
+    }
+
+    .gym-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 310px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .gym-card {
+      border-radius: var(--radius-lg);
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      padding: 10px 10px 9px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.7fr) minmax(0, 1.2fr);
+      column-gap: 10px;
+      row-gap: 6px;
+      font-size: 11px;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease,
+        background 0.15s ease;
+    }
+
+    .gym-card h3 { font-size: 13px; margin-bottom: 3px; }
+
+    .gym-card.selected-compare {
+      border-color: rgba(239, 68, 68, 0.9);
+      box-shadow: 0 0 0 1px rgba(248, 113, 113, 0.6);
+      background: rgba(24, 24, 27, 0.98);
+    }
+
+    .gym-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-size: 10px;
+      background: rgba(15, 23, 42, 1);
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      color: #e5e7eb;
+    }
+
+    .gym-meta {
+      color: var(--text-soft);
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      font-size: 10px;
+    }
+
+    .badge-busy {
+      background: rgba(248, 113, 113, 0.12);
+      color: #fecaca;
+    }
+
+    .badge-free {
+      background: rgba(34, 197, 94, 0.12);
+      color: #bbf7d0;
+    }
+
+    .badge-medium {
+      background: rgba(234, 179, 8, 0.12);
+      color: #fef3c7;
+    }
+
+    .gym-actions {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-ghost,
+    .btn-primary {
+      padding: 5px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-ghost {
+      background: rgba(15, 23, 42, 0.94);
+      color: var(--text-soft);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      color: #0b1120;
+      font-weight: 600;
+      border: none;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(15, 23, 42, 1);
+      color: #e5e7eb;
+    }
+
+    .btn-primary:hover { filter: brightness(1.05); }
+
+    .gym-price {
+      text-align: right;
+      font-size: 11px;
+      color: #e2e8f0;
+    }
+
+    .gym-price strong { font-size: 13px; }
+
+    /* Modal genérico */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.82);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+    }
+
+    .modal {
+      width: min(640px, 92vw);
+      background: #020617;
+      border-radius: 22px;
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      box-shadow: 0 24px 70px rgba(15, 23, 42, 0.9);
+      padding: 14px 16px 14px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 12px;
+    }
+
+    .modal-header h3 { font-size: 14px; }
+    .modal-header small { font-size: 11px; color: var(--text-soft); }
+
+    .modal-close {
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-soft);
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-close:hover { background: rgba(15, 23, 42, 1); }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 4px;
+      font-size: 11px;
+    }
+
+    .compare-table th,
+    .compare-table td {
+      padding: 5px 6px;
+      border-bottom: 1px solid rgba(31, 41, 55, 1);
+    }
+
+    .compare-table th {
+      text-align: left;
+      color: var(--text-soft);
+      font-weight: 500;
+    }
+
+    .compare-table td:nth-child(2),
+    .compare-table td:nth-child(3) {
+      text-align: center;
+    }
+
+    .modal-footer {
+      margin-top: 10px;
+      text-align: right;
+    }
+
+    .modal-footer button {
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      color: var(--text-soft);
+    }
+
+    .modal-footer button:hover {
+      background: rgba(15, 23, 42, 1);
+      color: #e5e7eb;
+    }
+
+    /* Login */
+    .login-overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at top, #020617, #020617 40%, #000000 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 60;
+    }
+
+    .login-card {
+      width: min(460px, 92vw);
+      background: rgba(15, 23, 42, 0.96);
+      border-radius: 24px;
+      padding: 22px 22px 18px;
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      box-shadow: 0 26px 80px rgba(15, 23, 42, 0.95);
+    }
+
+    .login-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .login-title-logo {
+      width: 54px;
+      height: 54px;
+      border-radius: 999px;
+      background: #020617;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .login-title-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .login-title h2 { font-size: 20px; }
+    .login-title span { font-size: 11px; color: var(--text-soft); }
+
+    .login-body p {
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-bottom: 10px;
+    }
+
+    .login-alert {
+      font-size: 11px;
+      color: #fecaca;
+      background: rgba(248, 113, 113, 0.08);
+      border: 1px solid rgba(248, 113, 113, 0.5);
+      border-radius: 12px;
+      padding: 6px 8px;
+      margin-bottom: 10px;
+    }
+
+    .google-btn {
+      width: 100%;
+      margin-top: 6px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #f97316, #22c55e);
+      color: #0b1120;
+      font-weight: 600;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: none;
+    }
+
+    .google-btn img { width: 16px; height: 16px; }
+
+    .login-small {
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--text-soft);
+      text-align: center;
+    }
+
+    .login-error {
+      margin-top: 6px;
+      font-size: 11px;
+      color: #fecaca;
+      min-height: 14px;
+    }
+
+    /* Perfil */
+    .perfil-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 14px;
+      font-size: 12px;
+    }
+
+    .perfil-group { margin-bottom: 10px; }
+
+    .perfil-group label {
+      font-size: 11px;
+      color: var(--text-soft);
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .perfil-group small {
+      font-size: 10px;
+      color: var(--text-soft);
+    }
+
+    .perfil-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      font-size: 10px;
+      color: var(--text-soft);
+    }
+
+    /* Rutinas */
+    .subsection-title {
+      font-size: 14px;
+      margin-top: 6px;
+      margin-bottom: 2px;
+    }
+
+    .subsection-help {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-bottom: 8px;
+    }
+
+    .routine-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .routine-card {
+      border-radius: var(--radius-lg);
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      padding: 10px 12px 9px;
+      font-size: 11px;
+    }
+
+    .routine-card h3 {
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .routine-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 10px;
+      background: rgba(15, 23, 42, 1);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      margin-right: 4px;
+    }
+
+    .routine-meta {
+      color: var(--text-soft);
+      margin-top: 3px;
+    }
+
+    .routine-card ul {
+      margin-top: 4px;
+      margin-left: 16px;
+    }
+
+    [hidden] { display: none !important; }
+
+    @media (max-width: 880px) {
+      .explorar-layout { grid-template-columns: minmax(0, 1fr); }
+      #gym-map { height: 260px; }
+      .perfil-grid { grid-template-columns: minmax(0, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <!-- LOGIN -->
+  <div id="login-overlay" class="login-overlay" hidden>
+    <div class="login-card">
+      <div class="login-title">
+        <div class="login-title-logo">
+          <img src="matchgym-logo.png" alt="MatchGym" />
+        </div>
+        <div>
+          <h2>MatchGym · PUCV</h2>
+          <span>Acceso exclusivo con correo institucional</span>
+        </div>
+      </div>
+      <div class="login-body">
+        <p>
+          Para usar la herramienta, inicia sesión con tu cuenta
+          <strong>@mail.pucv.cl</strong>. Solo se permite acceso a estudiantes y
+          docentes de la PUCV.
+        </p>
+        <div class="login-alert">
+          Solo se aceptan correos que terminen en <strong>@mail.pucv.cl</strong>.
+          Si intentas con otra cuenta, el sistema rechazará el acceso.
+        </div>
+        <button id="google-login-btn" class="google-btn">
+          <img
+            src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+            alt="Google"
+          />
+          Ingresar con Google PUCV
+        </button>
+        <div id="login-error" class="login-error"></div>
+        <p class="login-small">
+          Proyecto interno para comparar gimnasios y planes cercanos a las sedes de la
+          PUCV. Tus datos solo se usan para mostrar tu nombre y correo.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-logo">
+          <img src="matchgym-logo.png" alt="MatchGym" />
+        </div>
+        <div class="brand-text">
+          <h1>
+            MatchGym
+            <span class="dot">·</span>
+            <span>PUCV</span>
+          </h1>
+          <div class="subtitle">
+            Herramienta para elegir gimnasios y rutinas cerca de las sedes PUCV
+          </div>
+          <div class="pucv-logo-wrapper">
+            <img src="pucv-logo.png" alt="PUCV" />
+            <span>Pontificia Universidad Católica de Valparaíso</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="user-info">
+        <div class="user-name" id="user-name-label">Sesión no iniciada</div>
+        <div class="avatar-chip" id="user-avatar">--</div>
+        <button id="sign-out-btn" class="signout-btn" hidden>Salir</button>
+      </div>
+    </header>
+
+    <nav class="nav-tabs">
+      <button class="nav-tab active" data-section="explorar">
+        Explorar gimnasios
+      </button>
+      <button class="nav-tab" data-section="rutinas">
+        Mis rutinas
+      </button>
+      <button class="nav-tab" data-section="perfil">
+        Mi perfil
+      </button>
+    </nav>
+
+    <!-- EXPLORAR GIMNASIOS -->
+    <section id="section-explorar" class="main-card">
+      <div class="section-header">
+        <div>
+          <h2>Explorar gimnasios</h2>
+          <p>
+            SEDE de origen:
+            <strong id="sede-label">Edificio Isabel Brown Caces PUCV · Av. Brasil 2241</strong>
+          </p>
+        </div>
+        <div class="section-controls">
+          <div>
+            <label for="sede-select">Sede</label>
+            <select id="sede-select">
+              <option value="ibc">IBC · Av. Brasil 2241</option>
+              <option value="casa-central">Casa Central</option>
+              <option value="curauma">Campus Curauma</option>
+            </select>
+          </div>
+          <div>
+            <label for="afluencia-filter">Afluencia</label>
+            <select id="afluencia-filter">
+              <option value="todos">Todos</option>
+              <option value="baja">Baja</option>
+              <option value="media">Media</option>
+              <option value="alta">Alta</option>
+            </select>
+          </div>
+          <div>
+            <label for="max-distance">Máx. distancia (km)</label>
+            <input id="max-distance" type="number" min="0.5" max="5" step="0.5" value="3" />
+          </div>
+        </div>
+      </div>
+
+      <div class="explorar-layout">
+        <div id="gym-map"></div>
+        <div class="gym-cards" id="gym-cards"></div>
+      </div>
+    </section>
+
+    <!-- MIS RUTINAS -->
+    <section id="section-rutinas" class="main-card" hidden>
+      <div class="section-header">
+        <div>
+          <h2>Mis rutinas</h2>
+          <p>
+            Rutinas que estás usando actualmente. Al adoptar una rutina nueva de un mismo
+            grupo muscular, se reemplaza la anterior (no se acumulan por acumular).
+          </p>
+        </div>
+        <button id="btn-nueva-rutina" class="btn-primary">
+          + Nueva rutina
+        </button>
+      </div>
+
+      <h3 class="subsection-title">Mis rutinas guardadas</h3>
+      <p class="subsection-help">
+        Estas son las rutinas que estás usando ahora mismo. Algunas pueden venir
+        de otros estudiantes (adoptadas) y otras pueden ser creadas por ti.
+      </p>
+      <div id="my-routines-list" class="routine-cards"></div>
+
+      <h3 class="subsection-title" style="margin-top:16px;">
+        Rutinas recomendadas (otros estudiantes)
+      </h3>
+      <p class="subsection-help">
+        Se filtran según las <strong>lesiones/condiciones</strong> que marcaste en tu perfil.
+        Si marcas rodilla o lumbar, se ocultan las rutinas que podrían molestarte.
+      </p>
+      <div id="recommended-routines-list" class="routine-cards"></div>
+    </section>
+
+    <!-- MI PERFIL -->
+    <section id="section-perfil" class="main-card" hidden>
+      <div class="section-header">
+        <div>
+          <h2>Mi perfil</h2>
+          <p>
+            Resumen de tus antecedentes: objetivos, dolores articulares y horarios.
+            Esto es lo que MatchGym usará para sugerirte rutinas.
+          </p>
+        </div>
+        <div class="perfil-badge">
+          <span>“Debido a tus antecedentes, las mejores rutinas son…”</span>
+        </div>
+      </div>
+
+      <div class="perfil-grid">
+        <div>
+          <div class="perfil-group">
+            <label for="objetivo">Objetivo principal</label>
+            <select id="objetivo">
+              <option>Ganar masa muscular</option>
+              <option>Perder grasa / definición</option>
+              <option>Mejorar resistencia</option>
+              <option>Rehabilitación / mantenimiento suave</option>
+            </select>
+          </div>
+
+          <div class="perfil-group">
+            <label>Lesiones / condiciones relevantes</label>
+            <small>(marca todas las que apliquen)</small>
+            <div style="margin-top:4px;font-size:11px;color:var(--text-soft);display:flex;flex-wrap:wrap;gap:6px;">
+              <label><input type="checkbox" name="lesion" value="rodilla" /> Rodilla</label>
+              <label><input type="checkbox" name="lesion" value="lumbar" /> Lumbar</label>
+              <label><input type="checkbox" name="lesion" value="hombro" /> Hombro</label>
+            </div>
+          </div>
+
+          <div class="perfil-group">
+            <label for="restricciones">Restricciones médicas / recomendaciones</label>
+            <textarea id="restricciones"
+              placeholder="Ej: evitar impacto fuerte en rodillas, preferir elíptica y bicicleta."></textarea>
+          </div>
+        </div>
+
+        <div>
+          <div class="perfil-group">
+            <label for="dias-entreno">Días disponibles para entrenar</label>
+            <textarea id="dias-entreno"
+              placeholder="Ej: Lunes, miércoles y viernes en la tarde; sábado en la mañana."></textarea>
+          </div>
+
+          <div class="perfil-group">
+            <label for="experiencia">Experiencia en entrenamiento</label>
+            <select id="experiencia">
+              <option>Principiante (0–1 año)</option>
+              <option>Intermedio (1–4 años)</option>
+              <option>Avanzado (4+ años)</option>
+            </select>
+          </div>
+
+          <div class="perfil-group">
+            <label for="comentarios-extra">Comentarios extra</label>
+            <textarea id="comentarios-extra"
+              placeholder="Cualquier info extra que explique por qué eliges ciertos gimnasios o rutinas."></textarea>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- MODAL COMPARACIÓN GIMNASIOS -->
+  <div id="compare-overlay" class="modal-overlay" hidden>
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h3>Comparación de gimnasios</h3>
+          <small id="compare-names"></small>
+        </div>
+        <button id="compare-close" class="modal-close">×</button>
+      </div>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Aspecto</th>
+            <th id="col-a"></th>
+            <th id="col-b"></th>
+          </tr>
+        </thead>
+        <tbody id="compare-body"></tbody>
+      </table>
+      <div class="modal-footer">
+        <button id="compare-close-bottom">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DETALLE GIMNASIO -->
+  <div id="gym-detail-overlay" class="modal-overlay" hidden>
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h3 id="gym-detail-title">Detalle gimnasio</h3>
+          <small id="gym-detail-subtitle"></small>
+        </div>
+        <button id="gym-detail-close" class="modal-close">×</button>
+      </div>
+      <div id="gym-detail-body" style="font-size:11px;color:var(--text-soft);"></div>
+      <div class="modal-footer">
+        <button id="gym-detail-close-bottom">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL CREAR RUTINA -->
+  <div id="routine-modal" class="modal-overlay" hidden>
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h3 id="routine-modal-title">Nueva rutina</h3>
+          <small>Define un nombre, grupo muscular y la lista de ejercicios.</small>
+        </div>
+        <button id="routine-modal-close" class="modal-close">×</button>
+      </div>
+      <form id="routine-form">
+        <div class="perfil-group">
+          <label for="r-name">Nombre de la rutina</label>
+          <input id="r-name" type="text" required
+                 style="width:100%;border-radius:999px;padding:6px 9px;
+                 font-size:11px;border:1px solid rgba(148,163,184,0.5);
+                 background:rgba(15,23,42,0.95);color:var(--text);" />
+        </div>
+
+        <div class="perfil-group">
+          <label for="r-group">Grupo muscular</label>
+          <select id="r-group" required>
+            <option value="pierna">Pierna</option>
+            <option value="espalda">Espalda</option>
+            <option value="pecho">Pecho</option>
+            <option value="hombro">Hombro</option>
+            <option value="fullbody">Full body</option>
+          </select>
+        </div>
+
+        <div class="perfil-group">
+          <label for="r-level">Nivel</label>
+          <select id="r-level" required>
+            <option value="Principiante">Principiante (0–1 año)</option>
+            <option value="Intermedio">Intermedio (1–4 años)</option>
+            <option value="Avanzado">Avanzado (4+ años)</option>
+          </select>
+        </div>
+
+        <div class="perfil-group">
+          <label for="r-desc">Descripción corta</label>
+          <textarea id="r-desc"
+            placeholder="Ej: Pierna — 3 ejercicios básicos para volver a tomar ritmo."></textarea>
+        </div>
+
+        <div class="perfil-group">
+          <label for="r-exercises">Ejercicios (uno por línea)</label>
+          <textarea id="r-exercises"
+            placeholder="Sentadilla en máquina&#10;Prensa de piernas&#10;Curl femoral"
+            required></textarea>
+        </div>
+
+        <div class="modal-footer" style="display:flex;gap:8px;justify-content:flex-end;">
+          <button type="button" id="routine-modal-cancel">Cancelar</button>
+          <button type="submit" class="btn-primary">Guardar rutina</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // FIREBASE
+    const firebaseConfig = {
+      apiKey: "AIzaSyCC5XJy3oqmDoTKgDMefB1zjp7XAFgTxWo",
+      authDomain: "matchgym-e7df0.firebaseapp.com",
+      projectId: "matchgym-e7df0",
+      storageBucket: "matchgym-e7df0.firebasestorage.app",
+      messagingSenderId: "766710296254",
+      appId: "1:766710296254:web:a01ca1d2ee5d362b45b8ef",
+      measurementId: "G-D4VWL0H0K9",
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const provider = new firebase.auth.GoogleAuthProvider();
+
+    // ------------------- DATOS GIMNASIOS -------------------
+    const sedes = {
+      ibc: {
+        nombre: "Edificio Isabel Brown Caces PUCV · Av. Brasil 2241",
+        center: [-33.0435, -71.6214],
+        gyms: [
+          {
+            id: "smartfit-puerto",
+            nombre: "SmartFit Estación Puerto",
+            cadena: "SmartFit",
+            logo: "smartfit-logo.png",
+            coords: [-33.0389, -71.6273],
+            distanciaKm: 0.7,
+            afluencia: "media",
+            precio: 25990,
+            matricula: 19990,
+            horarioPeak: "18–21 h",
+            comentarios:
+              "Ubicado en Paseo del Puerto, ideal si bajas en Metro Estación Puerto.",
+          },
+          {
+            id: "sportlife-brasil",
+            nombre: "Sportlife Valparaíso",
+            cadena: "Sportlife",
+            logo: "sportlife-logo.png",
+            coords: [-33.0442, -71.6226],
+            distanciaKm: 0.6,
+            afluencia: "alta",
+            precio: 32990,
+            matricula: 24990,
+            horarioPeak: "17–20 h",
+            comentarios:
+              "Local amplio en Av. Brasil, a pocas cuadras del IBC y Parque Italia.",
+          },
+          {
+            id: "smartfit-victoria",
+            nombre: "SmartFit Plaza Victoria",
+            cadena: "SmartFit",
+            logo: "smartfit-logo.png",
+            coords: [-33.0448, -71.6196],
+            distanciaKm: 0.8,
+            afluencia: "alta",
+            precio: 25990,
+            matricula: 19990,
+            horarioPeak: "17–22 h",
+            comentarios:
+              "Muy concurrido, pero con buena rotación de máquinas cerca de Plaza Victoria.",
+          },
+          {
+            id: "seven",
+            nombre: "Gimnasio Seven",
+            cadena: "Seven",
+            logo: "seven-logo.png",
+            coords: [-33.0452, -71.6174],
+            distanciaKm: 1.0,
+            afluencia: "media",
+            precio: 24990,
+            matricula: 15000,
+            horarioPeak: "19–21 h",
+            comentarios:
+              "Referencia más local en Pedro Montt, cerca del Líder. Ambiente más familiar.",
+          },
+          {
+            id: "pacific-ross",
+            nombre: "Pacific Gym Mall Paseo Ross",
+            cadena: "Pacific",
+            logo: "pacific-logo.png",
+            coords: [-33.0437, -71.6203],
+            distanciaKm: 1.3,
+            afluencia: "baja",
+            precio: 23990,
+            matricula: 0,
+            horarioPeak: "18–20 h",
+            comentarios:
+              "Dentro del Mall Paseo Ross; suele tener menor afluencia en la mañana.",
+          },
+        ],
+      },
+      "casa-central": {
+        nombre: "Casa Central PUCV · Av. Brasil 2950",
+        center: [-33.0437, -71.6245],
+        gyms: [
+          {
+            id: "gym-casa-central",
+            nombre: "Gimnasio Casa Central PUCV",
+            cadena: "PUCV",
+            logo: "pucv-logo.png",
+            coords: [-33.0439, -71.6248],
+            distanciaKm: 0.0,
+            afluencia: "media",
+            precio: 0,
+            matricula: 0,
+            horarioPeak: "13–16 h",
+            comentarios:
+              "Gimnasio institucional para estudiantes PUCV (ejemplo ficticio).",
+          },
+        ],
+      },
+      curauma: {
+        nombre: "Campus Curauma PUCV",
+        center: [-33.0704, -71.4306],
+        gyms: [
+          {
+            id: "curauma-fit",
+            nombre: "Curauma Fitness",
+            cadena: "Local",
+            logo: "curauma-logo.png",
+            coords: [-33.0704, -71.4306],
+            distanciaKm: 0.4,
+            afluencia: "media",
+            precio: 19990,
+            matricula: 15000,
+            horarioPeak: "18–21 h",
+            comentarios: "Ejemplo de gimnasio cercano al Campus Curauma.",
+          },
+        ],
+      },
+    };
+
+    // ------------------- LOGIN UI -------------------
+    const loginOverlay = document.getElementById("login-overlay");
+    const loginBtn = document.getElementById("google-login-btn");
+    const loginError = document.getElementById("login-error");
+    const userNameLabel = document.getElementById("user-name-label");
+    const userAvatar = document.getElementById("user-avatar");
+    const signOutBtn = document.getElementById("sign-out-btn");
+
+    loginBtn.addEventListener("click", async () => {
+      loginError.textContent = "";
+      try {
+        const result = await auth.signInWithPopup(provider);
+        const email = result.user.email || "";
+        if (!email.endsWith("@mail.pucv.cl")) {
+          await auth.signOut();
+          loginError.textContent =
+            "Solo se permite el acceso con correos @mail.pucv.cl. Intenta nuevamente con tu cuenta institucional.";
+        }
+      } catch (err) {
+        console.error(err);
+        loginError.textContent = "No se pudo iniciar sesión. Intenta nuevamente.";
+      }
+    });
+
+    signOutBtn.addEventListener("click", () => auth.signOut());
+
+    auth.onAuthStateChanged((user) => {
+      if (user && user.email && user.email.endsWith("@mail.pucv.cl")) {
+        loginOverlay.hidden = true;
+        const displayName = user.displayName || user.email;
+        userNameLabel.textContent = displayName;
+        userAvatar.textContent = (displayName[0] || "?").toUpperCase();
+        signOutBtn.hidden = false;
+      } else {
+        loginOverlay.hidden = false;
+        userNameLabel.textContent = "Sesión no iniciada";
+        userAvatar.textContent = "--";
+        signOutBtn.hidden = true;
+      }
+    });
+
+    // ------------------- RUTINAS -------------------
+    const recommendedRoutines = [
+      {
+        id: "juan-pierna-basica",
+        titulo: "Pierna básica",
+        nivel: "Principiante",
+        grupoKey: "pierna",
+        grupoLabel: "Pierna",
+        creador: {
+          nombre: "Juan",
+          carrera: "Ingeniería Civil PUCV",
+          horario: "13:00–15:00",
+          objetivo: "Bajar grasa",
+        },
+        evitarSiLesiones: ["rodilla"],
+        descripcion:
+          "Pierna — 3 ejercicios. Sentadilla en máquina, prensa y curl femoral. Ideal para retomar después de la universidad.",
+        ejercicios: [
+          "Sentadilla en máquina",
+          "Prensa de piernas",
+          "Curl femoral",
+        ],
+      },
+      {
+        id: "carla-biceps-espalda",
+        titulo: "Espalda + bíceps simple",
+        nivel: "Intermedio",
+        grupoKey: "espalda",
+        grupoLabel: "Espalda",
+        creador: {
+          nombre: "Carla",
+          carrera: "Ingeniería Comercial PUCV",
+          horario: "18:00–20:00",
+          objetivo: "Hipertrofia tren superior",
+        },
+        evitarSiLesiones: ["hombro", "lumbar"],
+        descripcion:
+          "Rutina pensada para combinar con un día fuerte de pierna. Mucho foco en remos.",
+        ejercicios: [
+          "Remo con barra",
+          "Jalón al pecho",
+          "Remo en polea baja",
+          "Curl bíceps con barra Z",
+        ],
+      },
+      {
+        id: "alejandro-fullbody-suave",
+        titulo: "Full body suave",
+        nivel: "Principiante",
+        grupoKey: "fullbody",
+        grupoLabel: "Full body",
+        creador: {
+          nombre: "Alejandro",
+          carrera: "Ing. Informática PUCV",
+          horario: "07:00–08:00",
+          objetivo: "Mantenerse activo durante el semestre",
+        },
+        evitarSiLesiones: [],
+        descripcion:
+          "Rutina completa de 5 ejercicios para quienes solo pueden ir 2–3 veces por semana.",
+        ejercicios: [
+          "Prensa de piernas",
+          "Press banca en máquina",
+          "Remo sentado",
+          "Press militar con mancuernas sentado",
+          "Plancha abdominal",
+        ],
+      },
+    ];
+
+    let myRoutines = {
+      pierna: {
+        ...recommendedRoutines[0],
+        origen: "Adoptada de Juan",
+      },
+      espalda: {
+        id: "matchgym-espalda-basica",
+        titulo: "Espalda",
+        nivel: "Intermedio",
+        grupoKey: "espalda",
+        grupoLabel: "Espalda",
+        origen: "Sugerida por MatchGym",
+        descripcion:
+          "Remos básicos para combinar con tu split actual durante el semestre.",
+        ejercicios: ["Remo inclinado", "Jalón al pecho", "Remo a un brazo"],
+      },
+    };
+
+    const myRoutinesListEl = document.getElementById("my-routines-list");
+    const recommendedListEl = document.getElementById("recommended-routines-list");
+
+    function getSelectedLesiones() {
+      const checks = document.querySelectorAll('input[name="lesion"]:checked');
+      return Array.from(checks).map((c) => c.value);
+    }
+
+    function renderMyRoutines() {
+      const rutinas = Object.values(myRoutines).filter(Boolean);
+
+      if (!rutinas.length) {
+        myRoutinesListEl.innerHTML =
+          '<p style="font-size:12px;color:var(--text-soft);">Aún no has guardado ninguna rutina. Adopta una desde las recomendaciones o crea una nueva.</p>';
+        return;
+      }
+
+      myRoutinesListEl.innerHTML = rutinas
+        .map((r) => {
+          const ejerciciosHtml = (r.ejercicios || [])
+            .map((e) => `<li>${e}</li>`)
+            .join("");
+          return `
+            <article class="routine-card">
+              <h3>${r.titulo}</h3>
+              <div class="routine-meta">
+                <span class="routine-pill">${r.nivel.toUpperCase()}</span>
+                <span>Grupo muscular: ${r.grupoLabel}</span>
+                ${r.origen ? ` · <span>${r.origen}</span>` : ""}
+              </div>
+              <p class="routine-meta" style="margin-top:4px;">${r.descripcion || ""}</p>
+              ${
+                ejerciciosHtml
+                  ? `<ul>${ejerciciosHtml}</ul>`
+                  : "<p style='margin-top:4px;color:var(--text-soft);'>Sin ejercicios definidos.</p>"
+              }
+            </article>
+          `;
+        })
+        .join("");
+    }
+
+    function renderRecommendedRoutines() {
+      const lesiones = getSelectedLesiones();
+
+      const filtradas = recommendedRoutines.filter((r) => {
+        if (!lesiones.length) return true;
+        if (!r.evitarSiLesiones || !r.evitarSiLesiones.length) return true;
+        return !lesiones.some((l) => r.evitarSiLesiones.includes(l));
+      });
+
+      if (!filtradas.length) {
+        recommendedListEl.innerHTML =
+          '<p style="font-size:12px;color:var(--text-soft);">Con las lesiones marcadas no hay rutinas recomendadas por ahora. Prueba desmarcando alguna o crea tu propia rutina.</p>';
+        return;
+      }
+
+      recommendedListEl.innerHTML = filtradas
+        .map((r) => {
+          const ejerciciosHtml = r.ejercicios
+            .map((e) => `<li>${e}</li>`)
+            .join("");
+          return `
+            <article class="routine-card">
+              <div style="display:flex;gap:10px;align-items:flex-start;">
+                <div style="width:32px;height:32px;border-radius:999px;
+                            background:linear-gradient(135deg,#1d4ed8,#22c55e);
+                            display:flex;align-items:center;justify-content:center;
+                            font-size:13px;font-weight:600;">
+                  ${r.creador.nombre[0]}
+                </div>
+                <div style="flex:1;">
+                  <h3>${r.titulo}</h3>
+                  <div class="routine-meta">
+                    <span style="font-weight:600;">${r.creador.nombre}</span> ·
+                    <span>${r.creador.carrera}</span>
+                  </div>
+                  <div class="routine-meta" style="margin-top:2px;">
+                    <span class="routine-pill">${r.nivel.toUpperCase()}</span>
+                    <span class="routine-pill">Horario: ${r.creador.horario}</span>
+                  </div>
+                  <div class="routine-meta" style="margin-top:4px;">
+                    Objetivo: ${r.creador.objetivo} · Grupo: ${r.grupoLabel}
+                  </div>
+                  <p class="routine-meta" style="margin-top:4px;">${r.descripcion}</p>
+                  <ul>${ejerciciosHtml}</ul>
+                  <div style="margin-top:6px;text-align:right;">
+                    <button class="btn-primary" data-adopt-id="${r.id}">
+                      Adoptar esta rutina
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </article>
+          `;
+        })
+        .join("");
+    }
+
+    function adoptRoutine(routineId) {
+      const r = recommendedRoutines.find((x) => x.id === routineId);
+      if (!r) return;
+      myRoutines[r.grupoKey] = {
+        ...r,
+        origen: `Adoptada de ${r.creador.nombre}`,
+      };
+      renderMyRoutines();
+      alert(
+        `Se actualizó tu rutina de ${r.grupoLabel} con la de ${r.creador.nombre}.`
+      );
+    }
+
+    recommendedListEl.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-adopt-id]");
+      if (!btn) return;
+      adoptRoutine(btn.dataset.adoptId);
+    });
+
+    document.querySelectorAll('input[name="lesion"]').forEach((cb) => {
+      cb.addEventListener("change", renderRecommendedRoutines);
+    });
+
+    // Modal crear rutina
+    const btnNuevaRutina = document.getElementById("btn-nueva-rutina");
+    const routineModal = document.getElementById("routine-modal");
+    const routineModalTitle = document.getElementById("routine-modal-title");
+    const routineForm = document.getElementById("routine-form");
+    const routineModalClose = document.getElementById("routine-modal-close");
+    const routineModalCancel = document.getElementById("routine-modal-cancel");
+
+    const rName = document.getElementById("r-name");
+    const rGroup = document.getElementById("r-group");
+    const rLevel = document.getElementById("r-level");
+    const rDesc = document.getElementById("r-desc");
+    const rExercises = document.getElementById("r-exercises");
+
+    btnNuevaRutina.addEventListener("click", () => {
+      routineForm.reset();
+      routineModalTitle.textContent = "Nueva rutina";
+      routineModal.hidden = false;
+    });
+
+    [routineModalClose, routineModalCancel].forEach((btn) =>
+      btn.addEventListener("click", () => {
+        routineModal.hidden = true;
+      })
+    );
+
+    routineForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const nombre = rName.value.trim();
+      const grupoKey = rGroup.value;
+      const grupoLabel = rGroup.options[rGroup.selectedIndex].textContent;
+      const nivel = rLevel.value;
+      const desc = rDesc.value.trim();
+      const ejercicios = rExercises.value
+        .split("\n")
+        .map((x) => x.trim())
+        .filter(Boolean);
+
+      const rutina = {
+        id: "custom-" + Date.now(),
+        titulo: nombre,
+        nivel,
+        grupoKey,
+        grupoLabel,
+        descripcion: desc,
+        ejercicios,
+        origen: "Creada por ti",
+      };
+
+      myRoutines[grupoKey] = rutina;
+      routineModal.hidden = true;
+      renderMyRoutines();
+    });
+
+    // ------------------- NAV TABS -------------------
+    const navTabs = document.querySelectorAll(".nav-tab");
+    const sections = {
+      explorar: document.getElementById("section-explorar"),
+      rutinas: document.getElementById("section-rutinas"),
+      perfil: document.getElementById("section-perfil"),
+    };
+
+    navTabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        navTabs.forEach((t) => t.classList.remove("active"));
+        tab.classList.add("active");
+        const key = tab.dataset.section;
+        Object.entries(sections).forEach(([k, el]) => (el.hidden = k !== key));
+      });
+    });
+
+    // ------------------- MAPA -------------------
+    const initialSedeKey = "ibc";
+    let currentSedeKey = initialSedeKey;
+
+    const map = L.map("gym-map", {
+      zoomControl: true,
+      attributionControl: false,
+    }).setView(sedes[initialSedeKey].center, 15.5);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+    }).addTo(map);
+
+    const markersLayer = L.layerGroup().addTo(map);
+    let sedeMarker = null;
+    let gymMarkers = {};
+
+    const sedeIcon = L.icon({
+      iconUrl: "pucv-logo.png",
+      iconSize: [40, 40],
+      iconAnchor: [20, 20],
+    });
+
+    const defaultGymStyle = {
+      radius: 7,
+      color: "#0ea5e9",
+      fillColor: "#38bdf8",
+      fillOpacity: 0.95,
+      weight: 2,
+    };
+
+    const selectedGymStyle = {
+      radius: 8,
+      color: "#ef4444",
+      fillColor: "#f97373",
+      fillOpacity: 0.95,
+      weight: 2,
+    };
+
+    const sedeSelect = document.getElementById("sede-select");
+    const sedeLabel = document.getElementById("sede-label");
+    const afluenciaFilter = document.getElementById("afluencia-filter");
+    const maxDistanceInput = document.getElementById("max-distance");
+    const gymCardsEl = document.getElementById("gym-cards");
+
+    function afluenciaLabel(af) {
+      if (af === "baja") return "Baja afluencia";
+      if (af === "media") return "Afluencia media";
+      if (af === "alta") return "Muy concurrido";
+      return af;
+    }
+
+    function afluenciaClass(af) {
+      if (af === "baja") return "badge-free";
+      if (af === "media") return "badge-medium";
+      if (af === "alta") return "badge-busy";
+      return "";
+    }
+
+    function formatoPrecio(v) {
+      if (!v || v === 0) return "Incluido (ejemplo)";
+      return "$" + v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    function renderGyms() {
+      const sede = sedes[currentSedeKey];
+      sedeLabel.textContent = sede.nombre;
+
+      const maxDist = parseFloat(maxDistanceInput.value || "3");
+      const filter = afluenciaFilter.value;
+
+      markersLayer.clearLayers();
+      gymMarkers = {};
+
+      if (sedeMarker) map.removeLayer(sedeMarker);
+      sedeMarker = L.marker(sede.center, { icon: sedeIcon })
+        .addTo(map)
+        .bindPopup("Sede PUCV (origen)");
+
+      const gymsFiltrados = sede.gyms.filter((g) => {
+        if (g.distanciaKm > maxDist) return false;
+        if (filter !== "todos" && g.afluencia !== filter) return false;
+        return true;
+      });
+
+      const tempMarkers = [];
+
+      gymsFiltrados.forEach((gym) => {
+        const marker = L.circleMarker(gym.coords, defaultGymStyle)
+          .addTo(markersLayer)
+          .bindPopup(
+            `<strong>${gym.nombre}</strong><br>${gym.distanciaKm.toFixed(
+              1
+            )} km desde la sede`
+          );
+        gymMarkers[gym.id] = marker;
+        tempMarkers.push(marker);
+      });
+
+      if (gymsFiltrados.length > 0) {
+        const group = L.featureGroup([sedeMarker, ...tempMarkers]);
+        map.fitBounds(group.getBounds().pad(0.2));
+      } else {
+        map.setView(sede.center, 15.5);
+      }
+
+      renderGymCards(gymsFiltrados);
+      resetSelection();
+    }
+
+    function renderGymCards(gyms) {
+      gymCardsEl.innerHTML = "";
+      if (gyms.length === 0) {
+        gymCardsEl.innerHTML =
+          '<p style="font-size:12px;color:var(--text-soft);">No hay gimnasios que cumplan con los filtros actuales.</p>';
+        return;
+      }
+
+      gyms.forEach((gym) => {
+        const card = document.createElement("article");
+        card.className = "gym-card";
+        card.dataset.id = gym.id;
+
+        card.innerHTML = `
+          <div>
+            <h3>${gym.nombre}</h3>
+            <div class="gym-chip">
+              <span>${gym.cadena}</span>
+              <span style="opacity:.7">· ${gym.distanciaKm.toFixed(
+                1
+              )} km desde la sede</span>
+            </div>
+            <div class="gym-meta">
+              <div class="badge-pill ${afluenciaClass(gym.afluencia)}">
+                ${afluenciaLabel(gym.afluencia)}
+              </div>
+              <div>Horario con más afluencia: ${gym.horarioPeak}</div>
+              <div style="margin-top:2px;">${gym.comentarios}</div>
+            </div>
+          </div>
+          <div>
+            <div class="gym-price">
+              <div style="font-size:11px;color:var(--text-soft);">Plan mensual desde</div>
+              <strong>${formatoPrecio(gym.precio)}</strong>
+              <div style="font-size:11px;color:var(--text-soft);">
+                Matrícula: ${formatoPrecio(gym.matricula)}
+              </div>
+            </div>
+            <div class="gym-actions" style="margin-top:8px;">
+              <button class="btn-ghost" data-action="ver-detalle">Ver detalles</button>
+              <button class="btn-primary" data-action="comparar">Comparar</button>
+            </div>
+          </div>
+        `;
+        gymCardsEl.appendChild(card);
+      });
+    }
+
+    // selección para comparar
+    let firstSelectedGym = null;
+    let secondSelectedGym = null;
+
+    function highlightCardAndMarker(gymId, isSelected) {
+      const card = gymCardsEl.querySelector(`.gym-card[data-id="${gymId}"]`);
+      if (card) {
+        card.classList.toggle("selected-compare", isSelected);
+      }
+      const marker = gymMarkers[gymId];
+      if (marker) {
+        marker.setStyle(isSelected ? selectedGymStyle : defaultGymStyle);
+      }
+    }
+
+    function resetSelection() {
+      firstSelectedGym = null;
+      secondSelectedGym = null;
+      gymCardsEl
+        .querySelectorAll('button[data-action="comparar"]')
+        .forEach((b) => {
+          b.textContent = "Comparar";
+          b.disabled = false;
+          b.style.opacity = "1";
+        });
+      gymCardsEl
+        .querySelectorAll(".gym-card.selected-compare")
+        .forEach((c) => c.classList.remove("selected-compare"));
+      Object.values(gymMarkers).forEach((m) => m.setStyle(defaultGymStyle));
+    }
+
+    // MODAL COMPARACIÓN
+    const compareOverlay = document.getElementById("compare-overlay");
+    const compareClose = document.getElementById("compare-close");
+    const compareCloseBottom = document.getElementById("compare-close-bottom");
+    const compareNamesEl = document.getElementById("compare-names");
+    const compareBodyEl = document.getElementById("compare-body");
+    const colAEl = document.getElementById("col-a");
+    const colBEl = document.getElementById("col-b");
+
+    function getLogoUrl(g) {
+      return g.logo || "pucv-logo.png";
+    }
+
+    function openCompare(gymA, gymB) {
+      compareNamesEl.textContent = `${gymA.nombre} vs. ${gymB.nombre}`;
+
+      colAEl.innerHTML = `
+        <div class="modal-gym-head">
+          <img src="${getLogoUrl(gymA)}" class="gym-logo" alt="${gymA.cadena}" />
+          <span>${gymA.nombre}</span>
+        </div>
+      `;
+      colBEl.innerHTML = `
+        <div class="modal-gym-head">
+          <img src="${getLogoUrl(gymB)}" class="gym-logo" alt="${gymB.cadena}" />
+          <span>${gymB.nombre}</span>
+        </div>
+      `;
+
+      const rows = [
+        ["Cadena", gymA.cadena, gymB.cadena],
+        [
+          "Distancia desde sede",
+          gymA.distanciaKm.toFixed(1) + " km",
+          gymB.distanciaKm.toFixed(1) + " km",
+        ],
+        ["Afluencia", afluenciaLabel(gymA.afluencia), afluenciaLabel(gymB.afluencia)],
+        ["Plan mensual", formatoPrecio(gymA.precio), formatoPrecio(gymB.precio)],
+        ["Matrícula", formatoPrecio(gymA.matricula), formatoPrecio(gymB.matricula)],
+        ["Horario peak", gymA.horarioPeak, gymB.horarioPeak],
+        ["Comentario", gymA.comentarios, gymB.comentarios],
+      ];
+
+      compareBodyEl.innerHTML = rows
+        .map(
+          ([aspecto, a, b]) =>
+            `<tr><td>${aspecto}</td><td>${a}</td><td>${b}</td></tr>`
+        )
+        .join("");
+
+      compareOverlay.hidden = false;
+    }
+
+    function closeCompare() {
+      compareOverlay.hidden = true;
+      resetSelection();
+    }
+
+    compareClose.addEventListener("click", closeCompare);
+    compareCloseBottom.addEventListener("click", closeCompare);
+    compareOverlay.addEventListener("click", (e) => {
+      if (e.target === compareOverlay) closeCompare();
+    });
+
+    // MODAL DETALLE GIMNASIO
+    const gymDetailOverlay = document.getElementById("gym-detail-overlay");
+    const gymDetailTitle = document.getElementById("gym-detail-title");
+    const gymDetailSubtitle = document.getElementById("gym-detail-subtitle");
+    const gymDetailBody = document.getElementById("gym-detail-body");
+    const gymDetailClose = document.getElementById("gym-detail-close");
+    const gymDetailCloseBottom = document.getElementById("gym-detail-close-bottom");
+
+    function openGymDetail(gym, sedeNombre) {
+      gymDetailTitle.textContent = gym.nombre;
+      gymDetailSubtitle.textContent = `${gym.cadena} · ${gym.distanciaKm.toFixed(
+        1
+      )} km desde ${sedeNombre}`;
+      gymDetailBody.innerHTML = `
+        <p><strong>Afluencia:</strong> ${afluenciaLabel(gym.afluencia)}</p>
+        <p><strong>Horario típico con más gente:</strong> ${gym.horarioPeak}</p>
+        <p style="margin-top:6px;">${gym.comentarios}</p>
+        <p style="margin-top:6px;"><strong>Plan mensual:</strong> ${formatoPrecio(
+          gym.precio
+        )} &nbsp;·&nbsp; <strong>Matrícula:</strong> ${formatoPrecio(
+        gym.matricula
+      )}</p>
+      `;
+      gymDetailOverlay.hidden = false;
+    }
+
+    function closeGymDetail() {
+      gymDetailOverlay.hidden = true;
+    }
+
+    gymDetailClose.addEventListener("click", closeGymDetail);
+    gymDetailCloseBottom.addEventListener("click", closeGymDetail);
+    gymDetailOverlay.addEventListener("click", (e) => {
+      if (e.target === gymDetailOverlay) closeGymDetail();
+    });
+
+    // Eventos tarjetas gimnasios
+    gymCardsEl.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-action]");
+      if (!btn) return;
+      const card = btn.closest(".gym-card");
+      const gymId = card?.dataset.id;
+      if (!gymId) return;
+
+      const sede = sedes[currentSedeKey];
+      const gym = sede.gyms.find((g) => g.id === gymId);
+      if (!gym) return;
+
+      const action = btn.dataset.action;
+
+      if (action === "ver-detalle") {
+        openGymDetail(gym, sede.nombre);
+        return;
+      }
+
+      if (action === "comparar") {
+        if (!firstSelectedGym) {
+          firstSelectedGym = gym;
+          btn.textContent = "Seleccionado ✓";
+          btn.disabled = true;
+          btn.style.opacity = "0.7";
+          highlightCardAndMarker(gym.id, true);
+          return;
+        }
+        if (firstSelectedGym && firstSelectedGym.id === gym.id) {
+          resetSelection();
+          return;
+        }
+        secondSelectedGym = gym;
+        highlightCardAndMarker(gym.id, true);
+        openCompare(firstSelectedGym, secondSelectedGym);
+      }
+    });
+
+    // Filtros mapa
+    sedeSelect.addEventListener("change", () => {
+      currentSedeKey = sedeSelect.value;
+      map.setView(sedes[currentSedeKey].center, 15.5);
+      renderGyms();
+    });
+    afluenciaFilter.addEventListener("change", renderGyms);
+    maxDistanceInput.addEventListener("change", renderGyms);
+
+    // Inicializaciones
+    renderGyms();
+    renderMyRoutines();
+    renderRecommendedRoutines();
+  </script>
+</body>
+  </html>
