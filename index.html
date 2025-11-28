@@ -1153,20 +1153,23 @@
     signOutBtn.addEventListener("click", () => auth.signOut());
 
     auth.onAuthStateChanged((user) => {
-      if (user && user.email && user.email.endsWith("@mail.pucv.cl")) {
-        loginOverlay.hidden = true;
-        const displayName = user.displayName || user.email;
-        userNameLabel.textContent = displayName;
-        userAvatar.textContent = (displayName[0] || "?").toUpperCase();
-        signOutBtn.hidden = false;
-      } else {
-        loginOverlay.hidden = false;
-        userNameLabel.textContent = "Sesión no iniciada";
-        userAvatar.textContent = "--";
-        signOutBtn.hidden = true;
-      }
-    });
-
+  if (
+    user &&
+    user.email &&
+    (user.email.endsWith("@mail.pucv.cl") || user.email.endsWith("@pucv.cl"))
+  ) {
+    loginOverlay.hidden = true;
+    const displayName = user.displayName || user.email;
+    userNameLabel.textContent = displayName;
+    userAvatar.textContent = (displayName[0] || "?").toUpperCase();
+    signOutBtn.hidden = false;
+  } else {
+    loginOverlay.hidden = false;
+    userNameLabel.textContent = "Sesión no iniciada";
+    userAvatar.textContent = "--";
+    signOutBtn.hidden = true;
+  }
+});
     // ------------------- RUTINAS -------------------
     const recommendedRoutines = [
       {
