@@ -1139,7 +1139,7 @@
       try {
         const result = await auth.signInWithPopup(provider);
         const email = result.user.email || "";
-        if (!email.endsWith("@mail.pucv.cl")) {
+        if (!email.endsWith("@mail.pucv.cl") && !email.endsWith("@pucv.cl")) {
           await auth.signOut();
           loginError.textContent =
             "Solo se permite el acceso con correos @mail.pucv.cl. Intenta nuevamente con tu cuenta institucional.";
